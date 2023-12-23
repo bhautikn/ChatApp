@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/bhautikn/ChatApp/issues"
   },
-  "homepage": "https://github.com/bhautikn/ChatApp#readme"
+  "homepage": "https://github.com/bhautikn/ChatApp#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
