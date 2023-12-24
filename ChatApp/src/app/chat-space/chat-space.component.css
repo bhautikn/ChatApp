@@ -57,6 +57,7 @@ nav{
     margin-top: 5px;
     background-color: var(--background-light);
     overflow-y: auto;
+    transition-duration: 200ms;
 }
 .text-feild{
     position: absolute;
@@ -76,11 +77,12 @@ nav{
     float: left;
     width: 5%;
 }
+
 /* massage to css set */
-.to{
+::ng-deep .to{
     margin: 5px 0;
 }
-.to .massage{
+::ng-deep .to .massage{
     border-radius: 5px 0px 5px 5px;
     margin-left: auto;
     max-width: 50%;
@@ -89,37 +91,41 @@ nav{
     float: right;
     width: max-content;
     line-break: anywhere;
+    animation: massage 200ms;
+
 }
-.to .text{
+::ng-deep .to .text{
     background-color: var(--to-dark);
     padding: 3px;
     border-radius: 3px;
 }
-.to .time{
+::ng-deep .to .time{
     font-size: 0.7em;
     float: right;
     margin: 0 1px;
 }
-.to .massage-status{
+::ng-deep .to .massage-status{
     float: right;
     font-size: 0.7em;
     padding: 0;
     margin: 0;
 }
-.to .end{
+::ng-deep .to .end{
     height: 10px;
     width: 5px;
     float: right;
 	border-right: 13px solid transparent;
 	border-top: 18px solid var(--to);
+    animation: massage 200ms;
+
 }
 /* massage to set css end here */
 /* massage from set css start here */
 
-.from{
+::ng-deep .from{
     margin: 5px 0;
 }
-.from .massage{
+::ng-deep .from .massage{
     border-radius: 0px 5px 5px 5px;
     margin-left: auto;
     width: max-content;
@@ -129,21 +135,29 @@ nav{
     width: max-content;
     line-break: anywhere;
 }
-.from .text{
+::ng-deep .from .text{
     background-color: var(--from-dark);
     padding: 3px;
     border-radius: 3px;
    
 }
-.from .time{
+::ng-deep .from .time{
     font-size: 0.7em;
     float: right;
     margin: 0 1px;
 }
-.from .end{
+::ng-deep .from .end{
     height: 10px;
     width: 5px;
     float: left;
 	border-left: 13px solid transparent;
 	border-top: 18px solid var(--from);
 }
+/* @keyframes massage {
+    from{
+        transform:translateY(200px);
+    }
+    to{
+        transform:translateY(0px);
+    }
+} */

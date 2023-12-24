@@ -7,6 +7,11 @@ import { ChatComponent } from './chat/chat.component';
 import { PostComponent } from './post/post.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ChatSpaceComponent } from './chat-space/chat-space.component';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import { FormsModule } from '@angular/forms';
+
+
+const config: SocketIoConfig = { url: 'http://localhost:4444', options: {} };
 
 @NgModule({
   declarations: [
@@ -18,7 +23,10 @@ import { ChatSpaceComponent } from './chat-space/chat-space.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    SocketIoModule.forRoot(config)
+,
   ],
   providers: [],
   bootstrap: [AppComponent]
