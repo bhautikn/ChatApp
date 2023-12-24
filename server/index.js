@@ -7,9 +7,12 @@ const io = require('socket.io')({ cors: { origin: '*' } });
 const Chats = require('./mongo_scema/Chats');
 const mongoose = require('mongoose');
 const md5 = require('md5');
-
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
 require('./soket')(io);
 
+dotenv.config();
+const SIGN = process.env.JWT_SECRET_KEY;
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
@@ -20,6 +23,9 @@ app.get('/get-id', (req, res) => {
 app.post('/crete-chat', async (req, res)=>{
     password = req.body.password;
     token = req.body.token;
+    if(!password || !token){
+        return res.json({status: 403});
+    }
     try{
         await new Chats({
             _id: new mongoose.Types.ObjectId(),
@@ -33,7 +39,30 @@ app.post('/crete-chat', async (req, res)=>{
     }
 
 })
-server.listen(3000, () => {
-    console.log("App listing on", 3000);
+app.post('/authanticate', async (req, res)=>{
+    password = req.body.password;
+    token = req.body.token;
+    if(!password || !token){
+        return res.json({login: false});
+    }
+    try{
+        const data = await Chats.findOne({token:token});
+        if(!data){
+            return res.json({login: false});
+        }
+        if(data.password == md5(password)){
+            const _id = jwt.sign({ token: token }, SIGN);
+            return res.json({ login:true, id: _id });
+        }
+        else{
+            return res.json({ login: false });
+        }
+    }catch(e){
+        console.log(e);
+        res.json({status: 500});
+    }
+})
+server.listen(3000,()=>{
+    console.log('server started on', 3000)
 })
 io.attach(server);

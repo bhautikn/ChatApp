@@ -8,11 +8,12 @@
     --green-dark: #295D56;
     --blue-dark: #39465B;
     --green: rgb(0, 255, 0);
-    --to: green;
-    --to-dark: darkgreen;
+    --to: rgb(50, 125, 48);
+    --to-dark: rgb(47, 86, 47);
     --from: rgb(43, 74, 168);
-    --from-dark: rgb(17, 17, 169);
+    --from-dark: rgb(14, 14, 135);
 }
 body{
     background-color: var(--background);
+    overflow-x: hidden;
 }

@@ -10,8 +10,13 @@
             </div>
             <div class="name">{{name}}</div>
             <div>
-                <div *ngIf="online" class="green-dot"></div>
-                <div *ngIf="!online" class="grey-dot"></div>
+                <div *ngIf="status == 'online'" class="green-dot"></div>
+                <div *ngIf="status == 'offline'" class="grey-dot"></div>
+                <div *ngIf="status == 'typing'" class="typing-dot">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
                 <div class="status">{{status}}</div>
             </div>
         </div>
@@ -25,7 +30,7 @@
     </div>
 </nav>
 <div class="vh-50 chats-container container" [innerHtml]="data">
-
+    <!-- 
     <div class="row">
         <div class="to">
             <div class="end"></div>
@@ -51,17 +56,17 @@
                 <div class="time">2:11 am</div>
             </div>
         </div>
-    </div>
+    </div> -->
 
 </div>
 <div class="container">
     <div class="text-feild row">
         <div class="massage-text">
-            <!-- <input type="text" class="form-control" placeholder="Massage"> -->
-            <textarea placeholder="Massage" (keyup)="input($event)" class="form-control" rows="1"></textarea>
+            <textarea placeholder="Massage" (keyup)="input($event)" class="form-control" id="textarea"
+                rows="1"></textarea>
         </div>
         <div class="send-btn">
-            <button class="btn btn-info">
+            <button class="btn btn-info" (click)="addTo()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send"
                     viewBox="0 0 16 16">
                     <path

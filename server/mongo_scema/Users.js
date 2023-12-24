@@ -12,7 +12,16 @@ const user = mongoose.Schema({
     auth: {
         type: Boolean,
         require: true,
+    },
+    token:{
+        type: String,
+        require: true
+    },
+    online: {
+        type: Boolean,
+        require: true,
     }
 }, { timestamps: true });
 
-module.exports = mongoose.model('User', user);
+
+module.exports =  mongoose.model('User', user);

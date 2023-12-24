@@ -10,9 +10,10 @@ import { ChatSpaceComponent } from './chat-space/chat-space.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { FormsModule } from '@angular/forms';
 
-
+const hostName = window.location.hostname;
 const config: SocketIoConfig = { 
-    url: 'http://localhost:3000',
+
+    url: 'http://'+hostName+':3000',
     options: { transports: ['websocket'] }
   };
 

@@ -9,16 +9,19 @@ export class ChattingSoketService {
   constructor(private _socket:Socket) { }
 
 	//emit event
-	auth(token:String, password:string){
-		this._socket.emit('authaticate', token, password);
-	}
-	send(massage:string, id:any) {
-		this._socket.emit('massage', massage, id);
+	send(massage:string, auth:any) {
+		this._socket.emit('massage', massage, auth);
 	} 
-	onId(){
-		return this._socket.fromEvent('id');
+	join(authToken:string){
+		this._socket.emit('join', authToken);
+	}
+	sendStatus(status:any){
+		this._socket.emit('status', status);
 	}
 	// listen event
+	status(){
+		return this._socket.fromEvent('status')
+	}
 	onReceive() {
 		return this._socket.fromEvent('recive');
 	}

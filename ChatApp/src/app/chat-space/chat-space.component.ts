@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ChattingSoketService } from '../chatting-soket.service';
-import { ActivatedRoute } from '@angular/router';
-// import {  }
-// import { SocketService } from 'src/app/services/socket.service';
 
 @Component({
   selector: 'app-chat-space',
@@ -11,40 +8,42 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ChatSpaceComponent implements OnInit{
   
-  constructor( private _chat: ChattingSoketService, private _route:ActivatedRoute) { }
+  constructor( private _chat: ChattingSoketService) { }
   authToken:any = '';
-  password:any = 'bhautik123';
-  token:any = '';
-  ngOnInit(){
 
-    this.token = this._route.snapshot.params['token'];
-
-    this._chat.auth(this.token, this.password);
-
-    this._chat.onId().subscribe((data)=>{
-
-      console.log("recive data", data)
-      this.authToken = data;
-
-    })
-    this._chat.onReceive().subscribe((data: any) => {
-
-      this.addFrom(data, this.formatAMPM(new Date()));
-
-    })
-
-  }
-  
   name = 'Your Freind';
   online: boolean = false;
-  status = this.online ? 'online' : 'offline';
+  status:any = 'offline';
   statusColor = 'grey';
   data:any = '';
 
+  ngOnInit(){
+    this.authToken = localStorage['auth'];
+    if(this.authToken == '' || !this.authToken){
+      //set for login screen
+      // this.token = this._route.snapshot.params['token'];
+      console.log("you are not authorized")
+    }
+
+    this._chat.join(this.authToken);
+    //set status
+
+    this._chat.status().subscribe((data:any)=>{
+      this.status = data;
+      console.log("status", data)
+    })
+
+    this._chat.onReceive().subscribe((data: any) => {
+      this.addFrom(data);
+    })
+
+  }
+
   input(e: any) {
+    this._chat.sendStatus('typing')
     if (e.keyCode == 13) {
-      let time = this.formatAMPM(new Date());
-      this.addTo(e.target.value, time, e);
+      this.addTo();
+      this.status = 'online';
       return;
     }
 
@@ -60,10 +59,15 @@ export class ChatSpaceComponent implements OnInit{
     }
     
   }
-  addTo(text: string, time: string, e:any) {
-    e.target.value = "";
-    e.target.style.height = '0px';
-    if(text == "\n") return;
+  addTo() {
+    const textArea:any = document.querySelector('#textarea');
+    let text:string = textArea.value;
+    textArea.value = "";
+    textArea.style.height = '0px';
+    let time:any = this.formatAMPM(new Date()); 
+
+    if(text == "\n" || text == '' || !text || text.trim() == '') return;
+
     let child = `
     <div class="row">
         <div class="to">
@@ -82,16 +86,16 @@ export class ChatSpaceComponent implements OnInit{
         </div>
     </div>`
     this.data += child;
-
     this._chat.send(text, this.authToken);
-
+    this._chat.sendStatus('online');
     setTimeout(()=>{
       const container:any = document.querySelector('.chats-container');
       container.scrollTop = container.scrollTopMax;
     }, 50)
     
   }
-  addFrom(text: string, time: string) {
+  addFrom(text: string) {
+    const time: string = this.formatAMPM(new Date())
     let child = `
     <div class="row">
         <div class="from">
