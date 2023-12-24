@@ -12,6 +12,7 @@ export class ChatComponent {
   token = '';
   showClip= true;
   getTokenLoading = false;
+  password:string = '';
   
   genrateToken(){
     this.getTokenLoading = true;
@@ -27,5 +28,14 @@ export class ChatComponent {
   }
   startChat(){
     this._navigate.navigate(['/chat/'+this.token]);
+  }
+  createChat(){
+    this._api.setChat(this.token, this.password).subscribe((data:any)=>{
+      if(data.status == 200){
+        console.log('Chat Created Sucsesfully');
+      }else{
+        console.log("Somthing Went Wrong");
+      }
+    })
   }
 }

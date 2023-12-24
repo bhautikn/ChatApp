@@ -11,8 +11,8 @@
                         <div *ngIf='getTokenLoading' class="loading-ani"></div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="input-group">
+                <div class="row pe-0">
+                    <div class="input-group pe-0">
                         <span class="input-group-text" (click)="copyToClipBord(token)">
                             <svg *ngIf='showClip' xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                 fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
@@ -30,6 +30,14 @@
                             </svg>
                         </span>
                         <input type="text" class="form-control" [value]="token" disabled>
+                    </div>
+                </div>
+                <div class="row py-3 center">
+                    <input type="password" class="form-control" placeholder="Create Password" [(ngModel)]="password">
+                </div>
+                <div class="row">
+                    <div class="col text-end p-0">
+                        <button class="btn btn-info" (click)="createChat()">Create</button>
                     </div>
                 </div>
             </div>

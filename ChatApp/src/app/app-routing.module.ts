@@ -7,7 +7,7 @@ import { ChatSpaceComponent } from './chat-space/chat-space.component';
 const routes: Routes = [
   { path:'', component:ChatComponent },
   { path:'post', component:PostComponent },
-  { path:'chat/:id', component:ChatSpaceComponent },
+  { path:'chat/:token', component:ChatSpaceComponent },
 ];
 
 @NgModule({

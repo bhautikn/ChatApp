@@ -12,4 +12,7 @@ export class ApiChatService {
     return this._http.get(this.url+'get-id');
   }
 
+  setChat(token:string, password:string){
+    return this._http.post(this.url+'crete-chat', {password: password, token:token})
+  }
 }

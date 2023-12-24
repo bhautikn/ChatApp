@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChattingSoketService } from '../chatting-soket.service';
+import { ActivatedRoute } from '@angular/router';
 // import {  }
 // import { SocketService } from 'src/app/services/socket.service';
 
@@ -8,14 +9,30 @@ import { ChattingSoketService } from '../chatting-soket.service';
   templateUrl: './chat-space.component.html',
   styleUrl: './chat-space.component.css'
 })
-export class ChatSpaceComponent {
+export class ChatSpaceComponent implements OnInit{
   
-  constructor( private _chat: ChattingSoketService ) { }
-
+  constructor( private _chat: ChattingSoketService, private _route:ActivatedRoute) { }
+  authToken:any = '';
+  password:any = 'bhautik123';
+  token:any = '';
   ngOnInit(){
-    this._chat.onReceive().subscribe((data: any) => {
-      this.addFrom(data, this.formatAMPM(new Date()));
+
+    this.token = this._route.snapshot.params['token'];
+
+    this._chat.auth(this.token, this.password);
+
+    this._chat.onId().subscribe((data)=>{
+
+      console.log("recive data", data)
+      this.authToken = data;
+
     })
+    this._chat.onReceive().subscribe((data: any) => {
+
+      this.addFrom(data, this.formatAMPM(new Date()));
+
+    })
+
   }
   
   name = 'Your Freind';
@@ -23,6 +40,7 @@ export class ChatSpaceComponent {
   status = this.online ? 'online' : 'offline';
   statusColor = 'grey';
   data:any = '';
+
   input(e: any) {
     if (e.keyCode == 13) {
       let time = this.formatAMPM(new Date());
@@ -64,6 +82,9 @@ export class ChatSpaceComponent {
         </div>
     </div>`
     this.data += child;
+
+    this._chat.send(text, this.authToken);
+
     setTimeout(()=>{
       const container:any = document.querySelector('.chats-container');
       container.scrollTop = container.scrollTopMax;
