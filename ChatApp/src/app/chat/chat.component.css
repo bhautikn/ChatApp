@@ -1,0 +1,35 @@
+svg{
+    cursor: pointer;
+}
+.loading-ani{
+    border: 5px solid var(--green-dark);
+    border-radius: 300px;
+    border-top: 5px solid var(--background-light);
+    height: 30px;
+    width: 30px;
+    animation: loading-animation 500ms linear infinite;
+}
+.center{
+    margin: 0 auto;
+}
+.seclect-choice{
+    background-color: var(--background-light);
+    margin: 5px;
+    padding: 10px;
+}
+.title-header{
+    background-color: var(--background);
+    width: 50%;
+    padding: 7px;
+    margin: 0 auto;
+    border-radius: 10px;
+    text-align: center;
+}
+@keyframes loading-animation {
+    from{
+        transform: rotate(0deg);
+    }
+    to{
+        transform: rotate(360deg);
+    }
+}

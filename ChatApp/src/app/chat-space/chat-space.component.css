@@ -1,0 +1,149 @@
+nav{
+    background-color: var(--blue-dark);
+    padding: 10px;
+}
+.name{
+    font-size: 1.1em;
+    font-weight: bold;
+    line-height: 1em;
+}
+.status{
+    font-size: 0.7em;
+    line-height: 1.3em;
+}
+.green-dot{
+    height: 10px;
+    width: 10px;
+    background-color: var(--green);
+    border-radius: 50%;
+    float: left;
+    margin-right: 4px;
+    margin-top: 3px;
+}
+.grey-dot{
+    height: 10px;
+    width: 10px;
+    background-color: grey;
+    border-radius: 50%;
+    float: left;
+    margin-right: 4px;
+    margin-top: 3px;
+}
+.aroow-left{
+    float: left;
+    margin-right: 25px;
+    cursor: pointer;
+}
+.line{
+    background: var(--text);
+    height: 2px;
+    margin: 5px;
+    border-radius: 5px;
+}
+.option{
+    width: 40px;
+    margin-left: auto;
+    padding: 3px;
+    border-radius: 5px;
+    transition-duration: 200ms;
+    cursor: pointer;
+}
+.option:hover{
+    background-color: rgb(10, 10, 10, 0.2);
+}
+.chats-container{
+    height: 77vh;
+    border-radius: 10px;
+    margin-top: 5px;
+    background-color: var(--background-light);
+    overflow-y: auto;
+}
+.text-feild{
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.massage-text{
+    width: 79%;
+    float: left;
+    line-break: anywhere;
+    overflow-y:hidden;
+}
+.send-btn{
+    float: left;
+    width: 5%;
+}
+/* massage to css set */
+.to{
+    margin: 5px 0;
+}
+.to .massage{
+    border-radius: 5px 0px 5px 5px;
+    margin-left: auto;
+    max-width: 50%;
+    background-color: var(--to);
+    padding: 2px;
+    float: right;
+    width: max-content;
+    line-break: anywhere;
+}
+.to .text{
+    background-color: var(--to-dark);
+    padding: 3px;
+    border-radius: 3px;
+}
+.to .time{
+    font-size: 0.7em;
+    float: right;
+    margin: 0 1px;
+}
+.to .massage-status{
+    float: right;
+    font-size: 0.7em;
+    padding: 0;
+    margin: 0;
+}
+.to .end{
+    height: 10px;
+    width: 5px;
+    float: right;
+	border-right: 13px solid transparent;
+	border-top: 18px solid var(--to);
+}
+/* massage to set css end here */
+/* massage from set css start here */
+
+.from{
+    margin: 5px 0;
+}
+.from .massage{
+    border-radius: 0px 5px 5px 5px;
+    margin-left: auto;
+    width: max-content;
+    background-color: var(--from);
+    padding: 2px;
+    float: left;
+    width: max-content;
+    line-break: anywhere;
+}
+.from .text{
+    background-color: var(--from-dark);
+    padding: 3px;
+    border-radius: 3px;
+   
+}
+.from .time{
+    font-size: 0.7em;
+    float: right;
+    margin: 0 1px;
+}
+.from .end{
+    height: 10px;
+    width: 5px;
+    float: left;
+	border-left: 13px solid transparent;
+	border-top: 18px solid var(--from);
+}
