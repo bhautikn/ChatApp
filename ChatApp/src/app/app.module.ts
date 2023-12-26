@@ -9,11 +9,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { ChatSpaceComponent } from './chat-space/chat-space.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { FormsModule } from '@angular/forms';
+import { environment } from '../environments/environment';
 
-const hostName = window.location.hostname;
-const config: SocketIoConfig = { 
 
-    url: 'http://'+hostName+':3000',
+
+const config: SocketIoConfig = {
+    url: environment.soketUrl,
     options: { transports: ['websocket'] }
   };
 

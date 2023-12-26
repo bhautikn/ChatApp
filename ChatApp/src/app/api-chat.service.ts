@@ -1,12 +1,12 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApiChatService {
-  hostName = window.location.hostname;
-  url = 'http://'+this.hostName+':3000/';
+  url = environment.apiUrl;
   constructor(private _http:HttpClient) { }
 
   getToken(){
