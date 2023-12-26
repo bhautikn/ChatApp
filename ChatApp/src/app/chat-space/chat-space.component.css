@@ -2,6 +2,58 @@ nav{
     background-color: var(--blue-dark);
     padding: 10px;
 }
+.cross-icon{
+    width: max-content;
+    margin-left: 20px;
+    font-size: 1.7em;
+    cursor: pointer;
+    padding: 0 10px;
+    transition-duration: 200ms;
+    border-radius: 5px;
+}
+.dropdown-item{
+    cursor: pointer;
+}
+.cross-icon:hover{
+    background-color: rgb(10, 10, 10, 0.2);
+}
+.list{
+    margin-top: 30px;
+}
+.list-item{
+    padding: 15px;
+    border-top: 1px solid grey;
+    margin-left: 12px;
+    cursor: pointer;
+}
+.list-item:hover{
+    background-color: rgb(10, 10, 10, 0.2);
+    transition-duration: 200ms;
+}
+.list-active{
+    background-color: rgba(10, 10, 10, 0.3);
+}
+.created-at{
+    font-size: 0.7em;
+    width: max-content;
+    margin-left: auto;
+}
+.links{
+    text-decoration: none;
+    color: var(--text);
+}
+.side-nav{
+    float: left;
+    width: max-content;
+    transition-duration: 500ms;
+    animation: side-nav 500ms;
+}
+@keyframes side-nav {
+    from{
+        opacity: 0.3;
+        transform: translateX(-10px);
+    }
+}
 .name{
     font-size: 1.1em;
     font-weight: bold;
@@ -32,6 +84,7 @@ nav{
 .aroow-left{
     float: left;
     margin-right: 25px;
+    margin-left: 25px;
     cursor: pointer;
 }
 .line{
@@ -44,6 +97,8 @@ nav{
     width: 40px;
     margin-left: auto;
     padding: 3px;
+    font-size: 1.2em;
+    margin-right: 5px;
     border-radius: 5px;
     transition-duration: 200ms;
     cursor: pointer;
@@ -123,7 +178,6 @@ nav{
     float: right;
     width: max-content;
     line-break: anywhere;
-    /* animation: massage 200ms; */
 }
 ::ng-deep .to .text{
     background-color: var(--to-dark);
@@ -131,7 +185,7 @@ nav{
     border-radius: 3px;
 }
 ::ng-deep .to .time{
-    font-size: 0.7em;
+    font-size: 0.6em;
     float: right;
     margin: 0 1px;
 }
@@ -150,8 +204,6 @@ nav{
     float: right;
 	border-right: 13px solid transparent;
 	border-top: 18px solid var(--to);
-    /* animation: massage 200ms; */
-
 }
 /* massage to set css end here */
 /* massage from set css start here */
@@ -177,7 +229,7 @@ nav{
    
 }
 ::ng-deep .from .time{
-    font-size: 0.7em;
+    font-size: 0.6em;
     float: right;
     margin: 0 1px;
 }
@@ -188,10 +240,6 @@ nav{
 	border-left: 13px solid transparent;
 	border-top: 18px solid var(--from);
 }
-/* ::ng-deep .chats-container > .row{
-    background-color: red;
-    animation: massage 200ms;
-} */
 @keyframes massage {
     from{
         transform:translateY(200px);
@@ -218,8 +266,14 @@ nav{
 .typing-dot > div:nth-child(2){
     animation-delay: 200ms;
 }
+
 @keyframes first-dot {
     from{
         transform: translateY(-2px);
+    }
+}
+@media screen and (max-width: 700px) {
+    .side-nav{
+        width: 60%;
     }
 }

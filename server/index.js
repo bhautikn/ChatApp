@@ -16,14 +16,14 @@ const SIGN = process.env.JWT_SECRET_KEY;
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-app.get('/get-id', (req, res) => {
-    id = crypto.randomBytes(20).toString('hex');
-    res.send({ token: id })
-})
+// app.get('/get-id', (req, res) => {
+//     id = crypto.randomBytes(20).toString('hex');
+//     res.send({ token: id })
+// })
 app.post('/crete-chat', async (req, res)=>{
     password = req.body.password;
-    token = req.body.token;
-    if(!password || !token){
+    token = crypto.randomBytes(20).toString('hex');
+    if(!password){
         return res.json({status: 403});
     }
     try{
@@ -32,12 +32,25 @@ app.post('/crete-chat', async (req, res)=>{
             token: token,
             password: md5(password)
         }).save();
-        res.json({status: 200});
+    res.send({status: 200,  token: token })
     }catch(e){
         console.log(e);
         res.json({status: 500});
     }
 
+})
+app.delete('/chat/:id', (req, res)=>{
+    token = req.headers.token;
+    id = req.header.id;
+    console.log(token);
+    if(!token)
+        return res.json({ok: 0})
+    jwt.verify(token, SIGN, (err)=>{
+        if(!err){
+            Chats.deleteOne({token: id});
+            return res.json({ok: 200});
+        }
+    })
 })
 app.post('/authanticate', async (req, res)=>{
     password = req.body.password;

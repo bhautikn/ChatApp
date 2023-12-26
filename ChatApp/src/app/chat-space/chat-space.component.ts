@@ -10,24 +10,36 @@ import { ApiChatService } from '../api-chat.service';
 })
 export class ChatSpaceComponent implements OnInit{
   
-  constructor( private _chat: ChattingSoketService, private _route:ActivatedRoute, private _api:ApiChatService) { }
-  authToken:any = '';
-  showTopMenu:boolean = false;
-  name = 'Your Freind';
+  constructor( 
+    private _chat: ChattingSoketService, 
+    private _route:ActivatedRoute, 
+    private _api:ApiChatService,
+    private _navigate: Router
+    ) { }
+
+  urlToken:any = this._route.snapshot.params['token'];
+  chatOption:boolean = false;
+  isOpenMenu = true;
   online: boolean = false;
+  authToken:any = '';
+  name = 'Your Freind';
   status:any = 'offline';
   statusColor = 'grey';
   data:any = '';
-  dropWater:any = new Audio('../assets/sounds/water_drop.mp3');
   dataType = 'string';
+  dropWater:any = new Audio('../assets/sounds/water_drop.mp3');
+  chats:any = this.getChats();
 
   ngOnInit(){
-    this.authToken = localStorage['auth'];
+    if(screen.width < 700){
+      this.isOpenMenu = false;
+    }
+    this.authToken = localStorage[this.urlToken];
     if(this.authToken == '' || !this.authToken){
+
       //set for login screen
-      const token = this._route.snapshot.params['token'];
       const password:any = prompt("Enter Password");
-      this.authanticate(token, password);
+      this.authanticate(this.urlToken, password);
     }
 
     this._chat.join(this.authToken);
@@ -39,10 +51,6 @@ export class ChatSpaceComponent implements OnInit{
 
     this._chat.onReceive().subscribe(({massage , dataType}:any) => {
       this.addFrom(massage);
-
-      // if(data_type){
-
-      // }
       this.dropWater.play();
     })
 
@@ -75,15 +83,6 @@ export class ChatSpaceComponent implements OnInit{
     let time:any = this.formatAMPM(new Date()); 
 
     if(text == "\n" || text == '' || !text || text.trim() == '') return;
-    // text = (text:string) => text.replace(/[&<>'"]/g, 
-    //   tag => ({
-    //       '&': '&amp;',
-    //       '<': '&lt;',
-    //       '>': '&gt;',
-    //       "'": '&#39;',
-    //       '"': '&quot;'
-    //     }[tag]));
-    // modify html encode
     let child = `
     <div class="row">
         <div class="to">
@@ -147,9 +146,35 @@ export class ChatSpaceComponent implements OnInit{
         password = prompt("Wrong password try again");
         this.authanticate(token, password);
       }else{
-        localStorage.setItem('auth', data.id);
+        let obj = {token: token, cretaed: this.formatAMPM(new Date()), name:''}
+        this.setChat(obj);
+        localStorage.setItem(token, data.id);
         return;
       }
     })
+  }
+  getChats(){
+    if(!localStorage['chats']){
+      let arr:any = [];
+      localStorage['chats'] = JSON.stringify(arr);
+    }
+    return JSON.parse(localStorage['chats']);
+  }
+  setChat(newChat:any){
+    let chats = this.getChats()
+    chats.push(newChat);
+
+    localStorage.setItem('chats', JSON.stringify(chats));
+  }
+  deleteChat(){
+    let isDelete = confirm("are you sure??")
+    if(isDelete){
+      this._api.deleteChat(this.urlToken, this.authToken).subscribe((data:any)=>{
+        if(data.ok == 200){
+          localStorage.clear();
+          this._navigate.navigate(['/']);
+        }
+      });
+    }
   }
 }

@@ -15,7 +15,9 @@ export class ApiChatService {
   setChat(token:string, password:string){
     return this._http.post(this.url+'crete-chat', {password: password, token:token})
   }
-
+  deleteChat(chatId:any, token:any){
+    return this._http.delete(this.url+'chat/'+chatId, {headers: {token : token}})
+  }
   authanticate(token:string, password:string){
     return this._http.post(this.url+'authanticate', {password: password, token:token});
   }

@@ -1,0 +1,37 @@
+.list{
+    margin-top: 15px;
+}
+.list-item{
+    padding: 15px;
+    border-top: 1px solid grey;
+    margin-left: 12px;
+    cursor: pointer;
+}
+.list-item:hover{
+    background-color: rgb(10, 10, 10, 0.2);
+    transition-duration: 200ms;
+}
+.list-active{
+    background-color: rgba(10, 10, 10, 0.3);
+}
+.created-at{
+    font-size: 0.7em;
+    width: max-content;
+    margin-left: auto;
+}
+.links{
+    text-decoration: none;
+    color: var(--text);
+}
+.side-nav{
+    float: left;
+    width: max-content;
+    transition-duration: 500ms;
+    animation: side-nav 500ms;
+}
+@keyframes side-nav {
+    from{
+        opacity: 0.3;
+        transform: translateX(-10px);
+    }
+}
