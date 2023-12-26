@@ -9,14 +9,14 @@ export class ChattingSoketService {
   constructor(private _socket:Socket) { }
 
 	//emit event
-	send(massage:string, auth:any) {
-		this._socket.emit('massage', massage, auth);
+	send(massage:any, dataType:any ,auth:string) {
+		this._socket.emit('massage', massage, dataType, auth);
 	} 
 	join(authToken:string){
 		this._socket.emit('join', authToken);
 	}
-	sendStatus(status:any){
-		this._socket.emit('status', status);
+	sendStatus(status:any, token:any){
+		this._socket.emit('status', status, token);
 	}
 	// listen event
 	status(){

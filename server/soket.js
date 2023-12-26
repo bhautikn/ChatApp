@@ -39,30 +39,43 @@ module.exports = (io) => {
                     io.to(socket.id).emit('status', 'online');
                     io.to(friendId).emit('status', 'online');
 
-                } else { //if (await countToken(token) == 0) 
+                } else if (await countToken(token) == 0) { 
                     await add(socket.id, token, login);
                 }
             }
 
         })
 
-        socket.on('massage', (massage, id) => {
+        socket.on('massage', (massage, dataType , id) => {
+            console.log(dataType)
             jwt.verify(id, SIGN, async (err, data) => {
                 if(err){
                     return socket.emit('error', 'Somthing Went Wrong');
                 }
                 if (await getStatus(socket.id)) {
+                    massage = massage.replace(/[&<>'"]/g, 
+                    tag => ({
+                        '&': '&amp;',
+                        '<': '&lt;',
+                        '>': '&gt;',
+                        "'": '&#39;',
+                        '"': '&quot;'
+                      }[tag]));
                     const freind = await getFreindId(socket.id);
-                    console.log(freind);
-                    io.to(freind).emit('recive', massage);
+                    io.to(freind).emit('recive', {massage: massage, dataType: dataType});
                 }
             })
         })
 
-        socket.on('status', async (status)=>{
-            const friendId = await getFreindId(socket.id);
-            io.to(friendId).emit('status', status);
+        socket.on('status', async (status, id)=>{
+            jwt.verify(id, SIGN, async (err, data) => {
+                if(!err){
+                    const friendId = await getFreindId(socket.id);
+                    io.to(friendId).emit('status', status);
+                }
+            })
         })
+
         socket.on('disconnect', async () => {
             try{
                 const freindId = await getFreindId(socket.id);
@@ -72,9 +85,6 @@ module.exports = (io) => {
             deleteUser(socket.id);
         });
 
-        function sendStatusOnline(id1, id2){
-            
-        }
     })
 }
 async function add(id, token, auth) {
@@ -112,5 +122,6 @@ async function deleteUser(id){
 }
 async function getStatus(id){
     const data = await Users.findOne({id:id});
-    return data.online;
+    if(data)
+        return data.online;
 }

@@ -29,8 +29,7 @@ const config: SocketIoConfig = {
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    SocketIoModule.forRoot(config)
-,
+    SocketIoModule.forRoot(config),
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 })
 export class ChatComponent {
   constructor(private _api:ApiChatService, private _navigate:Router){}
+  
   token = '';
   showClip= true;
   getTokenLoading = false;
@@ -19,6 +20,9 @@ export class ChatComponent {
   loginSucsess: boolean = false;
   loginFaild: boolean = false;
 
+  ngOnInit(){
+    localStorage.clear();
+  }
   genrateToken(){
     this.getTokenLoading = true;
     this._api.getToken().subscribe((res:any)=>{

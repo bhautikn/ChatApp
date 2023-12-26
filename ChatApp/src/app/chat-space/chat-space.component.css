@@ -48,6 +48,38 @@ nav{
     transition-duration: 200ms;
     cursor: pointer;
 }
+/* conetex-menu css start */
+@keyframes animation-contex{
+    from{opacity: 0;}
+    to{opacity: 1;}
+}
+#context-menu{
+    display: block;
+    background-color: var(--light-bg-color);
+    border: 1px solid var(--back-color);
+    color: var(--txt-color);
+    z-index: 100;
+    background-color: smokewhite;
+    width: fit-content;
+    box-shadow: 2px 2px 15px var(--back-bg-color);
+    padding: 10px;
+    border-radius: 5px;
+    position: absolute;
+    user-select: none;
+    animation: animation-contex 800ms;
+    border: 1px solid lightgray; 
+}
+#context-menu .item{
+    padding : 5px;
+    cursor: pointer;
+    transition-duration: 100ms;
+    border-radius: 5px;
+    font-weight: 600;
+}
+#context-menu .item:hover{
+    background-color: var(--hover-color);
+}
+/* conetex-menu css end */
 .option:hover{
     background-color: rgb(10, 10, 10, 0.2);
 }
@@ -91,8 +123,7 @@ nav{
     float: right;
     width: max-content;
     line-break: anywhere;
-    animation: massage 200ms;
-
+    /* animation: massage 200ms; */
 }
 ::ng-deep .to .text{
     background-color: var(--to-dark);
@@ -103,6 +134,9 @@ nav{
     font-size: 0.7em;
     float: right;
     margin: 0 1px;
+}
+::ng-deep .to .time::after{
+    content: "\F840";
 }
 ::ng-deep .to .massage-status{
     float: right;
@@ -116,7 +150,7 @@ nav{
     float: right;
 	border-right: 13px solid transparent;
 	border-top: 18px solid var(--to);
-    animation: massage 200ms;
+    /* animation: massage 200ms; */
 
 }
 /* massage to set css end here */
@@ -132,6 +166,7 @@ nav{
     background-color: var(--from);
     padding: 2px;
     float: left;
+    max-width: 50%;
     width: max-content;
     line-break: anywhere;
 }
@@ -153,14 +188,19 @@ nav{
 	border-left: 13px solid transparent;
 	border-top: 18px solid var(--from);
 }
-/* @keyframes massage {
+/* ::ng-deep .chats-container > .row{
+    background-color: red;
+    animation: massage 200ms;
+} */
+@keyframes massage {
     from{
         transform:translateY(200px);
     }
     to{
         transform:translateY(0px);
     }
-} */
+}
+
 .typing-dot > div{
     height: 7px;
     width: 7px;

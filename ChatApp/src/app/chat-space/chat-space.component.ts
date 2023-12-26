@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChattingSoketService } from '../chatting-soket.service';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ApiChatService } from '../api-chat.service';
 
 @Component({
   selector: 'app-chat-space',
@@ -8,21 +10,24 @@ import { ChattingSoketService } from '../chatting-soket.service';
 })
 export class ChatSpaceComponent implements OnInit{
   
-  constructor( private _chat: ChattingSoketService) { }
+  constructor( private _chat: ChattingSoketService, private _route:ActivatedRoute, private _api:ApiChatService) { }
   authToken:any = '';
-
+  showTopMenu:boolean = false;
   name = 'Your Freind';
   online: boolean = false;
   status:any = 'offline';
   statusColor = 'grey';
   data:any = '';
+  dropWater:any = new Audio('../assets/sounds/water_drop.mp3');
+  dataType = 'string';
 
   ngOnInit(){
     this.authToken = localStorage['auth'];
     if(this.authToken == '' || !this.authToken){
       //set for login screen
-      // this.token = this._route.snapshot.params['token'];
-      console.log("you are not authorized")
+      const token = this._route.snapshot.params['token'];
+      const password:any = prompt("Enter Password");
+      this.authanticate(token, password);
     }
 
     this._chat.join(this.authToken);
@@ -30,20 +35,23 @@ export class ChatSpaceComponent implements OnInit{
 
     this._chat.status().subscribe((data:any)=>{
       this.status = data;
-      console.log("status", data)
     })
 
-    this._chat.onReceive().subscribe((data: any) => {
-      this.addFrom(data);
+    this._chat.onReceive().subscribe(({massage , dataType}:any) => {
+      this.addFrom(massage);
+
+      // if(data_type){
+
+      // }
+      this.dropWater.play();
     })
 
   }
 
   input(e: any) {
-    this._chat.sendStatus('typing')
+    this._chat.sendStatus('typing', this.authToken)
     if (e.keyCode == 13) {
       this.addTo();
-      this.status = 'online';
       return;
     }
 
@@ -67,7 +75,15 @@ export class ChatSpaceComponent implements OnInit{
     let time:any = this.formatAMPM(new Date()); 
 
     if(text == "\n" || text == '' || !text || text.trim() == '') return;
-
+    // text = (text:string) => text.replace(/[&<>'"]/g, 
+    //   tag => ({
+    //       '&': '&amp;',
+    //       '<': '&lt;',
+    //       '>': '&gt;',
+    //       "'": '&#39;',
+    //       '"': '&quot;'
+    //     }[tag]));
+    // modify html encode
     let child = `
     <div class="row">
         <div class="to">
@@ -85,12 +101,13 @@ export class ChatSpaceComponent implements OnInit{
             </div>
         </div>
     </div>`
+    this.dropWater.play();
     this.data += child;
-    this._chat.send(text, this.authToken);
-    this._chat.sendStatus('online');
+    this._chat.send(text, this.dataType ,this.authToken);
+    this._chat.sendStatus('online', this.authToken);
     setTimeout(()=>{
       const container:any = document.querySelector('.chats-container');
-      container.scrollTop = container.scrollTopMax;
+      container.scrollTop = container.scrollHeight;
     }, 50)
     
   }
@@ -109,7 +126,7 @@ export class ChatSpaceComponent implements OnInit{
     this.data += child;
     setTimeout(()=>{
       const container:any = document.querySelector('.chats-container');
-      container.scrollTop = container.scrollTopMax;
+      container.scrollTop = container.scrollHeight;
     }, 50)
   }
 
@@ -122,5 +139,17 @@ export class ChatSpaceComponent implements OnInit{
     minutes = minutes < 10 ? '0'+minutes : minutes;
     var strTime = hours + ':' + minutes + ' ' + ampm;
     return strTime;
+  }
+
+  authanticate(token:any, password:any){
+    this._api.authanticate(token, password).subscribe((data:any)=>{
+      if(data.login == false){
+        password = prompt("Wrong password try again");
+        this.authanticate(token, password);
+      }else{
+        localStorage.setItem('auth', data.id);
+        return;
+      }
+    })
   }
 }
