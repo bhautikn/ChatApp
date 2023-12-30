@@ -5,4 +5,6 @@ export const environment = {
     soketUrl: devUrl,
     apiUrl: devUrl,
     production: false,
+    gif_api:'https://g.tenor.com/v1/',
+    gif_api_key: 'LIVDSRZULELA'
 };

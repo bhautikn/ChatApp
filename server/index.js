@@ -9,6 +9,9 @@ const mongoose = require('mongoose');
 const md5 = require('md5');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
+const formidable = require('formidable');
+// const Posts = require('./mongo_scema/Posts')
+// const Reports = require('./mongo_scema/Reports')
 require('./soket')(io);
 
 dotenv.config();
@@ -16,10 +19,11 @@ const SIGN = process.env.JWT_SECRET_KEY;
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-// app.get('/get-id', (req, res) => {
-//     id = crypto.randomBytes(20).toString('hex');
-//     res.send({ token: id })
-// })
+app.post('/post/new', (req, res)=>{
+
+})
+
+///////////////////////////////////////////////////////////////////////////
 app.post('/crete-chat', async (req, res)=>{
     password = req.body.password;
     token = crypto.randomBytes(20).toString('hex');
@@ -37,7 +41,6 @@ app.post('/crete-chat', async (req, res)=>{
         console.log(e);
         res.json({status: 500});
     }
-
 })
 app.delete('/chat/:id', (req, res)=>{
     token = req.headers.token;
@@ -52,6 +55,8 @@ app.delete('/chat/:id', (req, res)=>{
         }
     })
 })
+///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 app.post('/authanticate', async (req, res)=>{
     password = req.body.password;
     token = req.body.token;
@@ -75,6 +80,7 @@ app.post('/authanticate', async (req, res)=>{
         res.json({status: 500});
     }
 })
+///////////////////////////////////////////////////////////////////////////
 server.listen(3000,()=>{
     console.log('server started on', 3000)
 })

@@ -175,29 +175,24 @@ nav{
 }
 
 /* massage to css set */
-::ng-deep .to{
+::ng-deep .to, ::ng-deep .from{
     margin: 5px 0;
 }
-::ng-deep .to .massage{
+::ng-deep .to .massage, ::ng-deep .from .massage{
     border-radius: 5px 0 5px 5px;
     margin-left: auto;
-    max-width: 50%;
     background-color: var(--to);
     padding: 2px;
     float: right;
     width: max-content;
+    max-width: 50%;
     line-break: anywhere;
     min-width: 50px;
 }
-::ng-deep .to .text{
+::ng-deep .to .text, ::ng-deep .from .text{
     background-color: var(--to-dark);
     padding: 0 5px;
     border-radius: 3px;
-}
-::ng-deep .to .time{
-    font-size: 0.6em;
-    float: right;
-    margin: 0 1px;
 }
 /* ::ng-deep .to .time::after{
     content: "\F840";
@@ -205,34 +200,22 @@ nav{
 ::ng-deep .to .massage-status{
     float: right;
     font-size: 0.7em;
-    padding: 0;
-    margin: 0;
 }
 /* massage to set css end here */
 /* massage from set css start here */
 
-::ng-deep .from{
-    margin: 5px 0;
-}
 ::ng-deep .from .massage{
-    border-radius: 0px 5px 5px 5px;
-    margin-left: auto;
-    width: max-content;
-    background-color: var(--from);
-    padding: 2px;
+    border-radius: 0 5px 5px 5px;
     float: left;
-    max-width: 50%;
-    width: max-content;
-    line-break: anywhere;
-    min-width: 50px;
+    background-color: var(--from);
 }
 ::ng-deep .from .text{
     background-color: var(--from-dark);
-    padding: 0 5px;
-    border-radius: 3px;
-   
 }
-::ng-deep .from .time{
+::ng-deep .from img, ::ng-deep .to img{
+    max-width: 200px;
+}
+::ng-deep .from .time, ::ng-deep .to .time{
     font-size: 0.6em;
     float: right;
     margin: 0 1px;
@@ -273,4 +256,29 @@ nav{
     .side-nav{
         width: 60%;
     }
+}
+
+/* Gif section */
+.all-gifs{
+    height: 30vh;
+    overflow: auto;
+}
+.gifs-item{
+    padding: 2px;
+    width: 47% !important; 
+    border: 1px solid green;
+    float: left;
+}
+.gifs-item img{
+    max-width: 50%;
+}
+.gif-menu{
+    border: 0.5px solid gray;
+    padding: 10px;
+    border-radius: 5px 5px 0 0;
+    background-color: rgba(10, 10, 10, 0.2);
+    backdrop-filter: blur(5px);
+    position: absolute;
+    bottom: 15%;
+    left: 25%;
 }

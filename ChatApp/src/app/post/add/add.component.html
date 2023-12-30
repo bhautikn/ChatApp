@@ -1,12 +1,12 @@
 <div class="container">
-    <form>
+    <form enctype="multipart/form-data">
         <br>
-        <input class="form-control" type="text" placeholder="Title">
+        <input class="form-control" type="text" placeholder="Title" name="title">
         <br>
-        <textarea class="form-control" placeholder="Description"></textarea>
+        <textarea class="form-control" placeholder="Description" name="description"></textarea>
         <br>
-        <input type="file">
+        <input type="file" name="file">
         <br>
-        <input type="submit" value="post" class="btn">
+        <input type="submit" value="post" class="btn btn-info mt-3">
     </form>
 </div>
