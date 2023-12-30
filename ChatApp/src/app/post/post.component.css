@@ -1,0 +1,19 @@
+.add-post-btn{
+    position: absolute;
+    right: 20px;
+    bottom: 30px;
+    align-items: center;
+    display: flex;
+    text-align: center;
+}
+.bi-plus{
+    text-align: center;
+    font-size: 2em;
+    margin: 0 3px;
+}
+.add-post-btn .text-option{
+    display: none;
+}
+.add-post-btn:hover .text-option{
+    display: block;
+}

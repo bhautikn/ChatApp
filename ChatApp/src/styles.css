@@ -1,5 +1,8 @@
 @import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
 
+*{
+    box-sizing: border-box;
+}
 :root{
     --background: #222222;
     --background-light: #333333;

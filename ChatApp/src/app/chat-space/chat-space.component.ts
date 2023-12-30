@@ -28,12 +28,12 @@ export class ChatSpaceComponent implements OnInit{
   data:any = '';
   dataType = 'string';
   dropWater:any = new Audio('../assets/sounds/water_drop.mp3');
-  chats:any = this.getChats();
-
+  chats:any = '';
   ngOnInit(){
     if(screen.width < 700){
       this.isOpenMenu = false;
     }
+    
     this.authToken = localStorage[this.urlToken];
     if(this.authToken == '' || !this.authToken){
 
@@ -44,7 +44,7 @@ export class ChatSpaceComponent implements OnInit{
 
     this._chat.join(this.authToken);
     //set status
-
+    this.chats = this.getChats();
     this._chat.status().subscribe((data:any)=>{
       this.status = data;
     })
@@ -86,7 +86,6 @@ export class ChatSpaceComponent implements OnInit{
     let child = `
     <div class="row">
         <div class="to">
-            <div class="end"></div>
             <div class="massage">
                 <div class="text">${text}</div>
                 <div class="massage-status">

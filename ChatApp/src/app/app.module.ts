@@ -11,6 +11,7 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { FormsModule } from '@angular/forms';
 import { environment } from '../environments/environment';
 import { SideBarComponent } from './side-bar/side-bar.component';
+import { AddComponent } from './post/add/add.component';
 
 
 
@@ -25,7 +26,8 @@ const config: SocketIoConfig = {
     ChatComponent,
     PostComponent,
     ChatSpaceComponent,
-    SideBarComponent
+    SideBarComponent,
+    AddComponent
   ],
   imports: [
     BrowserModule,
