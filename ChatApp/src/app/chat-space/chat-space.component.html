@@ -3,12 +3,12 @@
         <div class="side-nav p-0 m-0" *ngIf="isOpenMenu">
             <div class="container m-2">Chats</div>
             <div class="list">
-                <a [routerLink]="'/chat/'+item.token" class="links" *ngFor="let item of chats">
+                <div (click)="redirect('/chat/'+item.token)" class="links" *ngFor="let item of chats">
                     <div class="list-item" [ngClass]="{'list-active': item.token == urlToken}">{{item.token | slice:
                         0:15}}...
                         <div class="created-at">{{item.cretaed}}</div>
                     </div>
-                </a>
+                </div>
             </div>
         </div>
         <div class="col">

@@ -9,8 +9,9 @@ const mongoose = require('mongoose');
 const md5 = require('md5');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
-const formidable = require('formidable');
-// const Posts = require('./mongo_scema/Posts')
+const upload = require('./file_upload')
+
+const Posts = require('./mongo_scema/Posts')
 // const Reports = require('./mongo_scema/Reports')
 require('./soket')(io);
 
@@ -19,69 +20,99 @@ const SIGN = process.env.JWT_SECRET_KEY;
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
-app.post('/post/new', (req, res)=>{
+/////////////////////////////////////////////////////////////
 
+app.get('/posts',async (req, res)=>{
+    const data = await Posts.find();
+    res.json(data);
+})
+
+
+app.post('/post/new', upload.any(), (req, res) => {
+    if(!isSet(req.body.title))
+        return res.sendStatus(403);
+    let tagArray = [];
+    if(isSet(req.body.tags))
+        tagArray = req.body.tags.split('\s');
+    console.log(tagArray);
+    filePath = 'uploads/'+req.body.storeFileName;
+    const _id = new mongoose.Types.ObjectId()
+    new Posts({
+        _id: _id,
+        title: req.body.title,
+        description: req.body.description,
+        files: filePath,
+        tags: {$push: {tagArray}},
+    }).save();
+
+    res.json({ id: _id });
 })
 
 ///////////////////////////////////////////////////////////////////////////
-app.post('/crete-chat', async (req, res)=>{
+app.post('/crete-chat', async (req, res) => {
     password = req.body.password;
     token = crypto.randomBytes(20).toString('hex');
-    if(!password){
-        return res.json({status: 403});
+    if (!password) {
+        return res.json({ status: 403 });
     }
-    try{
+    try {
         await new Chats({
             _id: new mongoose.Types.ObjectId(),
             token: token,
             password: md5(password)
         }).save();
-    res.send({status: 200,  token: token })
-    }catch(e){
+        res.send({ status: 200, token: token })
+    } catch (e) {
         console.log(e);
-        res.json({status: 500});
+        res.json({ status: 500 });
     }
 })
-app.delete('/chat/:id', (req, res)=>{
+app.delete('/chat/:id', (req, res) => {
     token = req.headers.token;
     id = req.header.id;
     console.log(token);
-    if(!token)
-        return res.json({ok: 0})
-    jwt.verify(token, SIGN, (err)=>{
-        if(!err){
-            Chats.deleteOne({token: id});
-            return res.json({ok: 200});
+    if (!token)
+        return res.json({ ok: 0 })
+    jwt.verify(token, SIGN, (err) => {
+        if (!err) {
+            Chats.deleteOne({ token: id });
+            return res.json({ ok: 200 });
         }
     })
 })
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
-app.post('/authanticate', async (req, res)=>{
+app.post('/authanticate', async (req, res) => {
     password = req.body.password;
     token = req.body.token;
-    if(!password || !token){
-        return res.json({login: false});
+    if (!password || !token) {
+        return res.json({ login: false });
     }
-    try{
-        const data = await Chats.findOne({token:token});
-        if(!data){
-            return res.json({login: false});
-        }
-        if(data.password == md5(password)){
-            const _id = jwt.sign({ token: token }, SIGN);
-            return res.json({ login:true, id: _id });
-        }
-        else{
+    try {
+        const data = await Chats.findOne({ token: token });
+        if (!data) {
             return res.json({ login: false });
         }
-    }catch(e){
+        if (data.password == md5(password)) {
+            const _id = jwt.sign({ token: token }, SIGN);
+            return res.json({ login: true, id: _id });
+        }
+        else {
+            return res.json({ login: false });
+        }
+    } catch (e) {
         console.log(e);
-        res.json({status: 500});
+        res.json({ status: 500 });
     }
 })
 ///////////////////////////////////////////////////////////////////////////
-server.listen(3000,()=>{
+server.listen(3000, () => {
     console.log('server started on', 3000)
 })
 io.attach(server);
+
+function isSet(args){
+    if(!args || args == '' || args.trim() == '')
+        return false;
+    return true;
+}

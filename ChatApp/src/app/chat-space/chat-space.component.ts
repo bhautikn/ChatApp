@@ -31,7 +31,7 @@ export class ChatSpaceComponent implements OnInit{
   data:any = '';
   dataType = 'string';
   dropWater:any = new Audio('../assets/sounds/water_drop.mp3');
-  chats:any = '';
+  chats:any = [];
   gifs:any = {}; 
 
   changeGifText(e:any){
@@ -55,7 +55,9 @@ export class ChatSpaceComponent implements OnInit{
 
     this._chat.join(this.authToken);
     //set status
-    this.chats = this.getChats();
+    setTimeout(()=>{
+      this.chats = this.getChats();
+    } , 200)
     this._chat.status().subscribe((data:any)=>{
       this.status = data;
     })
@@ -235,5 +237,9 @@ export class ChatSpaceComponent implements OnInit{
       container.scrollTop = container.scrollHeight;
     }, 50)
     this._chat.send(data, 'gif', this.authToken);
+  }
+  redirect(to:string){
+    this.data = '';
+    this._navigate.navigate([to]);
   }
 }

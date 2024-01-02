@@ -13,11 +13,16 @@ const Scema = mongoose.Schema({
         trim: true,
     },
     files: {
-        type: mongoose.Types.Mixed,
+        type: String,
         require: false,
         default: [],
     },
     like:{
+        type: Number,
+        require: false,
+        default: 0,
+    },
+    dislike:{
         type: Number,
         require: false,
         default: 0,

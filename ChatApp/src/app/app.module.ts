@@ -8,10 +8,14 @@ import { PostComponent } from './post/post.component';
 import { HttpClientModule } from '@angular/common/http';
 import { ChatSpaceComponent } from './chat-space/chat-space.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from '../environments/environment';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { AddComponent } from './post/add/add.component';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { PostByIdComponent } from './post/post-by-id/post-by-id.component';
 
 
 
@@ -27,14 +31,19 @@ const config: SocketIoConfig = {
     PostComponent,
     ChatSpaceComponent,
     SideBarComponent,
-    AddComponent
+    AddComponent,
+    PostByIdComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
+    MatProgressBarModule,
+    ReactiveFormsModule,
+    CommonModule,
     SocketIoModule.forRoot(config),
+    BrowserAnimationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
