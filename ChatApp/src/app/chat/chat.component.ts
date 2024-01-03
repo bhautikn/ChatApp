@@ -15,17 +15,13 @@ export class ChatComponent {
   token = '';
   showClip = true;
   password: string = '';
-
+  chats:any = [];
   sucsessCreated: boolean = false;
   FailHappen: boolean = false;
 
-  // genrateToken() {
-  //   // this.getTokenLoading = true;
-  //   this._api.getToken().subscribe((res: any) => {
-  //     this.token = res.token;
-  //     // this.getTokenLoading = false;
-  //   })
-  // }
+  ngOnInit(){
+    this.chats = this.getChats();
+  }
 
   copyToClipBord() {
     navigator.clipboard.writeText(this.fullUrl);
@@ -43,5 +39,14 @@ export class ChatComponent {
       }
     })
   }
-
+  redirect(to:string){
+    this._navigate.navigate([to]);
+  }
+  getChats(){
+    if(!localStorage['chats']){
+      let arr:any = [];
+      localStorage['chats'] = JSON.stringify(arr);
+    }
+    return JSON.parse(localStorage['chats']);
+  }
 }
