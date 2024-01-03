@@ -27,14 +27,22 @@ app.get('/posts',async (req, res)=>{
     res.json(data);
 })
 
+app.get('/post/:id',async (req, res)=>{
+    const data = await Posts.findOne({_id: req.params.id});
+    res.json(data);
+})
 
 app.post('/post/new', upload.any(), (req, res) => {
-    if(!isSet(req.body.title))
+
+    if(!req.body.storeFileName){
         return res.sendStatus(403);
+    }
+     if(!isSet(req.body.title)){
+      return;
+    }
     let tagArray = [];
     if(isSet(req.body.tags))
         tagArray = req.body.tags.split('\s');
-    console.log(tagArray);
     filePath = 'uploads/'+req.body.storeFileName;
     const _id = new mongoose.Types.ObjectId()
     new Posts({
@@ -42,7 +50,7 @@ app.post('/post/new', upload.any(), (req, res) => {
         title: req.body.title,
         description: req.body.description,
         files: filePath,
-        tags: {$push: {tagArray}},
+        tags: [tagArray],
     }).save();
 
     res.json({ id: _id });

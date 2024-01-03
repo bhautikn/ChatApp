@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const Scema = mongoose.Schema({
     _id: mongoose.Types.ObjectId,
-    title:{
+    title: {
         type: String,
         require: true,
         trim: true,
     },
-    description:{
+    description: {
         type: String,
         require: true,
         trim: true,
@@ -17,26 +17,22 @@ const Scema = mongoose.Schema({
         require: false,
         default: [],
     },
-    like:{
+    like: {
         type: Number,
         require: false,
         default: 0,
     },
-    dislike:{
+    dislike: {
         type: Number,
         require: false,
         default: 0,
     },
-    view:{
+    view: {
         type: Number,
         require: false,
         default: 0,
     },
-    tag: {
-        type: Array,
-        default: [],
-        require: false,
-    }
+    tag: [{ type: String }],
 }, { timestamps: true });
 
 module.exports = mongoose.model('Post', Scema);

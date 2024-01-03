@@ -6,8 +6,11 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    req.body.storeFileName = Date.now() + '-' + file.originalname
-    cb(null, req.body.storeFileName);
+    if(checkMimetype(file.mimetype)){
+      req.body.storeFileName = Date.now()+Math.random()+ '-' + file.originalname
+      req.body.mimetype = file.mimetype;
+      cb(null, req.body.storeFileName);
+    }
   }
 });
 
@@ -15,9 +18,40 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   // limits: {
-  //   fileSize: 1048576 // Defined in bytes (1 Mb)
+  //   fileSize: 2e+7 // Defined in bytes (20 Mb)
   // },
 });
-
+function checkMimetype(mimetype){
+  if( // valid image files 
+    mimetype == 'image/bmp' || 
+    mimetype ==  'image/jpeg' || 
+    mimetype ==  'image/x-png' || 
+    mimetype == 'image/png' || 
+    mimetype == 'image/gif'){
+      return true;
+  }
+  if( // valid video files
+    mimetype == 'video/mp4' ||
+    mimetype == 'video/mpeg' ||
+    mimetype == 'video/x-ms-wmv' ||
+    mimetype == 'video/x-msvideo' ||
+    mimetype == 'video/quicktime' ||
+    mimetype == 'video/3gpp' ||
+    mimetype == 'video/MP2T' ||
+    mimetype == 'application/x-mpegURL' ||
+    mimetype == 'video/x-flv'
+  ){
+    return true;
+  }
+  if( // valid audio files
+    mimetype == 'audio/mpeg' ||
+    mimetype == 'audio/mp4' ||
+    mimetype == 'audio/vnd.wav' ||
+    mimetype == 'audio/ogg' ||
+    mimetype == 'audio/vnd.rn-realaudio'
+  ){
+    return true;
+  }
+  return false;
+}
 module.exports = upload;
-
