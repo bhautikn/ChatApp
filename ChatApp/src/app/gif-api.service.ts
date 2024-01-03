@@ -12,10 +12,10 @@ export class GifApiService {
 
   getAll(){
     console.log('Hello')
-    return this._http.get(this.url+'trending?key='+environment.gif_api_key+'&limit=8');
+    return this._http.get(this.url+'trending?key='+environment.gif_api_key+'&limit=20');
   }
   getBySearch(searchText:string){
-    return this._http.get(this.url+'search?q='+searchText+'&key='+environment.gif_api_key+'&limit=8')
+    return this._http.get(this.url+'search?q='+searchText+'&key='+environment.gif_api_key+'&limit=20')
   }
   getById(id:string){
     return this._http.get(this.url+'gifs?ids='+id+'&key='+environment.gif_api_key);

@@ -61,18 +61,20 @@
 
 
                 </div>
+
                 <div *ngIf="gifMenu" class="gif-menu container w-50 float-end">
                     <div class="gif-search">
                         <input type="text" (keyup)="changeGifText($event)" class="form-control" placeholder="Search Gif">
                     </div>
                     <div class="all-gifs p-2">
-                        <div *ngFor="let i of gifs">
+                        <div *ngFor="let i of gifs" class="gif-container">
                             <div class="gifs-item" (click)="sendGif(i.media[0].gif.url)">
                                 <img [src]="i.media[0].gif.url">
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="container">
                     <div class="text-feild row">
                         <div class="massage-text">

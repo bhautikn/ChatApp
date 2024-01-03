@@ -23,7 +23,7 @@ export class ChatSpaceComponent implements OnInit{
   chatOption:boolean = false;
   isOpenMenu = true;
   online: boolean = false;
-  gifMenu:boolean = false;
+  gifMenu:boolean = true;
   authToken:any = '';
   name = 'Your Freind';
   status:any = 'offline';
@@ -38,6 +38,7 @@ export class ChatSpaceComponent implements OnInit{
     console.log('Hello')
     this._gif_api.getBySearch(e.target.value).subscribe((res:any)=>{
       this.gifs = res.results;
+      console.log(this.gifs)
     })
   }
   ngOnInit(){

@@ -257,20 +257,21 @@ nav{
         width: 60%;
     }
 }
-
 /* Gif section */
 .all-gifs{
-    height: 30vh;
+    height: 40vh;
     overflow: auto;
 }
 .gifs-item{
     padding: 2px;
-    width: 47% !important; 
-    border: 1px solid green;
+    width: 33% !important; 
     float: left;
 }
 .gifs-item img{
-    max-width: 50%;
+    margin: 0 auto;
+    display: block;
+    max-width: 100%;
+    object-fit: cover;
 }
 .gif-menu{
     border: 0.5px solid gray;
