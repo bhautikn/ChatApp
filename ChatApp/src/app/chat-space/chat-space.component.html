@@ -82,6 +82,12 @@
                                 rows="1"></textarea>
                         </div>
                         <div class="send-btn">
+                            <label for="file-upload" class="btn btn-info">
+                                <i class="bi bi-file-earmark-fill"></i>
+                            </label>
+                            <input type="file" style="display: none" id="file-upload" (change)="uploadFile($event)" accept="image/jpeg, image/png">
+                        </div>
+                        <div class="send-btn">
                             <button class="btn btn-info" (click)="gifMenu = !gifMenu">
                                 <i class="bi bi-filetype-gif" *ngIf="!gifMenu"></i>
                                 <i class="bi bi-x" *ngIf="gifMenu"></i>

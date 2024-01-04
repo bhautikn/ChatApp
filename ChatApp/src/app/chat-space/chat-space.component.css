@@ -162,12 +162,13 @@ nav{
     padding: 10px;
     justify-content: center;
     width: 100%;
+    gap: 5px !important;
 }
 .massage-text{
     width: 79%;
     float: left;
     line-break: anywhere;
-    overflow-y:hidden;
+    overflow-y: hidden;
 }
 .send-btn{
     float: left;

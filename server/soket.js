@@ -47,20 +47,22 @@ module.exports = (io) => {
         })
 
         socket.on('massage', (massage, dataType , id) => {
-            console.log(dataType)
+            // console.log(massage.toString())
             jwt.verify(id, SIGN, async (err, data) => {
                 if(err){
                     return socket.emit('error', 'Somthing Went Wrong');
                 }
                 if (await getStatus(socket.id)) {
-                    massage = massage.replace(/[&<>'"]/g, 
-                    tag => ({
-                        '&': '&amp;',
-                        '<': '&lt;',
-                        '>': '&gt;',
-                        "'": '&#39;',
-                        '"': '&quot;'
-                      }[tag]));
+                    if(dataType == 'string'){
+                        massage = massage.replace(/[&<>'"]/g, 
+                        tag => ({
+                            '&': '&amp;',
+                            '<': '&lt;',
+                            '>': '&gt;',
+                            "'": '&#39;',
+                            '"': '&quot;'
+                          }[tag]));
+                    }
                     const freind = await getFreindId(socket.id);
                     io.to(freind).emit('recive', {massage: massage, dataType: dataType});
                 }
