@@ -18,6 +18,11 @@ export class ChattingSoketService {
 	sendStatus(status:any, token:any){
 		this._socket.emit('status', status, token);
 	}
+	sendVideoCall(authToken:any, callback:Function){
+		this._socket.emit('sendVideoCall', authToken, (res:any)=>{
+			callback(res);
+		})
+	}
 	// listen event
 	status(){
 		return this._socket.fromEvent('status')

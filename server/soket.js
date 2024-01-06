@@ -44,7 +44,6 @@ module.exports = (io) => {
                     await add(socket.id, token, login);
                 }
             }
-
         })
 
         socket.on('massage', (massage, dataType , id) => {
@@ -53,6 +52,7 @@ module.exports = (io) => {
                 if(err){
                     return socket.emit('error', 'Somthing Went Wrong');
                 }
+                console.log(data)
                 if (await getStatus(socket.id)) {
                     if(dataType == 'string'){
                         massage = massage.replace(/[&<>'"]/g, 
@@ -69,7 +69,14 @@ module.exports = (io) => {
                 }
             })
         })
-
+        // socket.on('sendVideoCall', id, ()=>{
+        //     jwt.verify(id, SIGN, async (err, data) => {
+        //         if(err){
+        //             return socket.emit('error', 'Somthing Went Wrong');
+        //         }
+        //         const freind = await getFreindId(socket.id);
+        //     })
+        // })
         socket.on('status', async (status, id)=>{
             jwt.verify(id, SIGN, async (err, data) => {
                 if(!err){
@@ -115,6 +122,12 @@ async function getFreindId(id) {
         return data.friend;
     }
 }
+// async function getFreindId(id) {
+//     const data = await Users.findOne({ id: id });
+//     if(data){
+//         return data.friend;
+//     }
+// }
 async function getIdByToken(token) {
     const data = await Users.findOne({ token: token });
     return data.id;

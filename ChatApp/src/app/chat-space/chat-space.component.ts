@@ -3,6 +3,7 @@ import { ChattingSoketService } from '../chatting-soket.service';
 import { ActivatedRoute, ChildActivationEnd, Params, Router } from '@angular/router';
 import { ApiChatService } from '../api-chat.service';
 import { GifApiService } from '../gif-api.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-chat-space',
@@ -51,8 +52,7 @@ export class ChatSpaceComponent implements OnInit{
       const password:any = prompt("Enter Password");
       this.authanticate(this.urlToken, password);
     }
-
-    this._chat.join(this.authToken);
+    this._chat.join(this.authToken)
 
     //set status
     setTimeout(()=>{
@@ -267,5 +267,8 @@ export class ChatSpaceComponent implements OnInit{
       </div>
     `;
     return child;
+  }
+  videoCall(){
+    this.redirect('/chat/video/send/'+this.urlToken);
   }
 }

@@ -24,6 +24,7 @@
     "ngx-socket-io": "^4.6.1",
     "rxjs": "~7.8.0",
     "socket.io-stream": "^0.9.1",
+    "sweetalert2": "^11.10.2",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
   },

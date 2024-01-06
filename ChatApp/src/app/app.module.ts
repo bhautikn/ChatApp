@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PostByIdComponent } from './post/post-by-id/post-by-id.component';
+import { VideoCallComponent } from './chat-space/video-call/video-call.component';
 
 const config: SocketIoConfig = {
     url: environment.soketUrl,
@@ -30,7 +31,8 @@ const config: SocketIoConfig = {
     ChatSpaceComponent,
     SideBarComponent,
     AddComponent,
-    PostByIdComponent
+    PostByIdComponent,
+    VideoCallComponent
   ],
   imports: [
     BrowserModule,
