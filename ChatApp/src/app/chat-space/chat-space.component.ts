@@ -3,6 +3,7 @@ import { ChattingSoketService } from '../chatting-soket.service';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ApiChatService } from '../api-chat.service';
 import { GifApiService } from '../gif-api.service';
+import { coerceStringArray } from '@angular/cdk/coercion';
 
 @Component({
   selector: 'app-chat-space',
@@ -117,18 +118,13 @@ export class ChatSpaceComponent implements OnInit{
             </div>
         </div>
     </div>`
-    // this.dropWater.play();
-    // this.data += child;
     this.setData(child);
     this._chat.send(text, this.dataType ,this.authToken);
     this._chat.sendStatus('online', this.authToken);
-    // setTimeout(()=>{
-    //   const container:any = document.querySelector('.chats-container');
-    //   container.scrollTop = container.scrollHeight;
-    // }, 50)
     
   }
   addFrom(text: any, dataType: string) {
+    console.log(dataType)
     const time: string = this.formatAMPM(new Date())
     var child = '';
     if(dataType == 'string'){
@@ -168,6 +164,29 @@ export class ChatSpaceComponent implements OnInit{
                 <div class="end"></div>
                 <div class="massage">
                     <img src='${src}'class="text">
+                    <div class="time">${time}</div>
+                </div>
+            </div>
+        </div>`
+        this.setData(child);
+      }
+    }
+    else if(dataType == 'video'){
+      console.log("recieve video file")
+      const blob = new Blob([text])
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      let src:any;
+      reader.onloadend = ()=>{
+        src = reader.result;
+        child = `
+        <div class="row">
+            <div class="from">
+                <div class="end"></div>
+                <div class="massage">
+                  <video width="320" height="240" class="text" controls>
+                    <source src='${src}' type="video/mp4" >
+                  </video>
                     <div class="time">${time}</div>
                 </div>
             </div>
@@ -258,32 +277,67 @@ export class ChatSpaceComponent implements OnInit{
   }
   uploadFile(e:any){
     let file = e.target.files[0];
-    const blob = new Blob([file])
+    if(file.type.split('/')[0] == 'image'){
+      const blob = new Blob([file])
       const reader = new FileReader();
       reader.readAsDataURL(blob);
       let src:any;
       reader.onloadend = ()=>{
         src = reader.result;
-    const child = `
-    <div class="row">
-        <div class="to">
-            <div class="massage">
-                <img src='${src}' class="text">
-                <div class="massage-status">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                        class="bi bi-check-all" viewBox="0 0 16 16">
-                        <path
-                            d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992a.252.252 0 0 1 .02-.022zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 1 0-1.091-1.028L9.477 9.417l-.485-.486-.943 1.179z" />
-                    </svg>
-                </div>
-                <div class="time">${this.formatAMPM(new Date())}</div>
-            </div>
-        </div>
-    </div>
-    `
-    this.setData(child)
+        let child = `
+          <div class="row">
+              <div class="to">
+                  <div class="massage">
+                      <img src='${src}' class="text">
+                      <div class="massage-status">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                              class="bi bi-check-all" viewBox="0 0 16 16">
+                              <path
+                                  d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992a.252.252 0 0 1 .02-.022zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 1 0-1.091-1.028L9.477 9.417l-.485-.486-.943 1.179z" />
+                          </svg>
+                      </div>
+                      <div class="time">${this.formatAMPM(new Date())}</div>
+                  </div>
+              </div>
+          </div>
+        `
+        this.setData(child);
+        this._chat.send(e.target.files[0], 'image', this.authToken);
       }
-    this._chat.send(e.target.files[0], 'image', this.authToken);
+    }
+    else if(file.type.split('/')[0] == 'video'){
+      const chunkSize = 1024;
+
+      const blobNew = file.slice(0, chunkSize);
+      this._chat.send(blobNew, 'video', this.authToken);
+      console.log(blobNew)
+
+    
+    
+      const blob = new Blob([file])
+
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      let src:any;
+      reader.onloadend = ()=>{
+        src = reader.result;
+        let child = `
+          <div class="row">
+              <div class="to">
+                  <div class="massage" >
+                      <video width="320" height="240" class="text" controls>
+                        <source src='${src}' type="video/mp4" >
+                      </video>
+                      <div class="time">${this.formatAMPM(new Date())}</div>
+                  </div>
+              </div>
+          </div>
+        `
+        this.setData(child)
+        this._chat.send(blob, 'video', this.authToken);
+      }
+    }
+    
   }
 
   setData(child:any){
@@ -292,6 +346,6 @@ export class ChatSpaceComponent implements OnInit{
     setTimeout(()=>{
       const container:any = document.querySelector('.chats-container');
       container.scrollTop = container.scrollHeight;
-    }, 50)
+    }, 50);
   }
 }

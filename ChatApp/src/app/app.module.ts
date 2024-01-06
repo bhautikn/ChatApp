@@ -16,8 +16,7 @@ import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PostByIdComponent } from './post/post-by-id/post-by-id.component';
-
-
+// import * as ss from 'socket.io-stream';
 
 const config: SocketIoConfig = {
     url: environment.soketUrl,

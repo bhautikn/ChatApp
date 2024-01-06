@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const Users = require('./mongo_scema/Users');
 const Chats = require('./mongo_scema/Chats');
+const ss = require('socket.io-stream')
 
 dotenv.config();
 const SIGN = process.env.JWT_SECRET_KEY;
@@ -47,7 +48,7 @@ module.exports = (io) => {
         })
 
         socket.on('massage', (massage, dataType , id) => {
-            // console.log(massage.toString())
+            console.log(massage)
             jwt.verify(id, SIGN, async (err, data) => {
                 if(err){
                     return socket.emit('error', 'Somthing Went Wrong');
