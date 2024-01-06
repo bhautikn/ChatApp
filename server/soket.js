@@ -48,7 +48,7 @@ module.exports = (io) => {
         })
 
         socket.on('massage', (massage, dataType , id) => {
-            console.log(massage)
+            // console.log(massage)
             jwt.verify(id, SIGN, async (err, data) => {
                 if(err){
                     return socket.emit('error', 'Somthing Went Wrong');
@@ -90,6 +90,8 @@ module.exports = (io) => {
 
     })
 }
+
+
 async function add(id, token, auth) {
     await new Users({
         _id: new mongoose.Types.ObjectId(),
