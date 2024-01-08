@@ -3,7 +3,6 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const Users = require('./mongo_scema/Users');
 const Chats = require('./mongo_scema/Chats');
-const ss = require('socket.io-stream')
 
 dotenv.config();
 const SIGN = process.env.JWT_SECRET_KEY;
@@ -47,7 +46,6 @@ module.exports = (io) => {
         })
 
         socket.on('massage', (massage, dataType , id) => {
-            // console.log(massage)
             jwt.verify(id, SIGN, async (err, data) => {
                 if(err){
                     return socket.emit('error', 'Somthing Went Wrong');
@@ -69,14 +67,34 @@ module.exports = (io) => {
                 }
             })
         })
-        // socket.on('sendVideoCall', id, ()=>{
-        //     jwt.verify(id, SIGN, async (err, data) => {
-        //         if(err){
-        //             return socket.emit('error', 'Somthing Went Wrong');
-        //         }
-        //         const freind = await getFreindId(socket.id);
-        //     })
-        // })
+
+        socket.on('streamVideo', (token, videoData)=>{
+            jwt.verify(token, SIGN, async (err, data) => {
+                console.log(socket.id, videoData);
+                if(err){
+                    return socket.emit('error', 'Somthing Went Wrong');
+                }else{
+                    const freind = await getFreindByToken(data.token, socket.id);;
+                    io.to(freind).volatile.emit('streamVideo', videoData)
+                }
+            });
+        })
+        socket.on('reqVideoCall', (id, callback)=>{
+            jwt.verify(id, SIGN, async (err, data) => {
+                if(err){
+                    return socket.emit('error', 'Somthing Went Wrong');
+                }
+                const freind = await getFreindByToken(data.token, socket.id);
+
+                io.timeout(1000).to(freind).emit('reqVideoCall', (err, res)=>{
+                    if(err) callback('err');
+                    if(res[0] == true) callback(true);
+                    else if(res[0] == false) callback(false);
+                })
+            })
+        })
+        
+        // socket.on('liveSendVideo', )
         socket.on('status', async (status, id)=>{
             jwt.verify(id, SIGN, async (err, data) => {
                 if(!err){
@@ -122,12 +140,12 @@ async function getFreindId(id) {
         return data.friend;
     }
 }
-// async function getFreindId(id) {
-//     const data = await Users.findOne({ id: id });
-//     if(data){
-//         return data.friend;
-//     }
-// }
+async function getFreindByToken(token, id) {
+    const data = await Users.findOne({ token: token , id: {$ne: id}});
+    if(data){
+        return data.id;
+    }
+}
 async function getIdByToken(token) {
     const data = await Users.findOne({ token: token });
     return data.id;

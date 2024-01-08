@@ -20,7 +20,7 @@ import { VideoCallComponent } from './chat-space/video-call/video-call.component
 
 const config: SocketIoConfig = {
     url: environment.soketUrl,
-    options: { transports: ['websocket'] }
+    options: { transports: ['websocket']},
   };
 
 @NgModule({

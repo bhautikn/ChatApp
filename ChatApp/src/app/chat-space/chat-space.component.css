@@ -211,6 +211,7 @@ nav{
     background-color: var(--from);
 }
 ::ng-deep .from .text{
+    padding: 2px;
     background-color: var(--from-dark);
 }
 ::ng-deep .from img, ::ng-deep .to img{
@@ -219,6 +220,7 @@ nav{
 ::ng-deep .from .time, ::ng-deep .to .time{
     font-size: 0.6em;
     float: right;
+    line-height: 12px;
     margin: 0 1px;
 }
 @keyframes massage {

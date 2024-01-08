@@ -18,16 +18,25 @@ export class ChattingSoketService {
 	sendStatus(status:any, token:any){
 		this._socket.emit('status', status, token);
 	}
-	sendVideoCall(authToken:any, callback:Function){
-		this._socket.emit('sendVideoCall', authToken, (res:any)=>{
+	reqVideoCall(authToken:any, callback:Function){
+		this._socket.emit('reqVideoCall', authToken, (res:any)=>{
 			callback(res);
 		})
 	}
+	streamVideo(token:any , data:any){
+		this._socket.emit('streamVideo', token ,data);
+	}
 	// listen event
+	onStreamVideo(){
+		return this._socket.fromEvent('streamVideo')
+	}
 	status(){
 		return this._socket.fromEvent('status')
 	}
 	onReceive() {
 		return this._socket.fromEvent('recive');
+	}
+	onReqVideoCall(){
+		return this._socket.fromEvent('reqVideoCall')
 	}
 }

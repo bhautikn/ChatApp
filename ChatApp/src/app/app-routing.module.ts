@@ -9,11 +9,11 @@ import { VideoCallComponent } from './chat-space/video-call/video-call.component
 
 const routes: Routes = [
   { path:'', component:ChatComponent },
+  { path:'chat/video/send/:token', component:VideoCallComponent },
   { path:'post', component:PostComponent },
   { path:'post/add', component:AddComponent },
   { path:'post/:id', component:PostByIdComponent },
   { path:'chat/:token', component:ChatSpaceComponent },
-  { path:'chat/video/send/:token', component:VideoCallComponent },
 ];
 
 @NgModule({

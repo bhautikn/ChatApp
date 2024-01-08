@@ -1,0 +1,32 @@
+.call-icon{
+    font-size: 5em;
+}
+.call-text{
+    font-size: 1.5em;
+}
+.body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+}
+.myVideoContainer{
+    position: absolute;
+    left: 10px;
+    border: 1px solid grey;
+    top: 60px;   
+    border-radius: 10px;
+    display: flex;
+}
+.myVideoContainer video{
+    border-radius: 10px;
+    width: 250px;
+}
+.myVideoContainer video:hover{
+    cursor:grab;
+}
+.otherVideo{
+    border: 1px solid grey;
+    width: 100% !important;
+    height: 100%;
+}

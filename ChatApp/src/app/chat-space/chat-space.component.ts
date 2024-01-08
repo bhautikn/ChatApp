@@ -32,6 +32,7 @@ export class ChatSpaceComponent implements OnInit{
   data:any = '';
   dataType = 'string';
   dropWater:any = new Audio('../assets/sounds/water_drop.mp3');
+  incomingRing:any = new Audio('../assets/sounds/phone-incoming.mp3');
   chats:any = [];
   gifs:any = {}; 
 
@@ -71,7 +72,45 @@ export class ChatSpaceComponent implements OnInit{
     this._gif_api.getAll().subscribe((res:any)=>{
       this.gifs = res.results;
     })
+    
 
+    this._chat.onReqVideoCall().subscribe((func:any)=>{
+      this.incomingRing.play()
+      // this.incomingRing.loop=true;
+
+      Swal.fire({
+        title: "Incomming Video Call",
+        iconHtml: "<i class='bi bi-telephone-inbound'></i>",
+        timer: 1000,
+        showClass :{
+          popup: `
+          animate__animated
+          animate__fadeInUp
+          animate__faster
+        `
+        },
+        hideClass: {
+          popup: `
+            animate__animated
+            animate__fadeOutDown
+            animate__faster
+          `
+          },
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Answer"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          func(true);
+          this.incomingRing.pause()
+          this.redirect('/chat/video/send/'+this.urlToken)
+        }else if(!result.isConfirmed){
+          func(false)
+          this.incomingRing.pause()
+        }
+      });
+    });
   }
 
   input(e: any) {
@@ -108,7 +147,6 @@ export class ChatSpaceComponent implements OnInit{
     
   }
   addFrom(text: any, dataType: string) {
-    console.log(dataType)
     var child = '';
 
     switch (dataType){
@@ -269,6 +307,46 @@ export class ChatSpaceComponent implements OnInit{
     return child;
   }
   videoCall(){
-    this.redirect('/chat/video/send/'+this.urlToken);
+    function clearAllThings(){
+      clearInterval(videoReq)
+      clearInterval(MusicPlayId)
+      clearInterval(timerInterval)
+      phoneCallMusic.pause();
+      Swal.close()
+    }
+    let timerInterval:any;
+    const phoneCallMusic = new Audio('../assets/sounds/phone-outgoing.mp3')
+    const MusicPlayId = setInterval(()=>{
+      phoneCallMusic.play();
+    }, 500);
+    Swal.fire({
+      position: "top-end",
+      title: "Calling ...",
+      iconHtml: "<i class='bi bi-telephone-outbound call-icon fs-1'></i>",
+      timer: 10000,
+      timerProgressBar: true,
+      showCancelButton: true,
+      willClose: () => {
+        clearAllThings();
+      }
+    }).then((result:any)=>{
+      if(!result.isConfirmed){
+        clearAllThings();
+      }
+    })
+
+    let videoReq = setInterval(()=>{
+      this._chat.reqVideoCall(this.authToken, (data:any)=>{
+        console.log(data);
+        if(data != 'err') {
+          clearAllThings();
+        };
+        if(data == true) this.redirect('/chat/video/send/'+this.urlToken);
+      })
+    }, 1000);
+    setTimeout(()=>{
+      clearInterval(videoReq);
+    }, 10*1000)
+    
   }
 }
