@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { environment } from '../environments/environment';
+import { environment } from '../environments/environment.development';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,6 @@ export class GifApiService {
   constructor(private _http:HttpClient) { }
 
   getAll(){
-    console.log('Hello')
     return this._http.get(this.url+'trending?key='+environment.gif_api_key+'&limit=20');
   }
   getBySearch(searchText:string){

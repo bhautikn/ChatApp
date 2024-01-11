@@ -1,5 +1,6 @@
 const express = require('express');
 var cors = require('cors');
+const path = require('path');
 const crypto = require('crypto');
 const app = express();
 const server = require('http').createServer(app);
@@ -10,7 +11,6 @@ const md5 = require('md5');
 const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const upload = require('./file_upload')
-
 const Posts = require('./mongo_scema/Posts')
 // const Reports = require('./mongo_scema/Reports')
 require('./soket')(io);
@@ -19,7 +19,7 @@ dotenv.config();
 const SIGN = process.env.JWT_SECRET_KEY;
 app.use(cors({ origin: '*' }));
 app.use(express.json());
-
+app.use("/public", express.static(path.join(__dirname, 'uploads')));
 /////////////////////////////////////////////////////////////
 
 app.get('/posts',async (req, res)=>{
@@ -43,17 +43,39 @@ app.post('/post/new', upload.any(), (req, res) => {
     let tagArray = [];
     if(isSet(req.body.tags))
         tagArray = req.body.tags.split('\s');
-    filePath = 'uploads/'+req.body.storeFileName;
+    fileName = req.body.storeFileName;
     const _id = new mongoose.Types.ObjectId()
     new Posts({
         _id: _id,
         title: req.body.title,
         description: req.body.description,
-        files: filePath,
+        files: fileName,
         tags: [tagArray],
+        fileDataType: req.body.mimetype,
     }).save();
 
     res.json({ id: _id });
+})
+app.put('/post/like/:id', async (req, res)=>{
+    console.log(req.params.id)
+    const PostId = req.params.id;
+    await Posts.updateOne({_id: PostId}, {$inc: {like: 1}});
+    res.sendStatus(200);
+})
+app.put('/post/dislike/:id', async(req, res)=>{
+    const PostId = req.params.id;
+    await Posts.updateOne({_id: PostId}, {$inc: {dislike: 1}});
+    res.sendStatus(200);
+})
+app.put('/post/remove-like/:id',async (req, res)=>{
+    const PostId = req.params.id;
+    await Posts.updateOne({_id: PostId}, {$dec: {like: 1}});
+    res.sendStatus(200);
+})
+app.put('/post/remove-dislike/:id', async(req, res)=>{
+    const PostId = req.params.id;
+    await Posts.updateOne({_id: PostId}, {$dec: {dislike: 1}});
+    res.sendStatus(200);
 })
 
 ///////////////////////////////////////////////////////////////////////////

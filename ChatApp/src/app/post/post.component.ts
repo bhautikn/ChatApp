@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ɵUSE_RUNTIME_DEPS_TRACKER_FOR_JIT } from '@angular/core';
 import { PostApiService } from '../post-service.service';
+import { environment } from '../../environments/environment.development';
 
 @Component({
   selector: 'app-post',
@@ -9,13 +10,48 @@ import { PostApiService } from '../post-service.service';
 export class PostComponent {
   constructor(private _api:PostApiService){}
 
-  data:any = '';
-
+  posts:any = '';
+  publicFolert:any = environment.apiUrl+'public/';
   ngOnInit(){
     this._api.getAll().subscribe((res:any)=>{
-      this.data = res;
-      console.log(res);
+      this.posts = res;
     })
+  }
+
+  addLike(_id:any, index:any){
+    if(this.posts[index].isDisLiked == true){
+      this.posts[index].isLiked = false;
+      this.addDisLike(_id, index)
+      this.addLike(_id, index);
+    }
+    else if(this.posts[index].isLiked == true){
+      this.posts[index].like --;
+      this.posts[index].isLiked = false;
+      this._api.removeLike(_id);
+    }
+    else{
+      this.posts[index].like ++;
+      this.posts[index].isLiked = true;
+      this._api.addLike(_id);
+    }
+  }
+  addDisLike(_id:any, index:any){
+    if(this.posts[index].isLiked == true){
+      this.posts[index].isDisLiked = false;
+      this.addLike(_id, index);
+      this.addDisLike(_id, index);
+    }
+    else if(this.posts[index].isDisLiked == true){
+      this.posts[index].dislike --;
+      this.posts[index].isDisLiked = false;
+      this._api.removeDisLike(_id);
+    }
+    else{
+      this.posts[index].dislike ++;
+      this.posts[index].isDisLiked = true;
+      this._api.addDisLike(_id);
+    }
+
   }
 }
 
@@ -33,6 +69,5 @@ class Post{
     this.like = 0;
     this.dislike = 0;
     this.view = 0;
-
   }
 }

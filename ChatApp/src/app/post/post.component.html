@@ -1,4 +1,50 @@
-<div class="container">Hello</div>
+<div class="container">
+    <div class="col-5 mx-auto">
+        <div *ngFor="let post of posts; index as i">
+            <div class="border p-2 rounded my-2">
+                <div class="post-header">
+                    <div class="post-title">
+                        {{  post.title }}
+                    </div>
+                    <div class="report-icon">
+                        <i class="bi bi-flag action-icon" title="report"></i>
+                    </div>
+                    <div style="clear: both;"></div>
+                    <div class="post-description">
+                        {{  post.title }}
+                    </div>
+                </div>
+                
+                <div *ngIf="post.fileDataType == 'image/png'">
+                    <img [src]="publicFolert+post.files" alt="..." class="post-image">
+                </div>
+                <div *ngIf="post.fileDataType == 'video/mp4'">
+                    <video controls class="post-image">
+                        <source [src]="publicFolert+post.files">
+                    </video>
+                </div>
+                <div class="post-action">
+                    <div class="post-like" (click)="addLike(post._id, i)">
+                        <i class="bi bi-hand-thumbs-up action-icon" *ngIf="!post.isLiked" title="like"></i>
+                        <i class="bi bi-hand-thumbs-up-fill action-icon" *ngIf="post.isLiked" title="remove like"></i>
+                        <!-- <div class="action-count"> -->
+                        {{ post.like }}
+                        <!-- </div> -->
+                    </div>
+                    <div class="post-dislike" (click)="addDisLike(post._id, i)">
+                        <i class="bi bi-hand-thumbs-down action-icon" *ngIf="!post.isDisLiked" title="dislike"></i>
+                        <i class="bi bi-hand-thumbs-down-fill action-icon" *ngIf="post.isDisLiked" title="remove dislike"></i>
+                        {{ post.dislike }}
+                    </div>
+                    <div class="post-comments">
+                        <i class="bi bi-chat-right-text action-icon" title="comments"></i>
+                        <!-- {{ post.comments }} -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <a class="add-post-btn btn btn-info" routerLink="/post/add">
     <div>

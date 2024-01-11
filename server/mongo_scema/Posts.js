@@ -15,7 +15,10 @@ const Scema = mongoose.Schema({
     files: {
         type: String,
         require: false,
-        default: [],
+    },
+    fileDataType: {
+        type: String,
+        require: false,
     },
     like: {
         type: Number,
