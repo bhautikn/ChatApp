@@ -1,0 +1,10 @@
+.nev-bar{
+    width: 90%;
+    padding: 5px 10px;
+    margin: 0 auto;
+}
+.bi-arrow-left{
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.5em;
+}

@@ -1,1 +1,82 @@
-<p>post-by-id works!</p>
+<app-back-nevigation></app-back-nevigation>
+<div class="container float-start w-50">
+    <div class="border p-2 rounded my-2">
+        <div class="post-header">
+            <div class="post-title">
+                {{ post.title }}
+            </div>
+            <div class="report-icon">
+                <i class="bi bi-flag action-icon" title="report"></i>
+            </div>
+            <div style="clear: both;"></div>
+            <div class="post-description">
+                {{ post.title }}
+            </div>
+        </div>
+
+        <div *ngIf="post.fileDataType == 'image/png'">
+            <img [src]="publicFolert+post.files" alt="..." class="post-image">
+        </div>
+        <div *ngIf="post.fileDataType == 'video/mp4'">
+            <video controls class="post-image">
+                <source [src]="publicFolert+post.files">
+            </video>
+        </div>
+        <div class="post-action">
+            <div class="post-like" (click)="addLike(post._id)">
+                <i class="bi bi-hand-thumbs-up action-icon" *ngIf="!post.isLiked" title="like"></i>
+                <i class="bi bi-hand-thumbs-up-fill action-icon" *ngIf="post.isLiked" title="remove like"></i>
+                <!-- <div class="action-count"> -->
+                {{ post.like }}
+                <!-- </div> -->
+            </div>
+            <div class="post-dislike" (click)="addDisLike(post._id)">
+                <i class="bi bi-hand-thumbs-down action-icon" *ngIf="!post.isDisLiked" title="dislike"></i>
+                <i class="bi bi-hand-thumbs-down-fill action-icon" *ngIf="post.isDisLiked" title="remove dislike"></i>
+                {{ post.dislike }}
+            </div>
+            <div class="post-view">
+                <i class="bi bi-eye fs-6" title="view"></i>
+                {{ post.view }}
+            </div>
+        </div>
+        
+    </div>
+</div>
+<div class="float-end w-50 p-2 comment-section">
+    <div class="p-2">
+        <div class="fs-5">
+            Add Comment
+        </div>
+
+        <div class="comments-holder">
+            <input type="text" class="form-control" placeholder="Name" [(ngModel)]="myName">
+            <textarea class="form-control" placeholder="Comment" [(ngModel)]="myComments"></textarea>
+            <!-- <input type="text" > -->
+            <input type="button" value="comment" class="btn btn-info float-end" (click)="postComment()">
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <hr>
+    <div class="fs-5">
+        Commnts
+    </div>
+    <div *ngFor="let comment of comments; index as i">
+        <hr>
+        <div class="fw-bold float-start">
+            {{comment.from}}
+        </div>
+        <div class="float-end">
+            {{ comment.createdAt }}
+        </div>
+        <div class="clearfix"></div>
+        <div class="px-2">
+            {{comment.text}}
+        </div>
+        <div class="p-3" (click)="likeComment(comment._id, i)">
+            <i class="bi bi-hand-thumbs-up action-icon" *ngIf="!comment.isLiked" title="like"></i>
+            <i class="bi bi-hand-thumbs-up-fill action-icon" *ngIf="comment.isLiked" title="remove like"></i>
+            {{ comment.like }}
+        </div>
+    </div>
+</div>

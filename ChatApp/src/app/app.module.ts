@@ -17,6 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PostByIdComponent } from './post/post-by-id/post-by-id.component';
 import { VideoCallComponent } from './chat-space/video-call/video-call.component';
+import { BackNevigationComponent } from './back-nevigation/back-nevigation.component';
 
 const config: SocketIoConfig = {
     url: environment.soketUrl,
@@ -32,7 +33,8 @@ const config: SocketIoConfig = {
     SideBarComponent,
     AddComponent,
     PostByIdComponent,
-    VideoCallComponent
+    VideoCallComponent,
+    BackNevigationComponent
   ],
   imports: [
     BrowserModule,

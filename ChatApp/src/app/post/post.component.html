@@ -36,10 +36,10 @@
                         <i class="bi bi-hand-thumbs-down-fill action-icon" *ngIf="post.isDisLiked" title="remove dislike"></i>
                         {{ post.dislike }}
                     </div>
-                    <div class="post-comments">
+                    <a class="post-comments" [routerLink]="post._id">
                         <i class="bi bi-chat-right-text action-icon" title="comments"></i>
                         <!-- {{ post.comments }} -->
-                    </div>
+                    </a>
                     <div class="post-view">
                         <i class="bi bi-eye fs-6" title="view"></i>
                         {{ post.view }}

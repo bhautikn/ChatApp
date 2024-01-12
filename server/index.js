@@ -12,6 +12,7 @@ const dotenv = require('dotenv');
 const jwt = require('jsonwebtoken');
 const upload = require('./file_upload')
 const Posts = require('./mongo_scema/Posts')
+const Comments = require('./mongo_scema/Comments')
 // const Reports = require('./mongo_scema/Reports')
 require('./soket')(io);
 
@@ -22,26 +23,26 @@ app.use(express.json());
 app.use("/public", express.static(path.join(__dirname, 'uploads')));
 /////////////////////////////////////////////////////////////
 
-app.get('/posts',async (req, res)=>{
+app.get('/posts', async (req, res) => {
     const data = await Posts.find();
     res.json(data);
 })
 
-app.get('/post/:id',async (req, res)=>{
-    const data = await Posts.findOne({_id: req.params.id});
+app.get('/post/:id', async (req, res) => {
+    const data = await Posts.findOne({ _id: req.params.id });
     res.json(data);
 })
 
 app.post('/post/new', upload.any(), (req, res) => {
 
-    if(!req.body.storeFileName){
+    if (!req.body.storeFileName) {
         return res.sendStatus(403);
     }
-     if(!isSet(req.body.title)){
-      return;
+    if (!isSet(req.body.title)) {
+        return;
     }
     let tagArray = [];
-    if(isSet(req.body.tags))
+    if (isSet(req.body.tags))
         tagArray = req.body.tags.split('\s');
     fileName = req.body.storeFileName;
     const _id = new mongoose.Types.ObjectId()
@@ -56,30 +57,85 @@ app.post('/post/new', upload.any(), (req, res) => {
 
     res.json({ id: _id });
 })
-app.put('/post/like/:id', async (req, res)=>{
+app.put('/post/like/:id', async (req, res) => {
     const PostId = req.params.id;
-    await Posts.updateOne({_id: PostId}, {$inc: {like: 1}});
+    if(!isSet(PostId)){
+        return res.sendStatus(403)
+    }
+    await Posts.updateOne({ _id: PostId }, { $inc: { like: 1 } });
     res.sendStatus(200);
 })
-app.put('/post/dislike/:id', async(req, res)=>{
+app.put('/post/dislike/:id', async (req, res) => {
     const PostId = req.params.id;
-    await Posts.updateOne({_id: PostId}, {$inc: {dislike: 1}});
+    if(!isSet(PostId)){
+        return res.sendStatus(403)
+    }
+    await Posts.updateOne({ _id: PostId }, { $inc: { dislike: 1 } });
     res.sendStatus(200);
 })
-app.put('/post/remove-like/:id',async (req, res)=>{
+app.put('/post/remove-like/:id', async (req, res) => {
     const PostId = req.params.id;
-    await Posts.updateOne({_id: PostId}, {$inc: {like: -1}});
+    if(!isSet(PostId)){
+        return res.sendStatus(403)
+    }
+    await Posts.updateOne({ _id: PostId }, { $inc: { like: -1 } });
     res.sendStatus(200);
 })
-app.put('/post/remove-dislike/:id', async(req, res)=>{
+app.put('/post/remove-dislike/:id', async (req, res) => {
     const PostId = req.params.id;
-    await Posts.updateOne({_id: PostId}, {$inc: {dislike: -1}});
+    if(!isSet(PostId)){
+        return res.sendStatus(403)
+    }
+    await Posts.updateOne({ _id: PostId }, { $inc: { dislike: -1 } });
     res.sendStatus(200);
 })
-app.put('/post/view/:id', async(req, res)=>{
+app.put('/post/view/:id', async (req, res) => {
     const PostId = req.params.id;
-    await Posts.updateOne({_id: PostId}, {$inc: {view: 1}});
+    if(!isSet(PostId)){
+        return res.sendStatus(403)
+    }
+    await Posts.updateOne({ _id: PostId }, { $inc: { view: 1 } });
     res.sendStatus(200);
+})
+
+app.put('/post/comment/like/:id', async (req, res) => {
+    const CommentId = req.params.id;
+    if(!isSet(CommentId)){
+        return res.sendStatus(403)
+    }
+    await Comments.updateOne({ _id: CommentId }, { $inc: { like: 1 } });
+    res.sendStatus(200);
+})
+app.put('/post/comment/remove-like/:id', async (req, res) => {
+    if(!isSet(CommentId)){
+        return res.sendStatus(403)
+    }
+    const CommentId = req.params.id;
+    const comment_id = await Comments.updateOne({ _id: CommentId }, { $inc: { like: -1 } });
+    res.sendStatus(200);
+})
+
+app.get('/post/comments/:id/', async (req, res) => {
+    const postId = req.params.id;
+    const data = await Comments.find({ postId: postId })
+    res.json(data);
+})
+
+app.post('/post/add-comment/', async (req, res) => {
+    const postId = req.body.postId;
+    const text = req.body.text;
+    const from = req.body.from;
+
+    if (!isSet(postId) || !isSet(text) || !isSet(from)) {
+        return res.sendStatus(403);
+    }
+    const data = await new Comments({
+        _id: new mongoose.Types.ObjectId(),
+        text: HTMLSPACIALCHAR(text),
+        postId: postId,
+        from: HTMLSPACIALCHAR(from),
+    }).save();
+    res.json({_id: data._id});
 })
 
 ///////////////////////////////////////////////////////////////////////////
@@ -144,8 +200,19 @@ server.listen(3000, () => {
 })
 io.attach(server);
 
-function isSet(args){
-    if(!args || args == '' || args.trim() == '')
+function isSet(args) {
+    if (!args || args == '' || args.trim() == '')
         return false;
     return true;
+}
+
+function HTMLSPACIALCHAR(str) {
+    return str.replace(/[&<>'"]/g,
+        tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            "'": '&#39;',
+            '"': '&quot;'
+        }[tag]));
 }

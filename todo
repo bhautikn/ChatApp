@@ -1,11 +1,17 @@
+///////////////// post ///////////////////////////
 fix the problem of insert tags in post/add router at backend
 upload multiple video or audio file
 image and video validation
+add comment feture
 
+
+///////////////// chat ///////////////////////////
 add video and audio call feture
-add send video and audio and image in chat
 group chat
 
+# add send video and audio and image in chat
+
+///////////////// genaral ///////////////////////////
 create light mode of application
 update nevigation bar of web
 fix nevbar toggel problem
