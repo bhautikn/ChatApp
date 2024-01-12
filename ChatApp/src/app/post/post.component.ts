@@ -16,6 +16,14 @@ export class PostComponent {
     this._api.getAll().subscribe((res:any)=>{
       this.posts = res;
     })
+    var observer = new IntersectionObserver(function(entries) {
+      if(entries[0].isIntersecting === true)
+        console.log('Element is fully visible in screen');
+    }, { threshold: [1] });
+
+    let element:any = document.querySelector(".post-title")
+    setTimeout(()=>{observer.observe(element)}, 200);
+    
   }
 
   addLike(_id:any, index:any){

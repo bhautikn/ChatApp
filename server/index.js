@@ -57,7 +57,6 @@ app.post('/post/new', upload.any(), (req, res) => {
     res.json({ id: _id });
 })
 app.put('/post/like/:id', async (req, res)=>{
-    console.log(req.params.id)
     const PostId = req.params.id;
     await Posts.updateOne({_id: PostId}, {$inc: {like: 1}});
     res.sendStatus(200);
@@ -69,12 +68,17 @@ app.put('/post/dislike/:id', async(req, res)=>{
 })
 app.put('/post/remove-like/:id',async (req, res)=>{
     const PostId = req.params.id;
-    await Posts.updateOne({_id: PostId}, {$dec: {like: 1}});
+    await Posts.updateOne({_id: PostId}, {$inc: {like: -1}});
     res.sendStatus(200);
 })
 app.put('/post/remove-dislike/:id', async(req, res)=>{
     const PostId = req.params.id;
-    await Posts.updateOne({_id: PostId}, {$dec: {dislike: 1}});
+    await Posts.updateOne({_id: PostId}, {$inc: {dislike: -1}});
+    res.sendStatus(200);
+})
+app.put('/post/view/:id', async(req, res)=>{
+    const PostId = req.params.id;
+    await Posts.updateOne({_id: PostId}, {$inc: {view: 1}});
     res.sendStatus(200);
 })
 
@@ -100,7 +104,6 @@ app.post('/crete-chat', async (req, res) => {
 app.delete('/chat/:id', (req, res) => {
     token = req.headers.token;
     id = req.header.id;
-    console.log(token);
     if (!token)
         return res.json({ ok: 0 })
     jwt.verify(token, SIGN, (err) => {
