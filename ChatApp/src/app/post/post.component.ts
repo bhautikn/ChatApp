@@ -1,6 +1,7 @@
-import { Component, ɵUSE_RUNTIME_DEPS_TRACKER_FOR_JIT } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PostApiService } from '../post-service.service';
 import { environment } from '../../environments/environment.development';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-post',
@@ -8,14 +9,21 @@ import { environment } from '../../environments/environment.development';
   styleUrl: './post.component.css'
 })
 export class PostComponent {
-  constructor(private _api:PostApiService){}
-
-  posts:any = '';
+  constructor(
+    private _api:PostApiService,
+    private _navigate: Router,
+    ){}
+    
+  @Input() posts: any;
+  // posts:any = [];
   publicFolert:any = environment.apiUrl+'public/';
+  isShowSearch:boolean = false;
   ngOnInit(){
-    this._api.getAll().subscribe((res:any)=>{
-      this.posts = res;
-    })
+    if(!this.posts){
+      this._api.getAll().subscribe((res:any)=>{
+        this.posts = res;
+      })
+    }
     // var observer = new IntersectionObserver(function(entries) {
     //   if(entries[0].isIntersecting === true)
     //     console.log('Element is fully visible in screen');
@@ -59,10 +67,14 @@ export class PostComponent {
       this.posts[index].isDisLiked = true;
       this._api.addDisLike(_id);
     }
-
   }
-  redirect(post:any){
-    console.log(post);
+  redirect(path:any){
+    this._navigate.navigate([path]);
+  }
+  handleSearch(e:any){
+    if(e.keyCode == 13){
+      this.redirect('/post/search/'+e.target.value);
+    }
   }
 }
 

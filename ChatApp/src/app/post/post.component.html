@@ -1,4 +1,11 @@
-<div class="container">
+<div class="seach-bar">
+    <input type="search" class="form-control seach-bar-text" *ngIf="isShowSearch" (keyup)="handleSearch($event)">
+    <button class="btn float-end action-icon border search-icon" title="search" (click)="isShowSearch = !isShowSearch">
+        <i class="bi bi-search"></i>
+    </button>
+</div>
+
+<div class="container" *ngIf="posts.length > 0">
     <div class="col-5 mx-auto">
         <div *ngFor="let post of posts; index as i">
             <div class="border p-2 rounded my-2">
@@ -9,12 +16,11 @@
                     <div class="report-icon">
                         <i class="bi bi-flag action-icon" title="report"></i>
                     </div>
-                    <div style="clear: both;"></div>
+                    <div class="clearfix"></div>
                     <div class="post-description">
-                        {{  post.title }}
+                        {{  post.description }}
                     </div>
                 </div>
-                
                 <div *ngIf="post.fileDataType == 'image/png'">
                     <img [src]="publicFolert+post.files" alt="..." class="post-image">
                 </div>
@@ -25,23 +31,25 @@
                 </div>
                 <div class="post-action">
                     <div class="post-like" (click)="addLike(post._id, i)">
-                        <i class="bi bi-hand-thumbs-up action-icon" *ngIf="!post.isLiked" title="like"></i>
-                        <i class="bi bi-hand-thumbs-up-fill action-icon" *ngIf="post.isLiked" title="remove like"></i>
+                        <i class="bi bi-hand-thumbs-up action-icon btn" *ngIf="!post.isLiked" title="like"></i>
+                        <i class="bi bi-hand-thumbs-up-fill action-icon btn" *ngIf="post.isLiked" title="remove like"></i>
                         <!-- <div class="action-count"> -->
                         {{ post.like }}
                         <!-- </div> -->
                     </div>
                     <div class="post-dislike" (click)="addDisLike(post._id, i)">
-                        <i class="bi bi-hand-thumbs-down action-icon" *ngIf="!post.isDisLiked" title="dislike"></i>
-                        <i class="bi bi-hand-thumbs-down-fill action-icon" *ngIf="post.isDisLiked" title="remove dislike"></i>
+                        <i class="bi bi-hand-thumbs-down action-icon btn" *ngIf="!post.isDisLiked" title="dislike"></i>
+                        <i class="bi bi-hand-thumbs-down-fill action-icon btn" *ngIf="post.isDisLiked" title="remove dislike"></i>
                         {{ post.dislike }}
                     </div>
-                    <a class="post-comments" [routerLink]="post._id">
-                        <i class="bi bi-chat-right-text action-icon" title="comments"></i>
-                        <!-- {{ post.comments }} -->
-                    </a>
+                    <div class="post-comments">
+                        <a [routerLink]="'/post/'+post._id">
+                            <i class="bi bi-chat-right-text action-icon btn" title="comments"></i>
+                        </a>
+                        {{ post.comments }}
+                    </div>
                     <div class="post-view">
-                        <i class="bi bi-eye fs-6" title="view"></i>
+                        <i class="bi bi-eye fs-6 btn" title="view"></i>
                         {{ post.view }}
                     </div>
                 </div>
@@ -49,7 +57,9 @@
         </div>
     </div>
 </div>
-
+<div *ngIf="posts.length == 0" class="fs-2 text-center p-5 text-secondary">
+    No such Record found
+</div>
 <a class="add-post-btn btn btn-info" routerLink="/post/add">
     <div>
         <i class="bi bi-plus"></i>

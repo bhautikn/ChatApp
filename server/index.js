@@ -29,8 +29,13 @@ app.get('/posts', async (req, res) => {
 })
 
 app.get('/post/:id', async (req, res) => {
-    const data = await Posts.findOne({ _id: req.params.id });
-    res.json(data);
+    try{
+        const data = await Posts.findOne({ _id: req.params.id });    
+        res.json(data);
+    }catch(e){
+        console.log(e);
+        res.sendStatus(500);
+    }
 })
 
 app.post('/post/new', upload.any(), (req, res) => {
@@ -59,7 +64,7 @@ app.post('/post/new', upload.any(), (req, res) => {
 })
 app.put('/post/like/:id', async (req, res) => {
     const PostId = req.params.id;
-    if(!isSet(PostId)){
+    if (!isSet(PostId)) {
         return res.sendStatus(403)
     }
     await Posts.updateOne({ _id: PostId }, { $inc: { like: 1 } });
@@ -67,7 +72,7 @@ app.put('/post/like/:id', async (req, res) => {
 })
 app.put('/post/dislike/:id', async (req, res) => {
     const PostId = req.params.id;
-    if(!isSet(PostId)){
+    if (!isSet(PostId)) {
         return res.sendStatus(403)
     }
     await Posts.updateOne({ _id: PostId }, { $inc: { dislike: 1 } });
@@ -75,7 +80,7 @@ app.put('/post/dislike/:id', async (req, res) => {
 })
 app.put('/post/remove-like/:id', async (req, res) => {
     const PostId = req.params.id;
-    if(!isSet(PostId)){
+    if (!isSet(PostId)) {
         return res.sendStatus(403)
     }
     await Posts.updateOne({ _id: PostId }, { $inc: { like: -1 } });
@@ -83,7 +88,7 @@ app.put('/post/remove-like/:id', async (req, res) => {
 })
 app.put('/post/remove-dislike/:id', async (req, res) => {
     const PostId = req.params.id;
-    if(!isSet(PostId)){
+    if (!isSet(PostId)) {
         return res.sendStatus(403)
     }
     await Posts.updateOne({ _id: PostId }, { $inc: { dislike: -1 } });
@@ -91,7 +96,7 @@ app.put('/post/remove-dislike/:id', async (req, res) => {
 })
 app.put('/post/view/:id', async (req, res) => {
     const PostId = req.params.id;
-    if(!isSet(PostId)){
+    if (!isSet(PostId)) {
         return res.sendStatus(403)
     }
     await Posts.updateOne({ _id: PostId }, { $inc: { view: 1 } });
@@ -100,14 +105,14 @@ app.put('/post/view/:id', async (req, res) => {
 
 app.put('/post/comment/like/:id', async (req, res) => {
     const CommentId = req.params.id;
-    if(!isSet(CommentId)){
+    if (!isSet(CommentId)) {
         return res.sendStatus(403)
     }
     await Comments.updateOne({ _id: CommentId }, { $inc: { like: 1 } });
     res.sendStatus(200);
 })
 app.put('/post/comment/remove-like/:id', async (req, res) => {
-    if(!isSet(CommentId)){
+    if (!isSet(CommentId)) {
         return res.sendStatus(403)
     }
     const CommentId = req.params.id;
@@ -120,7 +125,13 @@ app.get('/post/comments/:id/', async (req, res) => {
     const data = await Comments.find({ postId: postId })
     res.json(data);
 })
-
+app.get('/posts/search/:text', async (req, res) => {
+    const searchText = req.params.text;
+    if (isSet(searchText)) {
+        const data = await Posts.find({ title: { $regex: searchText , $options: 'i' } })
+        res.json(data);
+    }
+})
 app.post('/post/add-comment/', async (req, res) => {
     const postId = req.body.postId;
     const text = req.body.text;
@@ -129,16 +140,19 @@ app.post('/post/add-comment/', async (req, res) => {
     if (!isSet(postId) || !isSet(text) || !isSet(from)) {
         return res.sendStatus(403);
     }
+    await Posts.updateOne({ _id: postId }, { $inc: { comments: 1 } });
     const data = await new Comments({
         _id: new mongoose.Types.ObjectId(),
         text: HTMLSPACIALCHAR(text),
         postId: postId,
         from: HTMLSPACIALCHAR(from),
     }).save();
-    res.json({_id: data._id});
+    res.json({ _id: data._id });
 })
 
 ///////////////////////////////////////////////////////////////////////////
+
+
 app.post('/crete-chat', async (req, res) => {
     password = req.body.password;
     token = crypto.randomBytes(20).toString('hex');

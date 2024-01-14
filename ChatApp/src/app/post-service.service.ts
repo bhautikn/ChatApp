@@ -32,7 +32,9 @@ export class PostApiService {
   postComment(data:any){
     return this._http.post(this.url+'post/add-comment/', data);
   }
-
+  searchPost(data:any){
+    return this._http.get(this.url+'posts/search/'+data.text);
+  }
   addLike(_id:any){
     console.log(this.url+'/post/like/'+_id);
     return this._http.put(this.url+'post/like/'+_id, {}).subscribe();

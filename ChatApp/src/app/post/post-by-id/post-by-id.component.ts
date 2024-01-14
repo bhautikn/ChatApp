@@ -17,7 +17,7 @@ export class PostByIdComponent {
     private _navigate: Router,
     private _gif_api:GifApiService
   ){}
-  postComponentFunction:any = new PostComponent(this._api);
+  // postComponentFunction:any = new PostComponent(this._api);
 
   id:any = this._route.snapshot.params['id'];
   post:any = {};

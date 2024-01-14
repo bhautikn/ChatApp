@@ -33,7 +33,7 @@
     padding: 5px 0;
 }
 .post-action{
-    padding: 15px;
+    padding: 10px;
     border-radius: 20px;
     margin: 10px 0;
     display: flex;
@@ -58,4 +58,19 @@
 }
 .post-view{
     margin-left: auto;
+    padding: 0 10px;
+}
+.seach-bar{
+    width: 30%;
+    float: right;
+    display: flex;
+    gap: 5px;
+    padding: 10px;
+}
+.search-icon{
+    margin-left: auto;
+}
+.seach-bar-text{
+    position: relative !important;
+    left: 0 !important;
 }

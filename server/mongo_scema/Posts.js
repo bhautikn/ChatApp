@@ -22,17 +22,18 @@ const Scema = mongoose.Schema({
     },
     like: {
         type: Number,
-        require: false,
         default: 0,
     },
     dislike: {
         type: Number,
-        require: false,
         default: 0,
     },
     view: {
         type: Number,
-        require: false,
+        default: 0,
+    },
+    comments: {
+        type: Number,
         default: 0,
     },
     tag: [{ type: String }],
