@@ -1,0 +1,44 @@
+.links{
+    font-size: 1.1em;
+    border-radius: 10px;
+    padding: 10px 20px;
+}
+.links a{
+    text-decoration: none;
+}
+.links:hover{
+    transition-duration: 200ms;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.live-posts{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.live-icon{
+    float: left;
+	border-radius: 50%;
+	height: 10px;
+	width: 10px;
+    background: rgba(255, 82, 82, 1);
+	box-shadow: 0 0 0 0 rgba(255, 82, 82, 1);
+	animation: pulse-red 1.5s infinite;
+}
+
+@keyframes pulse-red {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(255, 82, 82, 0.7);
+	}
+	
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(255, 82, 82, 0);
+	}
+	
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(255, 82, 82, 0);
+	}
+}

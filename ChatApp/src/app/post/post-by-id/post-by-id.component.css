@@ -1,53 +1,3 @@
-.add-post-btn{
-    position: fixed;
-    right: 20px;
-    bottom: 30px;
-    align-items: center;
-    display: flex;
-    text-align: center;
-}
-.post-image{
-    max-width: 100%;
-    border: 1px solid grey;
-    border-radius: 20px;
-}
-.post-title{
-    font-weight: bold;
-    font-size: 1.5em;
-}
-.post-header{
-    padding: 20px;
-}
-.post-description{
-    padding: 5px 0;
-}
-.post-action{
-    padding: 15px;
-    border-radius: 20px;
-    margin: 10px 0;
-    display: flex;
-    gap: 20px;
-    background-color: rgba(0, 0, 0, 0.2);
-}
-.action-icon{
-    font-size: 1.2em;
-    cursor: pointer;
-    border-radius: 10px;
-    padding: 10px 15px;
-}
-.action-icon:hover{
-    background-color: rgba(0, 0, 0, 0.3);
-    transition-duration: 200ms;
-}
-.post-title{
-    float: left;
-}
-.report-icon{
-    float: right;
-}
-.post-view{
-    margin-left: auto;
-}
 .comments-holder{
     bottom: 10px;
     width: 100%;
@@ -61,4 +11,18 @@
 .comment-section{
     height: 100vh;
     overflow-y: auto;
+}
+.loading-div{
+    border-radius: 50%;
+    border: 4px solid var(--text);
+    border-top: 4px solid var(--background);
+    height: 30px;
+    width: 30px;
+    margin: 10px auto;
+    animation: loading-div-ani 500ms infinite linear;
+}
+@keyframes loading-div-ani {
+    to{
+        transform: rotate(360deg);
+    }
 }

@@ -19,6 +19,11 @@ import { PostByIdComponent } from './post/post-by-id/post-by-id.component';
 import { VideoCallComponent } from './chat-space/video-call/video-call.component';
 import { BackNevigationComponent } from './back-nevigation/back-nevigation.component';
 import { SearchComponent } from './post/search/search.component';
+import { SidebarComponent } from './post/sidebar/sidebar.component';
+import { LiveComponent } from './post/live/live.component';
+import { SinglePostComponent } from './post/single-post/single-post.component';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { InfiniteScrollModule } from "ngx-infinite-scroll";
 
 const config: SocketIoConfig = {
     url: environment.soketUrl,
@@ -36,7 +41,10 @@ const config: SocketIoConfig = {
     PostByIdComponent,
     VideoCallComponent,
     BackNevigationComponent,
-    SearchComponent
+    SearchComponent,
+    SidebarComponent,
+    LiveComponent,
+    SinglePostComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +56,7 @@ const config: SocketIoConfig = {
     CommonModule,
     SocketIoModule.forRoot(config),
     BrowserAnimationsModule,
+    InfiniteScrollModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

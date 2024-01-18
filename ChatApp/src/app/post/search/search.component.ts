@@ -1,4 +1,4 @@
-import { CSP_NONCE, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { PostApiService } from '../../post-service.service';
 import { ActivatedRoute } from '@angular/router';
 

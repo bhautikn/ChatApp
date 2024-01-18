@@ -10,7 +10,7 @@
     <textarea class="form-control" placeholder="Description" [(ngModel)]="data.description">
     </textarea>
     <br>
-    <input type="file" (change)="imageData($event)">
+    <input class="form-control" type="file" id="formFile" (change)="imageData($event)" accept="video/*, image/*">
     <br>
     <input type="submit" value="post" class="btn btn-info mt-3" (click)="submitForm()">
     <br>

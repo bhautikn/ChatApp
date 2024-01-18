@@ -27,12 +27,17 @@ app.get('/posts', async (req, res) => {
     const data = await Posts.find();
     res.json(data);
 })
-
+app.get('/some-posts/:from/:to', async (req, res) => {
+    const from = req.params.from;
+    const to = req.params.to;
+    const data = await Posts.find().skip(from).limit(to - from);
+    res.json(data);
+})
 app.get('/post/:id', async (req, res) => {
-    try{
-        const data = await Posts.findOne({ _id: req.params.id });    
+    try {
+        const data = await Posts.findOne({ _id: req.params.id });
         res.json(data);
-    }catch(e){
+    } catch (e) {
         console.log(e);
         res.sendStatus(500);
     }
@@ -44,19 +49,20 @@ app.post('/post/new', upload.any(), (req, res) => {
         return res.sendStatus(403);
     }
     if (!isSet(req.body.title)) {
-        return;
+        return res.sendStatus(403);
     }
     let tagArray = [];
     if (isSet(req.body.tags))
-        tagArray = req.body.tags.split('\s');
+        tagArray = req.body.tags.split(' ');
     fileName = req.body.storeFileName;
     const _id = new mongoose.Types.ObjectId()
+    console.log(tagArray);
     new Posts({
         _id: _id,
         title: req.body.title,
         description: req.body.description,
         files: fileName,
-        tags: [tagArray],
+        tags: tagArray,
         fileDataType: req.body.mimetype,
     }).save();
 
@@ -105,6 +111,7 @@ app.put('/post/view/:id', async (req, res) => {
 
 app.put('/post/comment/like/:id', async (req, res) => {
     const CommentId = req.params.id;
+
     if (!isSet(CommentId)) {
         return res.sendStatus(403)
     }
@@ -116,19 +123,24 @@ app.put('/post/comment/remove-like/:id', async (req, res) => {
         return res.sendStatus(403)
     }
     const CommentId = req.params.id;
-    const comment_id = await Comments.updateOne({ _id: CommentId }, { $inc: { like: -1 } });
+    await Comments.updateOne({ _id: CommentId }, { $inc: { like: -1 } });
     res.sendStatus(200);
 })
 
-app.get('/post/comments/:id/', async (req, res) => {
+app.get('/post/comments/:id/:from/:to', async (req, res) => {
     const postId = req.params.id;
-    const data = await Comments.find({ postId: postId })
+    const from = req.params.from;
+    const to = req.params.to;
+    const data = await Comments.find({ postId: postId }).skip(from).limit(to - from);
+    if (data.length === 0) {
+        return res.json({ dataOver: true });
+    }
     res.json(data);
 })
 app.get('/posts/search/:text', async (req, res) => {
     const searchText = req.params.text;
     if (isSet(searchText)) {
-        const data = await Posts.find({ title: { $regex: searchText , $options: 'i' } })
+        const data = await Posts.find({ title: { $regex: searchText, $options: 'i' } })
         res.json(data);
     }
 })
@@ -185,6 +197,7 @@ app.delete('/chat/:id', (req, res) => {
 })
 ///////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////
+
 app.post('/authanticate', async (req, res) => {
     password = req.body.password;
     token = req.body.token;

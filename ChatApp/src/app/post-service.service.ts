@@ -12,6 +12,12 @@ export class PostApiService {
   getAll(){
     return this._http.get(this.url + 'posts');
   }
+  getLimitedPost(from:number, to:number){
+    return this._http.get(this.url+ 'some-posts/'+from+'/'+to);
+  }
+  getLimitedComment(from:number, to:number, id: any){
+    return this._http.get(this.url+'post/comments/'+id+'/'+from+'/'+to);
+  }
   getById(id: any){
     return this._http.get(this.url+'post/'+id);
   }

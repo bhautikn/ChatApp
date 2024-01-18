@@ -36,7 +36,7 @@ const Scema = mongoose.Schema({
         type: Number,
         default: 0,
     },
-    tag: [{ type: String }],
+    tag: [String],
 }, { timestamps: true });
 
 module.exports = mongoose.model('Post', Scema);

@@ -1,0 +1,45 @@
+.add-post-btn{
+    position: fixed;
+    right: 20px;
+    bottom: 30px;
+    align-items: center;
+    display: flex;
+    text-align: center;
+}
+.live-icon{
+    text-align: center;
+    font-size: 2em;
+    margin: 20px;
+}
+
+.live-icon{
+    float: left;
+	border-radius: 50%;
+	height: 12px;
+	width: 12px;
+    background: black;
+	box-shadow: 0 0 0 0 black;
+	animation: pulse-red 1.5s infinite;
+}
+.add-post-btn .text-option{
+    display: none;
+}
+.add-post-btn:hover .text-option{
+    display: block;
+}
+@keyframes pulse-red {
+	0% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+	}
+	
+	70% {
+		transform: scale(1);
+		box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+	}
+	
+	100% {
+		transform: scale(0.95);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	}
+}
