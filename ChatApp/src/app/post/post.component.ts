@@ -11,39 +11,40 @@ import { of } from 'rxjs';
 })
 export class PostComponent {
   constructor(
-    private _api:PostApiService,
+    private _api: PostApiService,
     private _navigate: Router,
-  ){}
-    
-  @Input() posts:any = [];
+  ) { }
+
+  @Input() posts: any = [];
   // posts:any = [];
 
-  postsPerScroll:number = 3;
-  isShowSearch:boolean = false;
-  start:number = 0;
-  ngOnInit(){
-    if(this.posts.length == 0){
+  postsPerScroll: number = 3;
+  isShowSearch: boolean = false;
+  start: number = 0;
+  ngOnInit() {
+    if (this.posts.length == 0) {
       this.nextPosts();
     }
+    
   }
 
-  redirect(path:any){
+  redirect(path: any) {
     this._navigate.navigate([path]);
   }
-  nextPosts(){
-    this._api.getLimitedPost(this.start, this.start+this.postsPerScroll).subscribe((res:any)=>{
+  nextPosts() {
+    this._api.getLimitedPost(this.start, this.start + this.postsPerScroll).subscribe((res: any) => {
       of(res).subscribe({
         next: response => {
-          this.posts = [...this.posts, ...response]
+          this.posts = [...this.posts, ...response];
         },
         error: console.log
       })
       this.start += this.postsPerScroll;
     })
   }
-  handleSearch(e:any){
-    if(e.keyCode == 13){
-      this.redirect('/post/search/'+e.target.value);
+  handleSearch(e: any) {
+    if (e.keyCode == 13) {
+      this.redirect('/post/search/' + e.target.value);
     }
   }
 

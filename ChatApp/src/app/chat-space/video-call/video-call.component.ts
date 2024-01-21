@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, booleanAttribute } from '@angular/core';
 import { ChattingSoketService } from '../../chatting-soket.service';
 import { ActivatedRoute } from '@angular/router';
 
@@ -22,29 +22,13 @@ export class VideoCallComponent {
     this._chat.join(this.authToken);
     this.setMyVideo();
 
-
-    // const otherVideo: any = document.querySelector('.otherVideo');
-
-    // const mediaSource = new MediaSource();
-
-    // otherVideo.src = URL.createObjectURL(mediaSource);
-    // let sourceBuffer:any;
-    // mediaSource.addEventListener('sourceopen', ()=>{
-    //   sourceBuffer = mediaSource.addSourceBuffer('video/webm;codecs=vp8');
-    // })
-    // this._chat.onStreamVideo().subscribe((data: any) => {
-
-
-    //   let fileReader = new FileReader();
-    //   let arrayBuffer;
-
-    //   fileReader.onloadend = () => {
-    //       arrayBuffer = fileReader.result;
-    //       sourceBuffer.appendBuffer(arrayBuffer)
-    //   }
-    //   fileReader.readAsArrayBuffer(new Blob([data.data]));
-
-    // })
+    const otherVideo: any = document.querySelector('.otherVideo');
+  
+    this._chat.onStreamVideo().subscribe((data: any) => {
+      let file = new File([new Blob([data])],'sdsds.mp4', {type: 'video/mp4'})
+      let objUrl = URL.createObjectURL(file);
+      otherVideo.src = objUrl;
+    });
 
   }
   async setMyVideo() {
@@ -60,17 +44,21 @@ export class VideoCallComponent {
     });
 
   }
+  bool:boolean = true
   processStream(stream: any) {
     const mediaRecorder = new MediaRecorder(stream)
 
     mediaRecorder.ondataavailable = (data) => {
+      if(this.bool){
+        this.bool = false;
+      }
       this._chat.streamVideo(this.authToken, data.data);
     }
     mediaRecorder.start()
 
     setInterval(() => {
       mediaRecorder.requestData()
-    }, 2000)
+    }, 3000)
   }
 
 

@@ -8,7 +8,6 @@
             <div class="fs-5">
                 Add Comment
             </div>
-
             <div class="comments-holder">
                 <input type="text" class="form-control" placeholder="Name" [(ngModel)]="myName">
                 <textarea class="form-control" placeholder="Comment" [(ngModel)]="myComments"></textarea>
@@ -47,6 +46,6 @@
         ></div>
         <hr>
         <div class="loading-div" *ngIf="!dataOver"></div>
-        <div class="text-center" *ngIf="dataOver">- - -</div>
+        <div class="text-center" *ngIf="dataOver"><i class="bi bi-three-dots"></i></div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-<div class="border p-2 rounded my-2">
+<div class="border p-2 rounded my-2 target-posts-outer" [id]="post._id">
     <div class="post-header">
         <div class="post-title">
             {{  post.title }}
@@ -14,7 +14,7 @@
             {{  post.description }}
         </div>
     </div>
-    <div *ngIf="post.fileDataType == 'image/png'">
+    <div *ngIf="post.fileDataType == 'image/png'" (click)="showImage(publicFoler+post.files)">
         <img [src]="publicFoler+post.files" alt="..." class="post-image">
     </div>
     <div *ngIf="post.fileDataType == 'video/mp4'">

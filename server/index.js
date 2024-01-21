@@ -101,11 +101,15 @@ app.put('/post/remove-dislike/:id', async (req, res) => {
     res.sendStatus(200);
 })
 app.put('/post/view/:id', async (req, res) => {
-    const PostId = req.params.id;
-    if (!isSet(PostId)) {
+    const postId = req.params.id;
+    if (!isSet(postId)) {
         return res.sendStatus(403)
     }
-    await Posts.updateOne({ _id: PostId }, { $inc: { view: 1 } });
+    try{
+        await Posts.updateOne({ _id: postId }, { $inc: { view: 1 } });
+    }catch(e){
+        console.log(e);
+    }
     res.sendStatus(200);
 })
 
@@ -119,14 +123,25 @@ app.put('/post/comment/like/:id', async (req, res) => {
     res.sendStatus(200);
 })
 app.put('/post/comment/remove-like/:id', async (req, res) => {
+    const CommentId = req.params.id;
     if (!isSet(CommentId)) {
         return res.sendStatus(403)
     }
-    const CommentId = req.params.id;
     await Comments.updateOne({ _id: CommentId }, { $inc: { like: -1 } });
     res.sendStatus(200);
 })
-
+// app.put('/post/view/:id', async (req, res) => {
+//     const postId = req.params.id;
+//     if (!isSet(postId)) {
+//         return res.sendStatus(403);
+//     }
+//     try{
+//         await Posts.updateOne({ _id: postId }, { $inc: { view: 1 } });
+//     }catch(e){
+//         console.log(e);
+//     }
+//     res.sendStatus(200);
+// })
 app.get('/post/comments/:id/:from/:to', async (req, res) => {
     const postId = req.params.id;
     const from = req.params.from;

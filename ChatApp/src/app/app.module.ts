@@ -24,6 +24,7 @@ import { LiveComponent } from './post/live/live.component';
 import { SinglePostComponent } from './post/single-post/single-post.component';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
+import { UploadComponent } from './post/live/upload/upload.component';
 
 const config: SocketIoConfig = {
     url: environment.soketUrl,
@@ -44,7 +45,8 @@ const config: SocketIoConfig = {
     SearchComponent,
     SidebarComponent,
     LiveComponent,
-    SinglePostComponent
+    SinglePostComponent,
+    UploadComponent
   ],
   imports: [
     BrowserModule,

@@ -9,7 +9,6 @@ export const environment = {
 };
 
 export const formateTime = (date:any) => {
-    console.log(date);
     const curruntDate:any = new Date();
     date = new Date(date);
     var seconds = Math.floor((curruntDate - date) / 1000);
