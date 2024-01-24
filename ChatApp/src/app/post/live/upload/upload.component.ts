@@ -10,12 +10,14 @@ import { HttpEventType } from '@angular/common/http';
 export class UploadComponent {
   constructor(private _api: PostApiService) { }
 
+  liveVideoToken:any = '';
   videoId: string = '';
   progress: number = 0;
   formData: FormData = new FormData();
   isDone: boolean = false;
   isFaild: boolean = false;
   data: Form = new Form()
+  isLive:boolean = false;
 
   submitForm() {
     this.formData.append('name', this.data.name as string);
@@ -24,11 +26,20 @@ export class UploadComponent {
     this.formData.append('tags', this.data.tags as string);
     this.progress = 1;
 
-    this._api.newPost(this.formData).subscribe((res: any) => {
-      if (res.status == 403) {
-        this.isFaild = true;
-        this.isDone = false;
-        return;
+    this._api.newLive(this.formData).subscribe((res: any) => {
+      if (res.status == 200) {
+        this.liveVideoToken = res.token;
+        console.log(this.liveVideoToken);
+        this.clearForm();
+        this.isLive = true;
+        navigator.mediaDevices.getUserMedia({
+          audio:true,
+          video:true
+        }).then((stream)=>{
+          let liveVideo:any = document.querySelector('#live-video');
+          liveVideo.srcObject = stream;
+          this.handelStream(stream);
+        })
       }
       else {
         if (res.type == HttpEventType.UploadProgress)
@@ -40,24 +51,18 @@ export class UploadComponent {
             this.progress = 0;
             this.isDone = true;
             this.isFaild = false;
-            this.clearForm();
           }, 500)
         }
       }
     })
   }
 
-  imageData(e: any) {
-    const file: File = e.target.files[0];
-    if (file)
-      this.formData.append('file', file);
-  }
-
   clearForm() {
     this.data = new Form();
     this.formData = new FormData()
-    let temp: any = document.querySelector('input[type="file"]');
-    temp.value = ''
+  }
+  handelStream(stream:any){
+    console.log(stream);  
   }
 }
 class Form {

@@ -1,5 +1,5 @@
 <app-back-nevigation></app-back-nevigation>
-<div class="container col-4">
+<div class="container col-4" *ngIf="!isLive">
     <br>
     <input class="form-control" type="text" placeholder="Name" [(ngModel)]="data.name">
     <br>
@@ -10,27 +10,9 @@
     <textarea class="form-control" placeholder="Description" [(ngModel)]="data.description">
     </textarea>
     <br>
-    <input class="form-control" type="file" id="formFile" (change)="imageData($event)" accept="video/*, image/*">
+    <input type="submit" value="Live" class="btn btn-info mt-3" (click)="submitForm()">
     <br>
-    <input type="submit" value="post" class="btn btn-info mt-3" (click)="submitForm()">
-    <br>
-    <br>
-    <div class="progress" *ngIf="progress">
-        <div class="progress-bar" [style.width]="progress + '%'">{{progress}}%</div>
-    </div>
-    <div *ngIf="isDone">
-        <section class="c-container">
-  
-            <div class="o-circle c-container__circle o-circle__sign--success">
-              <div class="o-circle__sign"></div>  
-            </div>   
-            
-        </section>
-        <div style="text-align: center;">Post is Uploaded <a [routerLink]="'/post/' + videoId">see</a></div>
-    </div>
-    <div *ngIf="isFaild">
-        <div class="o-circle c-container__circle o-circle__sign--failure">
-            <div class="o-circle__sign"></div>  
-          </div>
-    </div>
+</div>
+<div *ngIf="isLive">
+    <video id="live-video" autoplay></video>
 </div>

@@ -4,12 +4,22 @@
         <div class="call-text">Calling ...</div>
     </div> -->
     <div>
-        <video class="otherVideo" autoplay controls></video>
+        <video class="otherVideo" autoplay></video>
     </div>
     <div class="myVideoContainer">
         <video class="myVideo" autoplay> </video>
     </div>
 </div>
-<div class="footer">
-
+<div class="sidebar-controls">
+    <div class="controls-icon">
+        <i class="bi bi-mic" *ngIf="isAudio" (click)="isAudio = false"></i>
+        <i class="bi bi-mic-mute" *ngIf="!isAudio" (click)="isAudio = true"></i>
+    </div>
+    <div class="controls-icon">
+        <i class="bi bi-camera-video" *ngIf="isVideo" (click)="setVideo(true)"></i>
+        <i class="bi bi-camera-video-off" *ngIf="!isVideo" (click)="setVideo(false)"></i>
+    </div>
+    <div class="controls-icon bg-danger" (click)="endCall()">
+        <i class="bi bi-telephone"></i>
+    </div>
 </div>

@@ -76,6 +76,7 @@ export class ChatSpaceComponent implements OnInit{
 
     this._chat.onReqVideoCall().subscribe((func:any)=>{
       this.incomingRing.play()
+      // console.log(func);
       // this.incomingRing.loop=true;
 
       Swal.fire({

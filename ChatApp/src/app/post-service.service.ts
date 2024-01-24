@@ -35,6 +35,9 @@ export class PostApiService {
         observe: "events"
       });
   }
+  newLive(data:any){
+    return this._http.post(this.url+'live/new', data);
+  }
   postComment(data: any) {
     return this._http.post(this.url + 'post/add-comment/', data);
   }

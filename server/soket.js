@@ -16,7 +16,7 @@ module.exports = (io) => {
 
     io.on('connection', (socket) => {
 
-        socket.on('join', async (authToken) => {
+        socket.on('join', async (authToken, callback) => {
             let token;
             let login = false;
             jwt.verify(authToken, SIGN, (err, data) => {
@@ -62,7 +62,8 @@ module.exports = (io) => {
                             '"': '&quot;'
                           }[tag]));
                     }
-                    const freind = await getFreindId(socket.id);
+                    // const freind = await getFreindId(socket.id);
+                    const freind = await getFreindByToken(data.token, socket.id);
                     io.to(freind).emit('recive', {massage: massage, dataType: dataType});
                 }
             })
@@ -74,7 +75,7 @@ module.exports = (io) => {
                 if(err){
                     return socket.emit('error', 'Somthing Went Wrong');
                 }else{
-                    const freind = await getFreindByToken(data.token, socket.id);;
+                    const freind = await getFreindByToken(data.token, socket.id);
                     io.to(freind).volatile.emit('streamVideo', videoData)
                 }
             });
@@ -86,11 +87,11 @@ module.exports = (io) => {
                 }
                 const freind = await getFreindByToken(data.token, socket.id);
 
-                io.timeout(1000).to(freind).emit('reqVideoCall', (err, res)=>{
+                io.timeout(1000).to(freind).emit('reqVideoCall',(err, res)=>{
                     if(err) callback('err');
                     if(res[0] == true) callback(true);
                     else if(res[0] == false) callback(false);
-                })
+                }) 
             })
         })
         

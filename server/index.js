@@ -23,6 +23,31 @@ app.use(express.json());
 app.use("/public", express.static(path.join(__dirname, 'uploads')));
 /////////////////////////////////////////////////////////////
 
+
+app.post('/live/new', async (req, res) => {
+
+    if (!isSet(req.body.title)) {
+        return res.sendStatus(403);
+    }
+    let tagArray = [];
+    if (isSet(req.body.tags))
+        tagArray = req.body.tags.split(' ');
+    const _id = new mongoose.Types.ObjectId()
+    console.log(tagArray);
+    new Posts({
+        _id: _id,
+        title: req.body.title,
+        description: req.body.description,
+        files: fileName,
+        tags: tagArray,
+        fileDataType: req.body.mimetype,
+    }).save();
+    res.json({ token: jwt.sign({ id: _id }, SIGN) });
+})
+
+
+
+
 app.get('/posts', async (req, res) => {
     const data = await Posts.find();
     res.json(data);
@@ -105,9 +130,9 @@ app.put('/post/view/:id', async (req, res) => {
     if (!isSet(postId)) {
         return res.sendStatus(403)
     }
-    try{
+    try {
         await Posts.updateOne({ _id: postId }, { $inc: { view: 1 } });
-    }catch(e){
+    } catch (e) {
         console.log(e);
     }
     res.sendStatus(200);
