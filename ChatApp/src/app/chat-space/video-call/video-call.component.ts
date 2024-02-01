@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ChattingSoketService } from '../../chatting-soket.service';
 import { ActivatedRoute } from '@angular/router';
-import {Peer} from 'peerjs';
+import { Peer } from 'peerjs';
 
 @Component({
   selector: 'app-video-call',
@@ -12,63 +12,44 @@ export class VideoCallComponent {
   constructor(
     private _chat: ChattingSoketService,
     private _route: ActivatedRoute,
-  ) { }
+    ) { }
+    
+    @Output() onCutVideoCall: EventEmitter<any> = new EventEmitter();
+    @Input() authToken: any;
 
-  @Output() onCutVideoCall: EventEmitter<any> = new EventEmitter();
-
-  urlToken: any = this._route.snapshot.params['token'];
-  authToken = localStorage[this.urlToken];
   isConnected: boolean = true;
-  // peer:Peer = new Peer();
+  peerClient: Peer = new Peer();
 
-  isVideo:boolean = true;
-  isAudio:boolean = true;
-  video:any = null;
+  isVideo: boolean = true;
+  isAudio: boolean = true;
+  video: any = null;
+  freindpeerToken:any = null;
+
   ngOnInit() {
+
+
+    this.peerClient.on('open', (id)=>{
+      this._chat.sendPeerConnectionId(this.authToken, id);
+    })
+
     this.dragElement(document.querySelector(".myVideoContainer"));
-    // this._chat.join(this.authToken);
-    this.setMyVideo();
-    // this._chat.onOtherUid()
     const otherVideo: any = document.querySelector('.otherVideo');
 
-    // this.peer.on('call', (call) => {
-    //   call.answer();
-    //   call.on('stream', (stream) => {
-    //     otherVideo.srcObject = stream;
-    //     otherVideo.addEventListener('loadedmetadata', () => {
-    //       otherVideo.play();
-    //     });
-    //   });
-    // });
-
-
-    var blobs: any = [];
-
-    this._chat.onStreamVideo().subscribe((data: any) => {
-      console.log(data);
-      blobs.push(data);
-      appendToSourceBuffer();
-    })
-    var mediaSource = new MediaSource();
-    otherVideo.src = URL.createObjectURL(mediaSource);
-    var sourceBuffer: any = null;
-
-
-    mediaSource.addEventListener("sourceopen", function () {
-      sourceBuffer = mediaSource.addSourceBuffer("video/webm; codecs=\"opus,vp8\"");
-      sourceBuffer.addEventListener("updateend", appendToSourceBuffer);
+    this.peerClient.on('call', (call) => {
+      console.log("called is called")
+      call.answer();
+      call.on('stream', (stream) => {
+        otherVideo.srcObject = stream;
+        otherVideo.addEventListener('loadedmetadata', () => {
+          otherVideo.play();
+        });
+      });
     });
-
-
-    function appendToSourceBuffer() {
-      if (
-        mediaSource.readyState === "open" &&
-        sourceBuffer &&
-        sourceBuffer.updating === false
-      ) {
-        sourceBuffer.appendBuffer(blobs.shift());
-      }
-    }
+    
+    this._chat.onPeerConnectionId().subscribe((id:any)=>{
+      this.freindpeerToken = id;
+      this.setMyVideo()
+    })
   }
   async setMyVideo() {
     // let streamRef:any = null;
@@ -79,29 +60,11 @@ export class VideoCallComponent {
       video: true,
       audio: true,
     }).then((stream) => {
-        this.processStream(stream)
+      this.video.srcObject = stream;
+      this.peerClient.call(this.freindpeerToken, stream);
     });
 
   }
-  processStream(stream: any) {
-    this.video.srcObject = stream;
-    this.video.onloadedmetadata = function(e:any) {
-      this.video.play();
-    };
-    const mediaRecorder = new MediaRecorder(stream)
-
-    mediaRecorder.ondataavailable = (data) => {
-      this._chat.streamVideo(this.authToken, data.data);
-    }
-    mediaRecorder.start()
-
-    setInterval(() => {
-      if(this.isVideo){
-        mediaRecorder.requestData()
-      }
-    }, 500)
-  }
-
 
   dragElement(elmnt: any) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0
@@ -137,19 +100,17 @@ export class VideoCallComponent {
       document.onmousemove = null;
     }
   }
-  setVideo(isVideo:boolean){
-    if(isVideo){
+  setVideo(isVideo: boolean) {
+    if (isVideo) {
       this.isVideo = false;
       this.video.srcObject.getVideoTracks()[0].stop();
     }
-    else{
+    else {
       this.isVideo = true
       // this.processStream(this.video.srcObject)
     }
   }
-  endCall(){
-    // this.setVideo(false);
-    // history.back();
+  endCall() {
     this.onCutVideoCall.emit(true);
   }
 } 

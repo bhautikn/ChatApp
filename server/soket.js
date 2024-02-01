@@ -68,17 +68,6 @@ module.exports = (io) => {
             })
         })
 
-        socket.on('streamVideo', (token, videoData)=>{
-            jwt.verify(token, SIGN, async (err, data) => {
-                console.log(socket.id, videoData);
-                if(err){
-                    return socket.emit('error', 'Somthing Went Wrong');
-                }else{
-                    const freind = await getFreindByToken(data.token, socket.id);
-                    io.to(freind).volatile.emit('streamVideo', videoData)
-                }
-            });
-        })
         socket.on('reqVideoCall', (id, callback)=>{
             jwt.verify(id, SIGN, async (err, data) => {
                 if(err){
@@ -93,8 +82,16 @@ module.exports = (io) => {
                 }) 
             })
         })
-        
-        // socket.on('liveSendVideo', )
+        socket.on('sendPeerConnectionId', (id, peerToken)=>{
+            jwt.verify(id, SIGN, async (err, data) => {
+                if(err){
+                    return socket.emit('error', 'Somthing Went Wrong');
+                }
+                const freind = await getFreindByToken(data.token, socket.id);
+                io.to(freind).emit('sendPeerConnectionId',peerToken); 
+            })
+        });
+
         socket.on('status', async (status, id)=>{
             jwt.verify(id, SIGN, async (err, data) => {
                 if(!err){
@@ -115,7 +112,6 @@ module.exports = (io) => {
 
     })
 }
-
 
 async function add(id, token, auth) {
     await new Users({

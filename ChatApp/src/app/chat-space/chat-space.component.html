@@ -101,6 +101,7 @@
 <app-video-call 
     *ngIf="isVideoCall" 
     class="videocall-component" 
+    [authToken]="authToken"
     (onCutVideoCall)="handleVideoCallCutEvent($event)"
 >
 </app-video-call>
