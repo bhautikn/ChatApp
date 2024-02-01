@@ -10,7 +10,7 @@ import { ChatSpaceComponent } from './chat-space/chat-space.component';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { environment } from '../environments/environment.development';
-import { SideBarComponent } from './side-bar/side-bar.component';
+import { SideBarComponent } from './chat-space/side-bar/side-bar.component';
 import { AddComponent } from './post/add/add.component';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -25,6 +25,7 @@ import { SinglePostComponent } from './post/single-post/single-post.component';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { UploadComponent } from './post/live/upload/upload.component';
+import { GIFComponent } from './gif/gif.component';
 
 const config: SocketIoConfig = {
     url: environment.soketUrl,
@@ -46,7 +47,8 @@ const config: SocketIoConfig = {
     SidebarComponent,
     LiveComponent,
     SinglePostComponent,
-    UploadComponent
+    UploadComponent,
+    GIFComponent
   ],
   imports: [
     BrowserModule,

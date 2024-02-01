@@ -22,5 +22,15 @@ body{
     background-color: var(--background);
     overflow-x: hidden;
 }
+
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
+}
+
+.swal-background{
+    background-color: var(--background-light);
+    color: var(--text);
+}

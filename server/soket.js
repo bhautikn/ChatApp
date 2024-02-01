@@ -50,7 +50,6 @@ module.exports = (io) => {
                 if(err){
                     return socket.emit('error', 'Somthing Went Wrong');
                 }
-                console.log(data)
                 if (await getStatus(socket.id)) {
                     if(dataType == 'string'){
                         massage = massage.replace(/[&<>'"]/g, 

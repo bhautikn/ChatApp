@@ -17,31 +17,6 @@ nav{
 .cross-icon:hover{
     background-color: rgb(10, 10, 10, 0.2);
 }
-.list{
-    margin-top: 30px;
-}
-.list-item{
-    padding: 15px;
-    border-top: 1px solid grey;
-    margin-left: 12px;
-    cursor: pointer;
-}
-.list-item:hover{
-    background-color: rgb(10, 10, 10, 0.2);
-    transition-duration: 200ms;
-}
-.list-active{
-    background-color: rgba(10, 10, 10, 0.3);
-}
-.created-at{
-    font-size: 0.7em;
-    width: max-content;
-    margin-left: auto;
-}
-.links{
-    text-decoration: none;
-    color: var(--text);
-}
 .side-nav{
     float: left;
     width: max-content;
@@ -261,28 +236,21 @@ nav{
     }
 }
 /* Gif section */
-.all-gifs{
-    height: 40vh;
-    overflow: auto;
-}
-.gifs-item{
-    padding: 2px;
-    width: 33% !important; 
-    float: left;
-}
-.gifs-item img{
-    margin: 0 auto;
-    display: block;
-    max-width: 100%;
-    object-fit: cover;
-}
 .gif-menu{
     border: 0.5px solid gray;
     padding: 10px;
-    border-radius: 5px 5px 0 0;
+    border-radius: 5px;
     background-color: rgba(10, 10, 10, 0.2);
     backdrop-filter: blur(5px);
     position: absolute;
-    bottom: 15%;
-    left: 25%;
+    /* bottom: 15%; */
+    /* left: 25%; */
+}
+/* video call section */
+.videocall-component{
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    top: 0;
+    background-color: var(--background);
 }

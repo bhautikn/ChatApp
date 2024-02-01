@@ -80,6 +80,7 @@ export class SinglePostComponent {
 
   handleReport(id: any) {
     Swal.fire({
+      customClass: 'swal-background',
       title: 'Report',
       html: `
       `

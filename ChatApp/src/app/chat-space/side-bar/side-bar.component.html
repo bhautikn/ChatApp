@@ -1,0 +1,14 @@
+<div class="container m-2">Chats</div>
+<div class="list">
+    <div (click)="redirect('/chat/'+item.token)" class="links" *ngFor="let item of chats; index as i">
+        <div class="list-item" [ngClass]="{'list-active': item.token == urlToken}">
+            <div *ngIf="!isChangingName" (click)="isChangingName = !isChangingName">
+                {{item.token | slice:0:15}}...
+            </div>
+            <div *ngIf="isChangingName" class="created-at">
+                <input type="text" (blur)="changeParticipentName(i, $event)" (keyup)="handleChange(i, $event)">
+            </div>
+            <div class="created-at">{{item.cretaed}}</div>
+        </div>
+    </div>
+</div>

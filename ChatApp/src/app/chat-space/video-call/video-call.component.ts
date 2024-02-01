@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ChattingSoketService } from '../../chatting-soket.service';
 import { ActivatedRoute } from '@angular/router';
 import {Peer} from 'peerjs';
@@ -14,6 +14,8 @@ export class VideoCallComponent {
     private _route: ActivatedRoute,
   ) { }
 
+  @Output() onCutVideoCall: EventEmitter<any> = new EventEmitter();
+
   urlToken: any = this._route.snapshot.params['token'];
   authToken = localStorage[this.urlToken];
   isConnected: boolean = true;
@@ -24,7 +26,7 @@ export class VideoCallComponent {
   video:any = null;
   ngOnInit() {
     this.dragElement(document.querySelector(".myVideoContainer"));
-    this._chat.join(this.authToken);
+    // this._chat.join(this.authToken);
     this.setMyVideo();
     // this._chat.onOtherUid()
     const otherVideo: any = document.querySelector('.otherVideo');
@@ -38,6 +40,7 @@ export class VideoCallComponent {
     //     });
     //   });
     // });
+
 
     var blobs: any = [];
 
@@ -63,16 +66,8 @@ export class VideoCallComponent {
         sourceBuffer &&
         sourceBuffer.updating === false
       ) {
-        // sourceBuffer.remove(0, otherVideo.buffered.end(0));
-        // console.log(otherVideo.buffered.end())
         sourceBuffer.appendBuffer(blobs.shift());
       }
-      // if (
-      //   otherVideo.buffered.length &&
-      //   otherVideo.buffered.end(0) - otherVideo.buffered.start(0) > 1200
-      // ) {
-      //   sourceBuffer.remove(0, otherVideo.buffered.end(0) - 1200)
-      // }
     }
   }
   async setMyVideo() {
@@ -153,7 +148,8 @@ export class VideoCallComponent {
     }
   }
   endCall(){
-    this.setVideo(false);
-    history.back();
+    // this.setVideo(false);
+    // history.back();
+    this.onCutVideoCall.emit(true);
   }
 } 
