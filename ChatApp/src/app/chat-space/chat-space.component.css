@@ -1,44 +1,52 @@
-nav{
+nav {
     background-color: var(--blue-dark);
     padding: 10px;
 }
-.cross-icon{
+
+.cross-icon {
     width: max-content;
-    margin-left: 20px;
+    margin-left: 10px;
     font-size: 1.7em;
     cursor: pointer;
-    padding: 0 10px;
+    padding: 5px 5px;
     transition-duration: 200ms;
     border-radius: 5px;
 }
-.dropdown-item{
+
+.dropdown-item {
     cursor: pointer;
 }
-.cross-icon:hover{
+
+.cross-icon:hover {
     background-color: rgb(10, 10, 10, 0.2);
 }
-.side-nav{
+
+.side-nav {
     float: left;
     width: max-content;
     transition-duration: 500ms;
     animation: side-nav 500ms;
 }
+
 @keyframes side-nav {
-    from{
+    from {
         opacity: 0.3;
         transform: translateX(-10px);
     }
 }
-.name{
+
+.name {
     font-size: 1.1em;
     font-weight: bold;
     line-height: 1em;
 }
-.status{
+
+.status {
     font-size: 0.7em;
     line-height: 1.3em;
 }
-.green-dot{
+
+.green-dot {
     height: 10px;
     width: 10px;
     background-color: var(--green);
@@ -47,7 +55,8 @@ nav{
     margin-right: 4px;
     margin-top: 3px;
 }
-.grey-dot{
+
+.grey-dot {
     height: 10px;
     width: 10px;
     background-color: grey;
@@ -56,34 +65,43 @@ nav{
     margin-right: 4px;
     margin-top: 3px;
 }
-.aroow-left{
+
+.aroow-left {
     float: left;
-    margin-right: 25px;
-    margin-left: 25px;
+    margin-right: 5px;
+    margin-left: 5px;
     cursor: pointer;
 }
-.line{
+
+.line {
     background: var(--text);
     height: 2px;
     margin: 5px;
     border-radius: 5px;
 }
-.option{
+
+.option {
     width: 40px;
     margin-left: auto;
-    padding: 3px;
+    padding: 5px;
     font-size: 1.2em;
-    margin-right: 5px;
     border-radius: 5px;
     transition-duration: 200ms;
     cursor: pointer;
 }
+
 /* conetex-menu css start */
-@keyframes animation-contex{
-    from{opacity: 0;}
-    to{opacity: 1;}
+@keyframes animation-contex {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
-#context-menu{
+
+#context-menu {
     display: block;
     background-color: var(--light-bg-color);
     border: 1px solid var(--back-color);
@@ -97,26 +115,35 @@ nav{
     position: absolute;
     user-select: none;
     animation: animation-contex 800ms;
-    border: 1px solid lightgray; 
+    border: 1px solid lightgray;
 }
-#context-menu .item{
-    padding : 5px;
+
+#context-menu .item {
+    padding: 5px;
     cursor: pointer;
     transition-duration: 100ms;
     border-radius: 5px;
     font-weight: 600;
 }
-#context-menu .item:hover{
+
+#context-menu .item:hover {
     background-color: var(--hover-color);
 }
+
 /* conetex-menu css end */
-.option:hover{
+.option:hover {
     background-color: rgb(10, 10, 10, 0.2);
 }
-.chats-container{
+
+.chats-container {
     overflow-y: auto;
+    display: block;
 }
-.main-container{
+.end-container .container-text-last{
+    display: flex;
+    justify-content: center;
+}
+.main-container {
     height: 77vh;
     border-radius: 10px;
     margin-top: 5px;
@@ -125,89 +152,141 @@ nav{
     background-color: var(--background-light);
     overflow-y: scroll !important;
 }
-.end-container{
+
+.end-container {
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    /* justify-content: center; */
     width: 100%;
     max-height: 100%;
 }
-.text-feild{
+
+.text-feild {
     display: flex;
-    padding: 10px;
+    padding: 10px 0;
     justify-content: center;
     width: 100%;
-    gap: 5px !important;
+    /* gap: 5px !important; */
 }
-.massage-text{
-    width: 79%;
-    float: left;
+
+.massage-text {
+    display: flex;
+    width: 100%;
     line-break: anywhere;
-    overflow-y: hidden;
+    overflow: hidden;
+    padding: 2px;
+    align-items: center;
+    border: 1px solid grey;
+    border-radius: 10px;
 }
-.send-btn{
+.massage-text #textarea{
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+    /* flex-grow: 4; */
+}
+.send-btn {
     float: left;
     width: 5%;
 }
 
+.massage-text .icon{
+    display: flex;
+    justify-content: center;
+    /* background-color: green; */
+    color: var(--text);
+    text-align: center;
+    margin: 1px;
+}
+.massage-text .icon i{
+    border-radius: 10px;
+    padding: 5px;
+    text-align: center;
+}
+.massage-text i:hover{
+    background-color: rgb(10, 10, 10, 0.2);
+
+}
 /* massage to css set */
-::ng-deep .to, ::ng-deep .from{
+::ng-deep .to,
+::ng-deep .from {
     margin: 5px 0;
 }
-::ng-deep .to .massage, ::ng-deep .from .massage{
-    border-radius: 5px 0 5px 5px;
-    margin-left: auto;
-    background-color: var(--to);
+
+::ng-deep .to .massage,
+::ng-deep .from .massage {
     padding: 2px;
     float: right;
     width: max-content;
-    max-width: 50%;
     line-break: anywhere;
     min-width: 50px;
+    max-width: 60%;
 }
-::ng-deep .to .text, ::ng-deep .from .text{
-    background-color: var(--to-dark);
-    padding: 0 5px;
-    border-radius: 3px;
+
+::ng-deep .to .text,
+::ng-deep .from .text {
+    background-color: var(--to);
+    padding: 10px;
+    font-size: 1.2em;
+    padding: 10px;
+    border-radius: 10px;
+
 }
-/* ::ng-deep .to .time::after{
-    content: "\F840";
-} */
-::ng-deep .to .massage-status{
+
+::ng-deep .to .massage-status {
     float: right;
     font-size: 0.7em;
 }
+
 /* massage to set css end here */
 /* massage from set css start here */
 
-::ng-deep .from .massage{
-    border-radius: 0 5px 5px 5px;
+::ng-deep .from .massage {
     float: left;
-    background-color: var(--from);
 }
-::ng-deep .from .text{
-    padding: 2px;
-    background-color: var(--from-dark);
+
+::ng-deep .to .text {
+    border-end-end-radius: 0;
 }
-::ng-deep .from img, ::ng-deep .to img{
+
+::ng-deep .from .text {
+    /* background-color: var(--from-dark); */
+    border: 1px solid grey;
+    background-color: transparent;
+    border-top-left-radius: 0;
+}
+
+::ng-deep .from img,
+::ng-deep .to img {
     max-width: 200px;
+    border-radius: 100px;
+    /* display: none; */
 }
-::ng-deep .from .time, ::ng-deep .to .time{
+
+::ng-deep .from .time,
+::ng-deep .to .time {
     font-size: 0.6em;
     float: right;
     line-height: 12px;
     margin: 0 1px;
 }
+
+::ng-deep .from .time {
+    float: left;
+}
+
 @keyframes massage {
-    from{
-        transform:translateY(200px);
+    from {
+        transform: translateY(200px);
     }
-    to{
-        transform:translateY(0px);
+
+    to {
+        transform: translateY(0px);
     }
 }
 
-.typing-dot > div{
+.typing-dot>div {
     height: 7px;
     width: 7px;
     background-color: var(--green);
@@ -217,26 +296,37 @@ nav{
     margin-top: 5px;
     animation: first-dot 1s infinite ease-out;
 }
-.typing-dot > div:nth-child(3){
+
+.typing-dot>div:nth-child(3) {
     animation-delay: 400ms;
     margin-right: 5px;
 }
-.typing-dot > div:nth-child(2){
+
+.typing-dot>div:nth-child(2) {
     animation-delay: 200ms;
 }
 
 @keyframes first-dot {
-    from{
+    from {
         transform: translateY(-2px);
     }
 }
+
 @media screen and (max-width: 700px) {
-    .side-nav{
+    .side-nav {
         width: 60%;
     }
+    .gif-menu{
+        width: 100% !;
+    }
+    ::ng-deep .to .massage,
+    ::ng-deep .from .massage {
+        max-width: 100%;
+    }
 }
+
 /* Gif section */
-.gif-menu{
+.gif-menu {
     border: 0.5px solid gray;
     padding: 10px;
     border-radius: 5px;
@@ -246,8 +336,9 @@ nav{
     /* bottom: 15%; */
     /* left: 25%; */
 }
+
 /* video call section */
-.videocall-component{
+.videocall-component {
     position: absolute;
     height: 100vh;
     width: 100%;

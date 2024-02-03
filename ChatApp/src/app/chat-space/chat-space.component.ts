@@ -113,14 +113,14 @@ export class ChatSpaceComponent implements OnInit {
     }
 
     { // block for auto height
-      e.target.style.height = 0;
-      let max = 100;
-      let height = e.target.scrollHeight;
-      if (height < max) {
-        e.target.style.height = (e.target.scrollHeight) + "px";
-      } else {
-        e.target.style.height = (100) + "px";
-      }
+      // e.target.style.height = 0;
+      // let max = 100;
+      // let height = e.target.scrollHeight;
+      // if (height < max) {
+      //   e.target.style.height = (e.target.scrollHeight) + "px";
+      // } else {
+      //   e.target.style.height = (100) + "px";
+      // }
     }
 
   }
@@ -272,10 +272,10 @@ export class ChatSpaceComponent implements OnInit {
     let forVideo = `
       <video width="320" height="240" class="text" controls>
         <source src='${data}' type="video/mp4" >
-      </video>
+      </video> <br>
     `;
     let forImage = `
-      <img src='${data}' class="text">
+      <img src='${data}' class="text"> <br>
     `;
     let forText = `
       <div class="text">${data}</div>
@@ -299,8 +299,8 @@ export class ChatSpaceComponent implements OnInit {
       <div class="row">
           <div class="${fromOrTo}">
               <div class="massage">
-                  ${data}
-                  <div class="time">${this.formatAMPM(new Date())}</div>
+                ${data}
+                <div class="time">${this.formatAMPM(new Date())}</div>
               </div>
           </div>
       </div>
@@ -369,4 +369,5 @@ export class ChatSpaceComponent implements OnInit {
     console.log(event)
     this.isVideoCall = false;
   }
+  
 }

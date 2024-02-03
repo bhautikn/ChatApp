@@ -23,16 +23,11 @@ export class ChattingSoketService {
 			callback(res);
 		})
 	}
-	streamVideo(token:any , data:any){
-		this._socket.emit('streamVideo', token ,data);
-	}
 	sendPeerConnectionId(token: any, peerToken:any){
 		this._socket.emit('sendPeerConnectionId', token, peerToken)
 	}
 	// listen event
-	onStreamVideo(){
-		return this._socket.fromEvent('streamVideo')
-	}
+	
 	onPeerConnectionId(){
 		return this._socket.fromEvent('sendPeerConnectionId');
 	}

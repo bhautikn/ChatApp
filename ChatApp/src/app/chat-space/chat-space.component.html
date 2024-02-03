@@ -1,7 +1,7 @@
 <nav>
     <div class="row">
         <div class="side-nav p-0 m-0" *ngIf="isOpenMenu">
-            <app-side-bar ></app-side-bar>
+            <app-side-bar></app-side-bar>
         </div>
         <div class="col">
             <div class="row">
@@ -9,7 +9,7 @@
                     <i class="bi bi-x" *ngIf="isOpenMenu" (click)="isOpenMenu = false"></i>
                     <i class="bi bi-list" *ngIf="!isOpenMenu" (click)="isOpenMenu = true"></i>
                 </div>
-                <div class="col-8">
+                <div class="col">
                     <a routerLink="/" class="aroow-left">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                             class="bi bi-arrow-left" viewBox="0 0 16 16">
@@ -38,70 +38,68 @@
                     </div>
 
                     <div class="btn-group">
-                        <button type="button" class="btn" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                        <div class="" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-three-dots-vertical option" (click)="chatOption = !chatOption"></i>
-                        </button>
+                        </div>
                         <ul class="dropdown-menu">
                             <li class="dropdown-item"><i class="bi bi-share"></i> Share</li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
-                            <li class="dropdown-item text-danger" (click)="deleteChat()"><i class="bi bi-trash"></i> Delete Chat</li>
+                            <li class="dropdown-item text-danger" (click)="deleteChat()"><i class="bi bi-trash"></i>
+                                Delete Chat</li>
                         </ul>
                     </div>
-                    
                 </div>
             </div>
+            <div *ngIf="gifMenu" class="gif-menu container w-50 float-end">
+                <app-gif (onsendGif)="sendGif($event)"></app-gif>
+            </div>
             <div class="main-container">
-
-                <div *ngIf="gifMenu" class="gif-menu container w-50 float-end">
-                    <app-gif (onsendGif)="sendGif($event)"></app-gif>
-                </div>
-
+                
                 <div class="end-container">
-                <div class="chats-container container" [innerHtml]="data">
 
-                </div>
+                    <div class="chats-container container" [innerHtml]="data">
 
-                <div class="container">
-                    <div class="text-feild row">
-                        <div class="massage-text">
-                            <textarea placeholder="Massage" (keyup)="input($event)" class="form-control" id="textarea"
-                                rows="1"></textarea>
-                        </div>
-                        <div class="send-btn">
-                            <label for="file-upload" class="btn btn-info">
-                                <i class="bi bi-file-earmark-fill"></i>
-                            </label>
-                            <input type="file" style="display: none" id="file-upload" (change)="uploadFile($event)" accept="image/jpeg, image/png, video/mp4">
-                        </div>
-                        <div class="send-btn">
-                            <button class="btn btn-info" (click)="gifMenu = !gifMenu">
-                                <i class="bi bi-filetype-gif" *ngIf="!gifMenu"></i>
-                                <i class="bi bi-x" *ngIf="gifMenu"></i>
-                            </button>
-                        </div>
-                        <div class="send-btn">
-                            <button class="btn btn-info" (click)="addTo()">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class=""
-                                    viewBox="0 0 16 16">
-                                    <path
-                                        d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z" />
-                                </svg>
-                            </button>
+
+                    </div>
+
+                    <div class="container-text-last container">
+                        <div class="text-feild">
+                            <div class="massage-text">
+                                <div class="icon">
+                                    <label for="file-upload">
+                                        <i class="bi bi-file-earmark"></i>
+                                    </label>
+                                    <input type="file" style="display: none" id="file-upload"
+                                        (change)="uploadFile($event)" accept="image/jpeg, image/png, video/mp4">
+                                </div>
+                                <div class="icon">
+                                    <div (click)="gifMenu = !gifMenu">
+                                        <i class="bi bi-filetype-gif" *ngIf="!gifMenu"></i>
+                                        <i class="bi bi-x" *ngIf="gifMenu"></i>
+                                    </div>
+                                </div>
+                                <textarea 
+                                    placeholder="Massage" 
+                                    (keyup)="input($event)" 
+                                    class="form-control"
+                                    id="textarea" rows="1"
+                                ></textarea>
+
+                                <div class="icon p-1">
+                                    <div (click)="addTo()">
+                                        <i class="bi bi-send border p-3 bg-success"></i>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                </div>
-            </div>  
+            </div>
         </div>
     </div>
 </nav>
-<app-video-call 
-    *ngIf="isVideoCall" 
-    class="videocall-component" 
-    [authToken]="authToken"
-    (onCutVideoCall)="handleVideoCallCutEvent($event)"
->
+<app-video-call *ngIf="isVideoCall" class="videocall-component" [authToken]="authToken"
+    (onCutVideoCall)="handleVideoCallCutEvent($event)">
 </app-video-call>
