@@ -1,8 +1,7 @@
 <div class="body">
-    <!-- <div *ngIf="!isConnected">
-        <i class="bi bi-telephone-outbound call-icon"></i><br><br>
-        <div class="call-text">Calling ...</div>
-    </div> -->
+    <div *ngIf="connecting" class="container">
+        <div class="call-text">Connecting ...</div>
+    </div>
     <div>
         <video class="otherVideo" autoplay></video>
     </div>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PostApiService } from '../../../post-service.service';
+import { PostApiService } from '../../../services/post-service.service';
 import { HttpEventType } from '@angular/common/http';
 
 @Component({

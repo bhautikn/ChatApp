@@ -1,7 +1,7 @@
 <nav>
     <div class="row">
         <div class="side-nav p-0 m-0" *ngIf="isOpenMenu">
-            <app-side-bar></app-side-bar>
+            <app-side-bar class="w-25"></app-side-bar>
         </div>
         <div class="col">
             <div class="row">
@@ -10,7 +10,7 @@
                     <i class="bi bi-list" *ngIf="!isOpenMenu" (click)="isOpenMenu = true"></i>
                 </div>
                 <div class="col">
-                    <a routerLink="/" class="aroow-left">
+                    <a (click)="goBack()" class="aroow-left">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                             class="bi bi-arrow-left" viewBox="0 0 16 16">
                             <path fill-rule="evenodd"
@@ -42,12 +42,13 @@
                             <i class="bi bi-three-dots-vertical option" (click)="chatOption = !chatOption"></i>
                         </div>
                         <ul class="dropdown-menu">
-                            <li class="dropdown-item"><i class="bi bi-share"></i> Share</li>
+                            <li class="dropdown-item"><i class="bi bi-share"></i> Invite</li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li class="dropdown-item text-danger" (click)="deleteChat()"><i class="bi bi-trash"></i>
-                                Delete Chat</li>
+                                Delete Chat
+                            </li>
                         </ul>
                     </div>
                 </div>

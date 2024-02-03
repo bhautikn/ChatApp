@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ChattingSoketService } from '../chatting-soket.service';
+import { ChattingSoketService } from '../../services/chatting-soket.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ApiChatService } from '../api-chat.service';
+import { ApiChatService } from '../../services/api-chat.service';
 import Swal from 'sweetalert2';
+import {formatAMPM, getChats} from '../../../environments/environment.development'
 
 @Component({
   selector: 'app-chat-space',
@@ -52,7 +53,7 @@ export class ChatSpaceComponent implements OnInit {
 
     //set status
     setTimeout(() => {
-      this.chats = this.getChats();
+      this.chats = getChats();
     }, 200)
     this._chat.status().subscribe((data: any) => {
       this.status = data;
@@ -128,7 +129,7 @@ export class ChatSpaceComponent implements OnInit {
     const textArea: any = document.querySelector('#textarea');
     let text: string = textArea.value;
     textArea.style.height = '0px';
-    let time: any = this.formatAMPM(new Date());
+    let time: any = formatAMPM(new Date());
     
     if (text == "\n" || text == '' || !text || text.trim() == '') return;
     textArea.value = "";
@@ -169,16 +170,7 @@ export class ChatSpaceComponent implements OnInit {
     this.setData(child);
   }
 
-  formatAMPM(date: Date) {
-    var hours: any = date.getHours();
-    var minutes: any = date.getMinutes();
-    var ampm = hours >= 12 ? 'pm' : 'am';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
-    return strTime;
-  }
+
 
   authanticate(token: any, password: any) {
     this._api.authanticate(token, password).subscribe((data: any) => {
@@ -186,28 +178,14 @@ export class ChatSpaceComponent implements OnInit {
         password = prompt("Wrong password try again");
         this.authanticate(token, password);
       } else {
-        let obj = { token: token, cretaed: this.formatAMPM(new Date()), name: '' }
-        this.setChat(obj);
+        
         localStorage.setItem(token, data.id);
         return;
       }
     })
   }
 
-  getChats() {
-    if (!localStorage['chats']) {
-      let arr: any = [];
-      localStorage['chats'] = JSON.stringify(arr);
-    }
-    return JSON.parse(localStorage['chats']);
-  }
 
-  setChat(newChat: any) {
-    let chats = this.getChats()
-    chats.push(newChat);
-
-    localStorage.setItem('chats', JSON.stringify(chats));
-  }
 
   deleteChat() {
     let isDelete = confirm("are you sure??")
@@ -300,7 +278,7 @@ export class ChatSpaceComponent implements OnInit {
           <div class="${fromOrTo}">
               <div class="massage">
                 ${data}
-                <div class="time">${this.formatAMPM(new Date())}</div>
+                <div class="time">${formatAMPM(new Date())}</div>
               </div>
           </div>
       </div>
@@ -369,5 +347,8 @@ export class ChatSpaceComponent implements OnInit {
     console.log(event)
     this.isVideoCall = false;
   }
-  
+  goBack(){
+    this._chat.disconnect();
+    this.redirect('/');
+  }
 }

@@ -4,7 +4,7 @@ import { Socket } from 'ngx-socket-io';
 @Injectable({
   providedIn: 'root'
 })
-export class ChattingSoketService {
+export class ChattingSoketService {	
 
   constructor(private _socket:Socket) { }
 
@@ -26,8 +26,13 @@ export class ChattingSoketService {
 	sendPeerConnectionId(token: any, peerToken:any){
 		this._socket.emit('sendPeerConnectionId', token, peerToken)
 	}
+	disconnectVideoCall(token:any){
+		this._socket.emit('disconnectVideoCall', token);
+	}
 	// listen event
-	
+	onDisconnectVideoCall(){
+		return this._socket.fromEvent('disconnectVideoCall');
+	}
 	onPeerConnectionId(){
 		return this._socket.fromEvent('sendPeerConnectionId');
 	}
@@ -39,5 +44,10 @@ export class ChattingSoketService {
 	}
 	onReqVideoCall(){
 		return this._socket.fromEvent('reqVideoCall')
+	}
+
+	// disconnect socket connection
+	disconnect(){
+		this._socket.disconnect();		
 	}
 }

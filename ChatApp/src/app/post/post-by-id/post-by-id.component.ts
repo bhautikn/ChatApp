@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { GifApiService } from '../../gif-api.service';
-import { PostApiService } from '../../post-service.service';
+import { GifApiService } from '../../services/gif-api.service';
+import { PostApiService } from '../../services/post-service.service';
 import { environment, formateTime } from '../../../environments/environment.development';
 import { of } from 'rxjs';
 

@@ -5,8 +5,12 @@
                 <div class="title-header">Create Chat</div>
                 <div class="row p-3">
                     <div class="row py-3 center">
+                        <label for="password" class="p-2">Chat Title: </label>
+                        <input type="text" class="form-control" placeholder="Chat Title" [(ngModel)]="chatTitle">
+                        <div class="m-2"></div>
                         <label for="password" class="p-2">Create Password: </label>
-                        <input type="password" class="form-control" placeholder="Create Password" [(ngModel)]="password">
+                        <input type="password" class="form-control" placeholder="Create Password"
+                            [(ngModel)]="password">
                     </div>
                     <div class="row">
                         <div class="col text-end p-0">
@@ -17,15 +21,8 @@
             </div>
         </div>
         <div class="col-4 w-25 seclect-choice">
-            <div class="title-header">Joined Chat</div>
-            <div class="list">
-                <div (click)="redirect('/chat/'+item.token)" class="links" *ngFor="let item of chats">
-                    <div class="list-item">{{item.token | slice:
-                        0:15}}...
-                        <div class="created-at">{{item.cretaed}}</div>
-                    </div>
-                </div>
-            </div>
+            <div class="title-header" >Joined Chat</div>
+            <app-side-bar></app-side-bar>
         </div>
     </div>
 </div>
@@ -35,12 +32,12 @@
         <path
             d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01-.622-.636zm.287 5.984-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7 8.793l2.646-2.647a.5.5 0 0 1 .708.708z" />
     </svg>
-    <strong class="mx-2">Succsess!</strong> Your Chat Room Created Succsess. at 
+    <strong class="mx-2">Succsess!</strong> Your Chat Room Created Succsess. at
     <a [routerLink]="linkUrl">{{fullUrl}}</a> &nbsp;
     <!-- copy svg icon   -->
     <span (click)="copyToClipBord()">
-        <svg *ngIf='showClip' xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-            fill="currentColor" class="bi bi-clipboard" viewBox="0 0 16 16">
+        <svg *ngIf='showClip' xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-clipboard" viewBox="0 0 16 16">
             <path
                 d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z">
             </path>
@@ -48,8 +45,8 @@
                 d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z">
             </path>
         </svg>
-        <svg *ngIf="!showClip" width="16px" height="16px" viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg" fill="none">
+        <svg *ngIf="!showClip" width="16px" height="16px" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"
+            fill="none">
             <path stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M17 5L8 15l-5-4" />
         </svg>

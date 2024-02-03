@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PostApiService } from '../post-service.service';
+import { PostApiService } from '../services/post-service.service';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 

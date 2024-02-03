@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import Swal from 'sweetalert2';
-import { PostApiService } from '../../post-service.service';
+import { PostApiService } from '../../services/post-service.service';
 import { environment, formateTime } from '../../../environments/environment.development';
 
 @Component({

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
-import { ApiChatService } from '../api-chat.service';
+import { ApiChatService } from '../services/api-chat.service';
 import { Router } from '@angular/router';
+import { formatAMPM, setChat } from '../../environments/environment.development';
+
 
 @Component({
   selector: 'app-chat',
@@ -18,6 +20,7 @@ export class ChatComponent {
   chats:any = [];
   sucsessCreated: boolean = false;
   FailHappen: boolean = false;
+  chatTitle: string = '';
 
   ngOnInit(){
     this.chats = this.getChats();
@@ -32,6 +35,10 @@ export class ChatComponent {
     this._api.setChat(this.token, this.password).subscribe((data: any) => {
       if (data.status == 200) {
         this.sucsessCreated = true;
+
+        let obj = { token: data.token, cretaed: formatAMPM(new Date()), name: this.chatTitle }
+        setChat(obj);
+
         this.linkUrl = 'chat/' + data.token;
         this.fullUrl = window.location + this.linkUrl;
       } else {

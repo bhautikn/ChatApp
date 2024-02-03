@@ -3,7 +3,7 @@
     <div (click)="redirect('/chat/'+item.token)" class="links" *ngFor="let item of chats; index as i">
         <div class="list-item" [ngClass]="{'list-active': item.token == urlToken}">
             <div *ngIf="!isChangingName" (click)="isChangingName = !isChangingName">
-                {{item.token | slice:0:15}}...
+                {{item.name | slice:0:15}}
             </div>
             <div *ngIf="isChangingName" class="created-at">
                 <input type="text" (blur)="changeParticipentName(i, $event)" (keyup)="handleChange(i, $event)">

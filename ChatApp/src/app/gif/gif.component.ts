@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { GifApiService } from '../gif-api.service';
+import { GifApiService } from '../services/gif-api.service';
 
 @Component({
   selector: 'app-gif',

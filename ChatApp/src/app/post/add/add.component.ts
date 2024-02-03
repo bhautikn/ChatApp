@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { ApiChatService } from '../../api-chat.service';
+import { ApiChatService } from '../../services/api-chat.service';
 import { HttpEventType } from '@angular/common/http';
-import { PostApiService } from '../../post-service.service';
+import { PostApiService } from '../../services/post-service.service';
 
 @Component({
   selector: 'app-add',

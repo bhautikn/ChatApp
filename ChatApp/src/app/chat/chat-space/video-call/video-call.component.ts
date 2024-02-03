@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ChattingSoketService } from '../../chatting-soket.service';
-import { ActivatedRoute } from '@angular/router';
+import { ChattingSoketService } from '../../../services/chatting-soket.service';
 import { Peer } from 'peerjs';
 
 @Component({
@@ -11,11 +10,10 @@ import { Peer } from 'peerjs';
 export class VideoCallComponent {
   constructor(
     private _chat: ChattingSoketService,
-    private _route: ActivatedRoute,
-    ) { }
-    
-    @Output() onCutVideoCall: EventEmitter<any> = new EventEmitter();
-    @Input() authToken: any;
+  ) { }
+
+  @Output() onCutVideoCall: EventEmitter<any> = new EventEmitter();
+  @Input() authToken: any;
 
   isConnected: boolean = true;
   peerClient: Peer = new Peer();
@@ -23,22 +21,31 @@ export class VideoCallComponent {
   isVideo: boolean = true;
   isAudio: boolean = true;
   video: any = null;
-  freindpeerToken:any = null;
-
+  freindpeerToken: any = null;
+  localstream: any = null;
+  connecting: boolean = true;
   ngOnInit() {
+    this.setMyVideo()
 
+    this._chat.onDisconnectVideoCall().subscribe(() => {
+      this.clearAllTraks();
+      this.closeVideoCall();
+    })
 
-    this.peerClient.on('open', (id)=>{
+    this.peerClient.on('open', (id) => {
       this._chat.sendPeerConnectionId(this.authToken, id);
     })
 
-    this.dragElement(document.querySelector(".myVideoContainer"));
-    const otherVideo: any = document.querySelector('.otherVideo');
+    this.peerClient.on('disconnected', () => {
+      this.endCall();
+    })
 
+    const otherVideo: any = document.querySelector('.otherVideo');
+    
     this.peerClient.on('call', (call) => {
-      console.log("called is called")
       call.answer();
       call.on('stream', (stream) => {
+        this.connecting = false;
         otherVideo.srcObject = stream;
         otherVideo.addEventListener('loadedmetadata', () => {
           otherVideo.play();
@@ -46,9 +53,12 @@ export class VideoCallComponent {
       });
     });
     
-    this._chat.onPeerConnectionId().subscribe((id:any)=>{
+    this.dragElement(document.querySelector(".myVideoContainer"));
+    
+    this._chat.onPeerConnectionId().subscribe((id: any) => {
       this.freindpeerToken = id;
-      this.setMyVideo()
+      this.connecting = false;
+      this.peerClient.call(this.freindpeerToken, this.localstream);
     })
   }
   async setMyVideo() {
@@ -56,12 +66,13 @@ export class VideoCallComponent {
     const mediaDevices = navigator.mediaDevices;
     this.video = document.querySelector('.myVideo');
     this.video.muted = true;
+
     mediaDevices.getUserMedia({
       video: true,
       audio: true,
     }).then((stream) => {
-      this.video.srcObject = stream;
-      this.peerClient.call(this.freindpeerToken, stream);
+      this.localstream = stream
+      this.video.srcObject = this.localstream;
     });
 
   }
@@ -107,10 +118,21 @@ export class VideoCallComponent {
     }
     else {
       this.isVideo = true
-      // this.processStream(this.video.srcObject)
     }
   }
   endCall() {
+    this.clearAllTraks();
+    this.closeVideoCall();
+    this._chat.disconnectVideoCall(this.authToken);
+  }
+  
+  closeVideoCall(){
     this.onCutVideoCall.emit(true);
+  }
+
+  clearAllTraks() {
+    this.localstream.getTracks().forEach((track: any) => {
+      track.stop();
+    });
   }
 } 

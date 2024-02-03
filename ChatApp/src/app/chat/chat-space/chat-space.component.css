@@ -24,6 +24,7 @@ nav {
 .side-nav {
     float: left;
     width: max-content;
+    width: 15%;
     transition-duration: 500ms;
     animation: side-nav 500ms;
 }
@@ -150,7 +151,6 @@ nav {
     display: flex;
     align-items: flex-end;
     background-color: var(--background-light);
-    overflow-y: scroll !important;
 }
 
 .end-container {
