@@ -2,9 +2,11 @@
     margin-top: 15px;
 }
 .list-item{
-    padding: 15px;
-    border-top: 1px solid grey;
-    margin-left: 12px;
+    padding: 10px;
+    margin-left: 15px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    background-color: var(--background-light);
     cursor: pointer;
 }
 .list-item:hover{
@@ -22,6 +24,17 @@
 .links{
     text-decoration: none;
     color: var(--text);
+}
+.trash{
+    float: right;
+    margin-right: 10px;
+    cursor: pointer;
+    padding: 0 5px;
+    border-radius: 5px;
+}
+.trash:hover{
+    background-color: var(--tansparent-black);
+    transition-duration: 200ms;
 }
 .side-nav{
     float: left;

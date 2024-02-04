@@ -11,6 +11,9 @@ exports.getAllPosts =  async function (req, res){
 exports.postByRange = async function(req, res){
     const from = req.params.from;
     const to = req.params.to;
+    if(isNaN(from) || isNaN(to)){
+        return res.sendStatus(403);
+    }
     const data = await Posts.find().skip(from).limit(to - from);
     res.json(data);
 }
@@ -151,6 +154,9 @@ exports.getCommentsByRange = async (req, res) => {
     const postId = req.params.id;
     const from = req.params.from;
     const to = req.params.to;
+    if(isNaN(from) || isNaN(to)){
+        return res.sendStatus(403);
+    }
     const data = await Comments.find({ postId: postId }).skip(from).limit(to - from);
     if (data.length === 0) {
         return res.json({ dataOver: true });

@@ -4,11 +4,10 @@
         <i class="bi bi-search"></i>
     </button>
 </div>
-
-<app-sidebar class="float-start"></app-sidebar>
+<app-sidebar class="float-start w-25"></app-sidebar>
 
 <div class="container" *ngIf="posts.length > 0">
-    <div class="col-7 mx-auto">
+    <div class="my-container mx-auto">
         <div *ngFor="let post of posts; index as i">
             <app-single-post [post]="post" showCommentsBtn="true"></app-single-post>
         </div>

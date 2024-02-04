@@ -1,6 +1,6 @@
 nav {
     background-color: var(--blue-dark);
-    padding: 10px;
+    padding: 5px;
 }
 
 .cross-icon {
@@ -145,7 +145,7 @@ nav {
     justify-content: center;
 }
 .main-container {
-    height: 77vh;
+    height: 86vh;
     border-radius: 10px;
     margin-top: 5px;
     display: flex;
@@ -314,14 +314,19 @@ nav {
 
 @media screen and (max-width: 700px) {
     .side-nav {
-        width: 60%;
+        width: 40%;
     }
     .gif-menu{
-        width: 100% !;
+        width: 100%;
     }
     ::ng-deep .to .massage,
     ::ng-deep .from .massage {
         max-width: 100%;
+    }
+}
+@media screen and (max-width: 500px) {
+    .side-nav {
+        width: 100%;
     }
 }
 

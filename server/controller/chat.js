@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const Chats = require('../models/Chats');
 const dotenv = require('dotenv');
 const crypto = require('crypto');
+const { mailSender } = require('../services/mailSender');
+
 
 dotenv.config();
 const SIGN = process.env.JWT_SECRET_KEY;
@@ -61,5 +63,19 @@ exports.authanticate = async (req, res) => {
     } catch (e) {
         console.log(e);
         res.json({ status: 500 });
+    }
+}
+
+exports.sendEmail = async (req, res) => {
+    console.log(req.body);
+    if(!req.body.email || !req.body.chat_link || !req.body.comment){
+        return res.sendStatus(403);
+    }
+    try {
+        await mailSender(req.body);
+        res.json({ status: 200 });
+    } catch (e) {
+        console.log(e);
+        res.sendStatus(500);
     }
 }

@@ -32,6 +32,9 @@
     position: relative !important;
     left: 0 !important;
 }
+.my-container{
+    width: 60%;
+}
 .loading-div{
     border-radius: 50%;
     border: 4px solid var(--text);
@@ -44,5 +47,14 @@
 @keyframes loading-div-ani {
     to{
         transform: rotate(360deg);
+    }
+}
+
+@media screen and (max-width: 768px){
+    .seach-bar{
+        width: 100%;
+    }
+    .my-container{
+        width: 100%;
     }
 }

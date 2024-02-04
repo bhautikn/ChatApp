@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { getChats } from '../../../../environments/environment.development';
 
 @Component({
   selector: 'app-side-bar',
@@ -9,24 +10,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class SideBarComponent {
 
   constructor(private _route:ActivatedRoute, private _nevigate:Router) { }
-  
+  @Input() showtitle: boolean = true;
+
   isChangingName: boolean = false;
   urlToken:any = this._route.snapshot.params['token'];
-  chats:any = this.getChats();
+  chats:any = getChats();
 
-  getChats(){
-    if(!localStorage['chats']){
-      let arr:any = [];
-      localStorage['chats'] = JSON.stringify(arr);
-    }
-    return JSON.parse(localStorage['chats']);
-  }
-  setChat(newChat:any){
-    let chats = this.getChats()
-    chats.push(newChat);
-
-    localStorage.setItem('chats', JSON.stringify(chats));
-  }
   redirect(to: string) {
     this._nevigate.navigate([to]);
   }
@@ -39,5 +28,13 @@ export class SideBarComponent {
   changeParticipentName(index: number, event: any){
     console.log(index)
     this.isChangingName = false
+  }
+  handleDeleteChat(){
+    //todo: delete chat from local storage
+    
+    // let chats = getChats();
+    // chats.splice(this.urlToken, 1);
+    // localStorage.setItem('chats', JSON.stringify(chats));
+    // this._nevigate.navigate(['chat']);
   }
 }

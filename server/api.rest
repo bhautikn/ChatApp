@@ -13,3 +13,16 @@ GET http://localhost:3000/some-posts/1/3
 ###
 
 GET http://localhost:3000/post/comments/65a40fba185d71e5ab761558/0/5
+
+
+
+###
+
+POST http://localhost:3000/chat/email
+Content-Type: application/json
+
+{
+    "email": "hajasi1227@gosarlar.com",
+    "comment": "Hello",
+    "chat_link": "https://www.google.com"
+} 

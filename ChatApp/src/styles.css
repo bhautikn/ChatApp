@@ -6,6 +6,7 @@
 :root{
     --background: #222222;
     --background-light: #333333;
+    --background-light-2: #444444;
     --text: white;
     --text-light: grey;
     --shadow: black;
@@ -16,6 +17,7 @@
     --to: rgb(17, 73, 42);
     --from: rgb(27, 50, 118);
     --from-dark: rgb(14, 14, 135);
+    --tansparent-black: rgba(0, 0, 0, 0.3);
 }
 body{
     background-color: var(--background);

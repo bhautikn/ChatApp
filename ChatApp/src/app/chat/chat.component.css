@@ -17,6 +17,7 @@ svg{
     margin: 5px;
     padding: 10px;
 }
+
 .title-header{
     background-color: var(--background);
     width: 50%;
@@ -32,4 +33,23 @@ svg{
     to{
         transform: rotate(360deg);
     }
+}
+
+.create-chat-container{
+    width: 40%;
+}
+.joined-chat-container{
+    width: 30%;
+}
+.linebreak{
+    line-break: anywhere;
+}
+@media screen and (max-width: 768px){
+    .create-chat-container{
+        width: 100%;
+    }
+    .joined-chat-container{
+        width: 100%;
+    }
+    
 }

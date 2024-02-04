@@ -3,16 +3,18 @@ fix the problem of insert tags in post/add router at backend
 upload multiple video or audio file
 image and video validation
 spam detaction captcha
+
 # add comment feture
 
 
 ///////////////// chat ///////////////////////////
 add audio call feture
 group chat
+fix mute and stop audio in chat
 
 # add send video and audio and image in chat
 
-///////////////// genaral ///////////////////////////
+///////////////// genaral ////////////////////////
 create light mode of application
 update nevigation bar of web
 fix nevbar toggel problem

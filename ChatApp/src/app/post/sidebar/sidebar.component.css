@@ -2,13 +2,16 @@
     font-size: 1.1em;
     border-radius: 10px;
     padding: 10px 20px;
+	cursor: pointer;
+	background-color: var(--background-light);
+	margin-bottom: 5px;
 }
 .links a{
     text-decoration: none;
 }
 .links:hover{
     transition-duration: 200ms;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--background-light-2);
 }
 .live-posts{
     display: flex;
@@ -25,7 +28,12 @@
 	box-shadow: 0 0 0 0 rgba(255, 82, 82, 1);
 	animation: pulse-red 1.5s infinite;
 }
-
+.app-logo{
+	padding: 20px;
+	font-size: 3em;
+	cursor: pointer;
+	color: var(--text-light);
+}
 @keyframes pulse-red {
 	0% {
 		transform: scale(0.95);

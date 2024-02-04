@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ApiChatService } from '../services/api-chat.service';
 import { Router } from '@angular/router';
-import { formatAMPM, setChat } from '../../environments/environment.development';
+import { formatAMPM, getChats, setChat } from '../../environments/environment.development';
 
 
 @Component({
@@ -21,9 +21,12 @@ export class ChatComponent {
   sucsessCreated: boolean = false;
   FailHappen: boolean = false;
   chatTitle: string = '';
+  // optional
+  email: string = '';
+  comment: string = '';
 
   ngOnInit(){
-    this.chats = this.getChats();
+    this.chats = getChats();
   }
 
   copyToClipBord() {
@@ -35,8 +38,9 @@ export class ChatComponent {
     this._api.setChat(this.token, this.password).subscribe((data: any) => {
       if (data.status == 200) {
         this.sucsessCreated = true;
-
-        let obj = { token: data.token, cretaed: formatAMPM(new Date()), name: this.chatTitle }
+        let date = new Date();
+        let today = date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear()+' '+formatAMPM(date);
+        let obj = { token: data.token, cretaed: today, name: this.chatTitle }
         setChat(obj);
 
         this.linkUrl = 'chat/' + data.token;
@@ -49,11 +53,17 @@ export class ChatComponent {
   redirect(to:string){
     this._navigate.navigate([to]);
   }
-  getChats(){
-    if(!localStorage['chats']){
-      let arr:any = [];
-      localStorage['chats'] = JSON.stringify(arr);
+
+  inviteFreind(){
+    if(this.email == '' || this.comment == ''){
+      return alert('Please fill the email and comment');
     }
-    return JSON.parse(localStorage['chats']);
+    this._api.sendEmail(this.email, this.comment, this.fullUrl).subscribe((data:any)=>{
+      if(data.status == 200){
+        alert('Email sent');
+      }else{
+        alert('Email not sent');
+      }
+    });
   }
 }

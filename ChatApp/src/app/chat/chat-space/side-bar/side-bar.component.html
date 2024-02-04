@@ -1,12 +1,17 @@
-<div class="container m-2">Chats</div>
+<div *ngIf="showtitle" class="container p-3 fs-3 text-secondary">
+    Chats
+</div>
 <div class="list">
+    <div *ngIf="chats.length == 0" class="fs-2 text-secondary text-center p-3">
+        no chats found
+    </div>
     <div (click)="redirect('/chat/'+item.token)" class="links" *ngFor="let item of chats; index as i">
         <div class="list-item" [ngClass]="{'list-active': item.token == urlToken}">
-            <div *ngIf="!isChangingName" (click)="isChangingName = !isChangingName">
+            <div>
                 {{item.name | slice:0:15}}
-            </div>
-            <div *ngIf="isChangingName" class="created-at">
-                <input type="text" (blur)="changeParticipentName(i, $event)" (keyup)="handleChange(i, $event)">
+                <div class="trash" (click)="handleDeleteChat()">
+                    <i class="bi bi-trash"></i>
+                </div>
             </div>
             <div class="created-at">{{item.cretaed}}</div>
         </div>

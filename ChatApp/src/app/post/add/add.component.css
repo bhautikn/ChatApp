@@ -156,3 +156,13 @@
     font-size: 1.5625em;
   }
 }
+
+.my-container{
+  width: 40%;
+}
+
+@media screen and (max-width: 768px){
+  .my-container{
+    width: 100%;
+  }
+}
