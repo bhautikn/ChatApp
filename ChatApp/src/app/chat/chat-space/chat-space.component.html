@@ -1,7 +1,7 @@
 <nav>
     <div class="row">
-        <div class="side-nav p-0 m-0" *ngIf="isOpenMenu">
-            <app-side-bar class="w-25"></app-side-bar>
+        <div class="side-nav p-0 m-0" *ngIf="isOpenMenu" >
+            <app-side-bar class="w-25" (onreload)="reloadPage($event)"></app-side-bar>
         </div>
         <div class="col">
             <div class="row">
@@ -41,12 +41,23 @@
                         <div class="" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-three-dots-vertical option" (click)="chatOption = !chatOption"></i>
                         </div>
-                        <ul class="dropdown-menu">
-                            <li class="dropdown-item"><i class="bi bi-share"></i> Invite</li>
-                            <li>
-                                <hr class="dropdown-divider">
+                        <ul class="dropdown-menu p-0">
+                            <li class="dropdown-item p-2">
+                                <i class="bi bi-share"></i>
+                                Invite
                             </li>
-                            <li class="dropdown-item text-danger" (click)="deleteChat()"><i class="bi bi-trash"></i>
+                            <li>
+                                <hr class="p-0 m-0">
+                            </li>
+                            <li class="dropdown-item p-2" (click)="clearChat()">
+                                <i class="bi bi-x-circle"></i>
+                                Clear Chat
+                            </li>
+                            <li>
+                                <hr class="p-0 m-0">
+                            </li>
+                            <li class="dropdown-item text-danger p-2" (click)="deleteChat()">
+                                <i class="bi bi-trash"></i>
                                 Delete Chat
                             </li>
                         </ul>
@@ -75,6 +86,7 @@
                                     <input type="file" style="display: none" id="file-upload"
                                         (change)="uploadFile($event)" accept="image/jpeg, image/png, video/mp4">
                                 </div>
+
                                 <div class="icon">
                                     <div (click)="gifMenu = !gifMenu">
                                         <i class="bi bi-filetype-gif" *ngIf="!gifMenu"></i>
@@ -88,10 +100,8 @@
                                     id="textarea" rows="1"
                                 ></textarea>
 
-                                <div class="icon p-1">
-                                    <div (click)="addTo()">
-                                        <i class="bi bi-send border p-3 bg-success"></i>
-                                    </div>
+                                <div class="icon send-btn-chat-space" (click)="addTo()">
+                                    <i class="bi bi-send p-2 px-3"></i>
                                 </div>
                             </div>
                         </div>

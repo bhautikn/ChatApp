@@ -3,7 +3,7 @@ import { ChattingSoketService } from '../../services/chatting-soket.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiChatService } from '../../services/api-chat.service';
 import Swal from 'sweetalert2';
-import {formatAMPM, getChats} from '../../../environments/environment.development'
+import { formatAMPM, getChats, setChat, tost, updateChat } from '../../../environments/environment.development'
 
 @Component({
   selector: 'app-chat-space',
@@ -22,19 +22,16 @@ export class ChatSpaceComponent implements OnInit {
   urlToken: any = this._route.snapshot.params['token'];
   chatOption: boolean = false;
   isOpenMenu = true;
-  online: boolean = false;
   gifMenu: boolean = false;
   authToken: any = '';
   name = 'Your Freind';
   status: any = 'offline';
   statusColor = 'grey';
-  data: any = '';
+  data: any = this.getChatData(this.urlToken);
   dataType = 'string';
   dropWater: any = new Audio('../assets/sounds/water_drop.mp3');
   incomingRing: any = new Audio('../assets/sounds/phone-incoming.mp3');
   chats: any = [];
-  gifs: any = {};
-
   isVideoCall: boolean = false;
 
   ngOnInit() {
@@ -43,16 +40,18 @@ export class ChatSpaceComponent implements OnInit {
     }
 
     this.authToken = localStorage[this.urlToken];
+    // console.log(this.authToken);
     if (this.authToken == '' || !this.authToken) {
 
       //set for login screen
       const password: any = prompt("Enter Password");
       this.authanticate(this.urlToken, password);
     }
-    this._chat.join(this.authToken)
+    this.joinChat();
 
     //set status
     setTimeout(() => {
+      this.scrollTop();
       this.chats = getChats();
     }, 200)
     this._chat.status().subscribe((data: any) => {
@@ -94,13 +93,16 @@ export class ChatSpaceComponent implements OnInit {
         confirmButtonText: "Answer"
       }).then((result) => {
         if (result.isConfirmed) {
+          
           func(true);
           this.incomingRing.pause()
-          // this.redirect('/chat/video/send/' + this.urlToken)
           this.isVideoCall = true;
+
         } else if (!result.isConfirmed) {
+
           func(false)
           this.incomingRing.pause()
+
         }
       });
     });
@@ -130,7 +132,7 @@ export class ChatSpaceComponent implements OnInit {
     let text: string = textArea.value;
     textArea.style.height = '0px';
     let time: any = formatAMPM(new Date());
-    
+
     if (text == "\n" || text == '' || !text || text.trim() == '') return;
     textArea.value = "";
 
@@ -178,13 +180,15 @@ export class ChatSpaceComponent implements OnInit {
         password = prompt("Wrong password try again");
         this.authanticate(token, password);
       } else {
-        
+
         localStorage.setItem(token, data.id);
         return;
       }
     })
   }
-
+  joinChat(){
+    this._chat.join(this.authToken)
+  }
 
 
   deleteChat() {
@@ -237,11 +241,13 @@ export class ChatSpaceComponent implements OnInit {
   }
 
   setData(child: any) {
+    if (this.status == 'offline') {
+      tost({ title: 'Your Freind is offline', icon: 'warning' });
+    }
     this.dropWater.play();
     this.data += child;
     setTimeout(() => {
-      const container: any = document.querySelector('.chats-container');
-      container.scrollTop = container.scrollHeight;
+      this.scrollTop()
     }, 50);
   }
 
@@ -332,9 +338,8 @@ export class ChatSpaceComponent implements OnInit {
         if (data != 'err') {
           clearAllThings();
         };
-        if (data == true) { 
+        if (data == true) {
           this.isVideoCall = true;
-          // this.redirect('/chat/video/send/' + this.urlToken) 
         };
       })
     }, 1000);
@@ -347,8 +352,52 @@ export class ChatSpaceComponent implements OnInit {
     console.log(event)
     this.isVideoCall = false;
   }
-  goBack(){
+  clearChat() {
+    this.data = '';
+    this.setChatData(this.urlToken, '');
+  }
+  goBack() {
     this._chat.disconnect();
+    this.setChatData(this.urlToken, this.data);
     this.redirect('/');
+  }
+  reloadPage(url: any){
+    this._chat.disconnect();
+    let oldUrl = this.urlToken;
+    this.urlToken = url.split('/')[2];
+    this.setChatData(oldUrl, this.data);
+    this.data = this.getChatData(this.urlToken);
+    this.status = 'offline';
+    this.statusColor = 'grey';
+    setTimeout(() => {
+      this._chat.connect();
+      this.ngOnInit();
+    }, 50);
+  }
+
+  setChatData(urlToken:any, data:any){
+    let chats = getChats();
+    for (let i in chats){
+      if(chats[i].token == urlToken){
+        chats[i].data = data;
+        updateChat(chats);
+        console.log('set chat data', chats[i]);
+        break;
+      }
+    }
+  }
+  getChatData(urlToken:any): any{
+    let chats = getChats();
+    for (let i in chats){
+      if(chats[i].token == urlToken){
+        if (!chats[i].data)
+          return '';
+        return chats[i].data;
+      }
+    }
+  }
+  scrollTop(){
+    const container: any = document.querySelector('.chats-container');
+    container.scrollTop = container.scrollHeight;
   }
 }

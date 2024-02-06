@@ -94,10 +94,11 @@ module.exports = (io) => {
 
         socket.on('status', async (status, id) => {
             const {data, err} = verifyJWTToken(id);
-            if (!err) {
-                const freind = await getFreindByToken(data.token, socket.id);
-                io.to(freind).emit('status', status);
+            if(err){
+                return socket.emit('error', 'Somthing Went Wrong');
             }
+            const freind = await getFreindByToken(data.token, socket.id);
+            io.to(freind).emit('status', status);
         })
 
         socket.on('disconnect', async () => {

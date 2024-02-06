@@ -13,8 +13,9 @@
     --shadow-light: rgb(23, 23, 23);
     --green-dark: #295D56;
     --blue-dark: #39465B;
+    --blue-light: #617fa3;
     --green: rgb(0, 255, 0);
-    --to: rgb(17, 73, 42);
+    --to: rgb(25, 89, 54);
     --from: rgb(27, 50, 118);
     --from-dark: rgb(14, 14, 135);
     --tansparent-black: rgba(0, 0, 0, 0.3);

@@ -6,6 +6,11 @@
     display: flex;
     text-align: center;
 }
+.main-outer-container{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
 .bi-plus{
     text-align: center;
     font-size: 2em;
@@ -17,10 +22,14 @@
 .add-post-btn:hover .text-option{
     display: block;
 }
-
+.side-bar{
+    position: sticky;
+    top: 0;
+}
 .seach-bar{
+    position: sticky;
+    top: 0;
     width: 30%;
-    float: right;
     display: flex;
     gap: 5px;
     padding: 10px;

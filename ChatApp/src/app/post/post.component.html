@@ -1,31 +1,35 @@
-<div class="seach-bar">
-    <input type="search" class="form-control seach-bar-text" *ngIf="isShowSearch" (keyup)="handleSearch($event)" autofocus="true">
-    <button class="btn float-end action-icon border search-icon" title="search" (click)="isShowSearch = !isShowSearch">
-        <i class="bi bi-search"></i>
-    </button>
-</div>
-<app-sidebar class="float-start w-25"></app-sidebar>
+<div class="main-outer-container">
 
-<div class="container" *ngIf="posts.length > 0">
-    <div class="my-container mx-auto">
+
+    <app-sidebar class="w-25 side-bar">
+    </app-sidebar>
+
+    <div *ngIf="posts.length > 0" class="my-container">
         <div *ngFor="let post of posts; index as i">
             <app-single-post [post]="post" showCommentsBtn="true"></app-single-post>
         </div>
-        <div
-            class="search-results"
-            infiniteScroll
-            [infiniteScrollDistance]="2"
-            [infiniteScrollThrottle]="500"
-            (scrolled)="onScroll()"
-        ></div>
+        <div class="search-results" infiniteScroll [infiniteScrollDistance]="2" [infiniteScrollThrottle]="500"
+            (scrolled)="onScroll()"></div>
         <hr>
         <div class="loading-div"></div>
     </div>
+
+    <div *ngIf="posts.length == 0" class="fs-2 text-center p-5 text-secondary">
+        No such Record found
+    </div>
+
+    <div class="seach-bar">
+        <input type="search" class="form-control seach-bar-text" *ngIf="isShowSearch" (keyup)="handleSearch($event)"
+            autofocus="true">
+        <button class="btn float-end action-icon border search-icon" title="search"
+            (click)="isShowSearch = !isShowSearch">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+
+
 </div>
 
-<div *ngIf="posts.length == 0" class="fs-2 text-center p-5 text-secondary">
-    No such Record found
-</div>
 <a class="add-post-btn btn btn-info" routerLink="/post/add">
     <div>
         <i class="bi bi-plus"></i>

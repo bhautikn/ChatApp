@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 const devUrl:string = 'http://'+window.location.hostname+':3000/';
 // const devUrl = 'https://fuzzy-disco-r44g6q4g57jfjvj-3000.app.github.dev/';
 
@@ -51,7 +53,6 @@ export function formatAMPM(date: Date) {
 export function setChat(newChat: any) {
   let chats = getChats()
   chats.push(newChat);
-
   localStorage.setItem('chats', JSON.stringify(chats));
 }
 
@@ -63,3 +64,23 @@ export function getChats() {
   return JSON.parse(localStorage['chats']);
 }
 
+export function updateChat(chats:any){
+  localStorage.setItem('chats', JSON.stringify(chats));
+}
+export function tost(props:any) {
+  var toastMixin = Swal.mixin({
+    toast: true,
+    animation: true,
+    position: 'top-right',
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  });
+  toastMixin.fire(
+    props
+  );
+}

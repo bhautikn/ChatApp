@@ -50,4 +50,7 @@ export class ChattingSoketService {
 	disconnect(){
 		this._socket.disconnect();		
 	}
+	connect(){
+		this._socket.connect();
+	}
 }
