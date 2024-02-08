@@ -6,10 +6,19 @@
         no chats found
     </div>
     <div (click)="redirect('/chat/'+item.token)" class="links" *ngFor="let item of chats; index as i">
+        <div class="position-relative">
+            
+            <span *ngIf="item.unread > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" >
+                {{item.unread}}
+              <span class="visually-hidden">unread messages</span>
+            </span>
+
+        </div>
         <div class="list-item" [ngClass]="{'list-active': item.token == urlToken}">
+            
             <div>
                 {{item.name | slice:0:15}}
-                <div class="trash" (click)="handleDeleteChat()">
+                <div class="trash" (click)="handleDeleteChat(i)">
                     <i class="bi bi-trash"></i>
                 </div>
             </div>

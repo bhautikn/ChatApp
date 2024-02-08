@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { ApiChatService } from '../services/api-chat.service';
 import { Router } from '@angular/router';
 import { formatAMPM, getChats, setChat } from '../../environments/environment.development';
+import { Store } from '@ngrx/store';
+import { addChat } from '../reducer/chat.action';
 
 
 @Component({
@@ -11,13 +13,13 @@ import { formatAMPM, getChats, setChat } from '../../environments/environment.de
 })
 export class ChatComponent {
 
-  constructor(private _api: ApiChatService, private _navigate: Router) { }
+  constructor(private _api: ApiChatService, private _navigate: Router, private store: Store) { }
   linkUrl: string = '';
   fullUrl: string = ''
   token = '';
   showClip = true;
   password: string = '';
-  chats:any = [];
+  chats: any = [];
   sucsessCreated: boolean = false;
   FailHappen: boolean = false;
   chatTitle: string = '';
@@ -25,7 +27,7 @@ export class ChatComponent {
   email: string = '';
   comment: string = '';
 
-  ngOnInit(){
+  ngOnInit() {
     this.chats = getChats();
   }
 
@@ -39,9 +41,16 @@ export class ChatComponent {
       if (data.status == 200) {
         this.sucsessCreated = true;
         let date = new Date();
-        let today = date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear()+' '+formatAMPM(date);
-        let obj = { token: data.token, cretaed: today, name: this.chatTitle }
-        setChat(obj);
+        let today = date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear() + ' ' + formatAMPM(date);
+        let obj = {
+          token: data.token,
+          cretaed: today,
+          name: this.chatTitle,
+          data: '',
+          unread: 0,
+        }
+
+        this.store.dispatch(addChat({ chatObj: obj }))
 
         this.linkUrl = 'chat/' + data.token;
         this.fullUrl = window.location + this.linkUrl;
@@ -50,18 +59,18 @@ export class ChatComponent {
       }
     })
   }
-  redirect(to:string){
+  redirect(to: string) {
     this._navigate.navigate([to]);
   }
 
-  inviteFreind(){
-    if(this.email == '' || this.comment == ''){
+  inviteFreind() {
+    if (this.email == '' || this.comment == '') {
       return alert('Please fill the email and comment');
     }
-    this._api.sendEmail(this.email, this.comment, this.fullUrl).subscribe((data:any)=>{
-      if(data.status == 200){
+    this._api.sendEmail(this.email, this.comment, this.fullUrl).subscribe((data: any) => {
+      if (data.status == 200) {
         alert('Email sent');
-      }else{
+      } else {
         alert('Email not sent');
       }
     });

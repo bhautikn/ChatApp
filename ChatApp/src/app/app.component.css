@@ -7,7 +7,7 @@ nav{
 .my-container{
     padding: 1px 10px;
     border-radius: 10px;
-    background-color: var(--background-light);
+    background-color: var(--background);
 }
 .navigator{
     border-radius: 10px;

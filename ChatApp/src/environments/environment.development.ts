@@ -36,7 +36,7 @@ export const formateTime = (date:any) => {
     if (interval > 1) {
       return Math.floor(interval) + " minutes ago";
     }
-    return Math.floor(seconds) + " seconds ago";
+    return "few seconds ago";
 }
 
 export function formatAMPM(date: Date) {
@@ -83,4 +83,22 @@ export function tost(props:any) {
   toastMixin.fire(
     props
   );
+}
+
+export function deleteChat(urlToken: any){
+  localStorage.removeItem(urlToken)
+  let chats = getChats();
+  chats = chats.filter((item:any)=>{
+    return item.token !=  urlToken;
+  })
+  localStorage.setItem('chats', JSON.stringify(chats))
+  return {
+    length: chats.length,
+    firstToken: length!=0?chats[0].token:'',
+  }
+}
+
+export function getToday(){
+  const date = new Date();
+  return date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear() + ' ' + formatAMPM(date);
 }

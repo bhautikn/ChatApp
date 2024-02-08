@@ -1,7 +1,7 @@
 <nav>
   <div class="my-container">
     <div class="row p-1">
-      <div class="col navigator" id="chat" (click)="navigate('/', $event)" style="background: #295D56;">
+      <div class="col navigator" id="chat" (click)="navigate('/', $event)" style="background: var(--green-dark);">
         chat
       </div>
       <div class="col navigator" id="post" (click)="navigate('post', $event)">
@@ -9,6 +9,9 @@
       </div>
     </div>
   </div>
+  <!-- <div *ngFor="let todo of chats">
+    {{todo.data | json}}
+  </div> -->
 </nav>
 
 <router-outlet></router-outlet>

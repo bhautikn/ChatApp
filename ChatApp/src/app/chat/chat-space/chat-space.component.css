@@ -1,5 +1,5 @@
 nav {
-    background-color: var(--blue-dark);
+    background-color: var(--background-light-3);
     padding: 5px;
 }
 
@@ -151,7 +151,9 @@ nav {
     margin-top: 5px;
     display: flex;
     align-items: flex-end;
-    background-color: var(--background-light);
+    background-color: var(--background);
+    border: 1px solid rgb(51, 51, 51);
+    /* background-image: url('./../../../assets/images/chat-back.svg'); */
 }
 
 .end-container {

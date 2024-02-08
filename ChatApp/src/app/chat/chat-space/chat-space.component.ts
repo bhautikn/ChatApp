@@ -3,7 +3,11 @@ import { ChattingSoketService } from '../../services/chatting-soket.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiChatService } from '../../services/api-chat.service';
 import Swal from 'sweetalert2';
-import { formatAMPM, getChats, setChat, tost, updateChat } from '../../../environments/environment.development'
+import { deleteChat, formatAMPM, getChats, getToday, setChat, tost, updateChat } from '../../../environments/environment.development'
+import { Store } from '@ngrx/store';
+import { getAllChats, getChatByToken } from '../../reducer/chat.selector';
+import { addChat, appendData, resetChatData, resetresetUnreadToZero } from '../../reducer/chat.action';
+import { genrateData } from '../../functions';
 
 @Component({
   selector: 'app-chat-space',
@@ -17,6 +21,7 @@ export class ChatSpaceComponent implements OnInit {
     private _route: ActivatedRoute,
     private _api: ApiChatService,
     private _navigate: Router,
+    private store: Store
   ) { }
 
   urlToken: any = this._route.snapshot.params['token'];
@@ -27,42 +32,79 @@ export class ChatSpaceComponent implements OnInit {
   name = 'Your Freind';
   status: any = 'offline';
   statusColor = 'grey';
-  data: any = this.getChatData(this.urlToken);
+  data: any;
   dataType = 'string';
   dropWater: any = new Audio('../assets/sounds/water_drop.mp3');
   incomingRing: any = new Audio('../assets/sounds/phone-incoming.mp3');
   chats: any = [];
+  curruntIndex:number = -1;
   isVideoCall: boolean = false;
+  chatTitle: string = ''
 
-  ngOnInit() {
+  async ngOnInit() {
+    
+    this.store.select(getAllChats).subscribe((data: any)=>{
+      console.log('Hello');
+      this.chats = data.chat;
+      if(this.curruntIndex == -1){
+        this.curruntIndex  = this.chats.map((e:any) => e.token).indexOf(this.urlToken);
+        if(this.curruntIndex >= 0 ){
+          if(this.chats[this.curruntIndex].data){
+            this.data = this.chats[this.curruntIndex].data;
+          }else{
+            this.data = ''
+          }
+        }
+      }
+      else{
+        if(this.curruntIndex >= 0 ){
+          if(this.chats[this.curruntIndex].data){
+            this.data = this.chats[this.curruntIndex].data;
+          }else{
+            this.data = ''
+          }
+        }
+      }
+      setTimeout(() => {
+        this.scrollTop();
+      }, 200)
+      // if(this.curruntIndex >= 0){
+
+      // }
+    })
+
+    // this.store.select(getChatByToken({token: this.urlToken})).subscribe((data:any)=>{
+    //   if(data){
+    //     this.data = data.data
+    //     this.scrollTop();
+
+    //     setTimeout(() => {
+    //       this.scrollTop();
+    //     }, 200)
+    //     // this.store.dispatch(resetresetUnreadToZero({token: this.urlToken}));
+    //   }
+    //   else{
+    //     this.data = '';
+    //   }
+    // })
     if (screen.width < 700) {
       this.isOpenMenu = false;
     }
 
     this.authToken = localStorage[this.urlToken];
-    // console.log(this.authToken);
+
     if (this.authToken == '' || !this.authToken) {
 
       //set for login screen
-      const password: any = prompt("Enter Password");
-      this.authanticate(this.urlToken, password);
+      const password: any = await this.passwordEnterPopUp();
+      await this.authanticate(this.urlToken, password);
     }
-    this.joinChat();
 
     //set status
-    setTimeout(() => {
-      this.scrollTop();
-      this.chats = getChats();
-    }, 200)
+
     this._chat.status().subscribe((data: any) => {
       this.status = data;
     })
-
-    this._chat.onReceive().subscribe(({ massage, dataType }: any) => {
-      this.addFrom(massage, dataType);
-      this.dropWater.play();
-    })
-
 
     this._chat.onReqVideoCall().subscribe((func: any) => {
       this.incomingRing.play()
@@ -93,7 +135,7 @@ export class ChatSpaceComponent implements OnInit {
         confirmButtonText: "Answer"
       }).then((result) => {
         if (result.isConfirmed) {
-          
+
           func(true);
           this.incomingRing.pause()
           this.isVideoCall = true;
@@ -136,57 +178,45 @@ export class ChatSpaceComponent implements OnInit {
     if (text == "\n" || text == '' || !text || text.trim() == '') return;
     textArea.value = "";
 
-    let child = this.genrateData('text', 'to', text);
+    let child = genrateData('text', 'to', text);
     this.setData(child);
     this._chat.send(text, this.dataType, this.authToken);
     this._chat.sendStatus('online', this.authToken);
 
   }
-  addFrom(text: any, dataType: string) {
-    var child = '';
 
-    switch (dataType) {
-      case 'string':
-        child = this.genrateData('text', 'from', text);
-        break;
-
-      case 'gif':
-        child = this.genrateData('image', 'from', text);
-        break;
-
-      case 'image':
-        let blob = new Blob([text])
-        let myFile: File = new File([blob], "file.jpg")
-        let src: any = URL.createObjectURL(myFile);
-        child = this.genrateData('image', 'from', src);
-        break;
-
-      case 'video':
-        let blobVideo = new Blob([text])
-        let myFileVideo: File = new File([blobVideo], "file.mp4")
-        let srcVideo: any = URL.createObjectURL(myFileVideo);
-        child = this.genrateData('video', 'from', srcVideo);
-        break;
-
-    }
-    this.setData(child);
-  }
-
-
-
-  authanticate(token: any, password: any) {
-    this._api.authanticate(token, password).subscribe((data: any) => {
+  async authanticate(token: any, password: any) {
+    await this._api.authanticate(token, password).subscribe(async (data: any) => {
       if (data.login == false) {
-        password = prompt("Wrong password try again");
+        password = await this.passwordEnterPopUp();
         this.authanticate(token, password);
       } else {
-
         localStorage.setItem(token, data.id);
+        let isFound: boolean = false;
+        this.chats.forEach((element: any) => {
+          if (element.token == this.urlToken) {
+            isFound = true;
+            return;
+          }
+        });
+        if (!isFound) {
+          let name:string = await this.nameEnterPopUp();
+          let today = getToday();
+
+          let obj = {
+            token: this.urlToken,
+            cretaed: today,
+            name: name,
+            data: '',
+            unread: 0,
+          }
+          this.store.dispatch(addChat({chatObj: obj}));
+        }
         return;
       }
     })
   }
-  joinChat(){
+  joinChat() {
     this._chat.join(this.authToken)
   }
 
@@ -195,18 +225,14 @@ export class ChatSpaceComponent implements OnInit {
     let isDelete = confirm("are you sure??")
     if (isDelete) {
       this._api.deleteChat(this.urlToken, this.authToken).subscribe((data: any) => {
+
         if (data.ok == 200) {
-          // localStorage.clear();
-          // let chats = this.getChats();
-          //todo: make clear one chat from array of object
-          localStorage.removeItem(this.urlToken)
-          localStorage.removeItem('chats');
-          // for (let i in chats){
-          //   if(chats[i].token == this.urlToken){
-          //     chats.splice(i, 1);
-          //     localStorage.setItem('chats', JSON.stringify(chats));
-          //     break;
-          //   }
+          const { length,firstToken } = deleteChat(this.urlToken)
+          // if (length != 0) {
+          //   this._navigate.navigate(['/chat/' + firstToken]);
+          // }
+          // else {
+          // this._navigate.navigate(['/']);
           // }
           this._navigate.navigate(['/']);
         }
@@ -226,16 +252,16 @@ export class ChatSpaceComponent implements OnInit {
     if (file.type.split('/')[0] == 'image') {
       this._chat.send(e.target.files[0], 'image', this.authToken);
       let src: any = URL.createObjectURL(file);
-      child = this.genrateData('image', 'to', src);
+      child = genrateData('image', 'to', src);
     }
     else if (file.type.split('/')[0] == 'video') {
       this._chat.send(file, 'video', this.authToken);
       let src: any = URL.createObjectURL(file);
-      child = this.genrateData('video', 'to', src);
+      child = genrateData('video', 'to', src);
     }
     else {
       this._chat.send(file, file.miamitype, this.authToken);
-      child = this.genrateData('other', 'to', null);
+      child = genrateData('other', 'to', null);
     }
     this.setData(child);
   }
@@ -245,56 +271,18 @@ export class ChatSpaceComponent implements OnInit {
       tost({ title: 'Your Freind is offline', icon: 'warning' });
     }
     this.dropWater.play();
-    this.data += child;
+    // this.data += child;
+    this.store.dispatch(appendData({token: this.urlToken, data: child}))
     setTimeout(() => {
       this.scrollTop()
     }, 50);
   }
 
-  genrateData(miamitype: string, fromOrTo: string, data: any): string {
-
-    let forVideo = `
-      <video width="320" height="240" class="text" controls>
-        <source src='${data}' type="video/mp4" >
-      </video> <br>
-    `;
-    let forImage = `
-      <img src='${data}' class="text"> <br>
-    `;
-    let forText = `
-      <div class="text">${data}</div>
-    `;
-    let forOther = `
-      <div></div>
-    `
-    switch (miamitype) {
-      case 'text':
-        return this.getStrBydata(forText, fromOrTo);
-      case 'image':
-        return this.getStrBydata(forImage, fromOrTo);
-      case 'video':
-        return this.getStrBydata(forVideo, fromOrTo);
-      default:
-        return ''
-    }
-  }
-  getStrBydata(data: string, fromOrTo: string) {
-    let child = `
-      <div class="row">
-          <div class="${fromOrTo}">
-              <div class="massage">
-                ${data}
-                <div class="time">${formatAMPM(new Date())}</div>
-              </div>
-          </div>
-      </div>
-    `;
-    return child;
-  }
+  
 
   sendGif(data: any) {
     this.gifMenu = false;
-    let child = this.genrateData('image', 'to', data);
+    let child = genrateData('image', 'to', data);
     this.setData(child)
     this._chat.sendStatus('online', this.authToken);
     this._chat.send(data, 'gif', this.authToken);
@@ -354,50 +342,83 @@ export class ChatSpaceComponent implements OnInit {
   }
   clearChat() {
     this.data = '';
-    this.setChatData(this.urlToken, '');
+    this.store.dispatch(resetChatData({token: this.urlToken}))
+    // this.setChatData(this.urlToken, '');
   }
   goBack() {
-    this._chat.disconnect();
-    this.setChatData(this.urlToken, this.data);
+    // this.setChatData(this.urlToken, this.data);
     this.redirect('/');
   }
-  reloadPage(url: any){
-    this._chat.disconnect();
-    let oldUrl = this.urlToken;
+  reloadPage(url: any) {
+    // let oldUrl = this.urlToken;
+    this.curruntIndex = -1;
     this.urlToken = url.split('/')[2];
-    this.setChatData(oldUrl, this.data);
-    this.data = this.getChatData(this.urlToken);
-    this.status = 'offline';
-    this.statusColor = 'grey';
+    // this.setChatData(oldUrl, this.data);
+    // this.data = this.getChatData(this.urlToken);
+    // this.status = 'offline';
+    // this.statusColor = 'grey';
     setTimeout(() => {
-      this._chat.connect();
+      // this._chat.connect();
       this.ngOnInit();
     }, 50);
   }
 
-  setChatData(urlToken:any, data:any){
-    let chats = getChats();
-    for (let i in chats){
-      if(chats[i].token == urlToken){
-        chats[i].data = data;
-        updateChat(chats);
-        console.log('set chat data', chats[i]);
-        break;
-      }
-    }
-  }
-  getChatData(urlToken:any): any{
-    let chats = getChats();
-    for (let i in chats){
-      if(chats[i].token == urlToken){
-        if (!chats[i].data)
-          return '';
-        return chats[i].data;
-      }
-    }
-  }
-  scrollTop(){
+  // setChatData(urlToken: any, data: any) {
+  //   let chats = getChats();
+  //   for (let i in chats) {
+  //     if (chats[i].token == urlToken) {
+  //       chats[i].data = data;
+  //       updateChat(chats);
+  //       break;
+  //     }
+  //   }
+  // }
+  // getChatData(urlToken: any): any {
+  //   let chats = getChats();
+  //   for (let i in chats) {
+  //     if (chats[i].token == urlToken) {
+  //       if (!chats[i].data)
+  //         return '';
+  //       return chats[i].data;
+  //     }
+  //   }
+  // }
+  scrollTop() {
     const container: any = document.querySelector('.chats-container');
     container.scrollTop = container.scrollHeight;
+  }
+
+  async passwordEnterPopUp() {
+    let outPassword: string = ''
+
+    await Swal.fire({
+      title: "Enter password",
+      input: "password",
+      customClass: 'swal-background',
+      inputAttributes: {
+        autocapitalize: "off"
+      },
+      showCancelButton: true,
+      preConfirm: (password) => {
+        outPassword = password;
+      }
+    })
+    return outPassword;
+  }
+  async nameEnterPopUp(){
+    let Outname: string = 'Anonymouse';
+    await Swal.fire({
+      title: 'Chat Name',
+      input: "text",
+      customClass: 'swal-background',
+      showCancelButton: true,
+      inputAttributes: {
+        autocapitalize: "off"
+      },
+      preConfirm: (name) => {
+        Outname = name;
+      }
+    })
+    return Outname;
   }
 }

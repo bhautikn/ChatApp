@@ -14,7 +14,6 @@ import { SideBarComponent } from './chat/chat-space/side-bar/side-bar.component'
 import { AddComponent } from './post/add/add.component';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PostByIdComponent } from './post/post-by-id/post-by-id.component';
 import { VideoCallComponent } from './chat/chat-space/video-call/video-call.component';
 import { BackNevigationComponent } from './back-nevigation/back-nevigation.component';
@@ -25,6 +24,8 @@ import { SinglePostComponent } from './post/single-post/single-post.component';
 import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { UploadComponent } from './post/live/upload/upload.component';
 import { GIFComponent } from './gif/gif.component';
+import { StoreModule } from '@ngrx/store';
+import { chatReducer } from './reducer/chat.reducer';
 
 const config: SocketIoConfig = {
     url: environment.soketUrl,
@@ -54,12 +55,12 @@ const config: SocketIoConfig = {
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    MatProgressBarModule,
     ReactiveFormsModule,
     CommonModule,
     SocketIoModule.forRoot(config),
     BrowserAnimationsModule,
     InfiniteScrollModule,
+    StoreModule.forRoot({chat: chatReducer}),
   ],
   providers: [],
   bootstrap: [AppComponent],

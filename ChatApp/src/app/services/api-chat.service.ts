@@ -16,7 +16,7 @@ export class ApiChatService {
     return this._http.delete(this.url + chatId, { headers: { token: token } })
   }
   authanticate(token: string, password: string) {
-    return this._http.post(this.url + '/authanticate', { password: password, token: token });
+    return this._http.post(this.url + 'authanticate', { password: password, token: token });
   }
   sendEmail(email: string, comment: string, url: string) {
     return this._http.post(this.url+'email', { email: email, comment: comment, chat_link: url });

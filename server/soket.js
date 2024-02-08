@@ -55,7 +55,7 @@ module.exports = (io) => {
                 }
 
                 const freind = await getFreindByToken(data.token, socket.id);
-                io.to(freind).emit('recive', { massage: massage, dataType: dataType });
+                io.to(freind).emit('recive', { massage: massage, dataType: dataType, to: data.token});
             }
         })
 

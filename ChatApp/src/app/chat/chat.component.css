@@ -13,7 +13,9 @@ svg{
     margin: 0 auto;
 }
 .seclect-choice{
-    background-color: var(--background-light);
+    background-color: var(--background-light-4);
+    border-radius: 10px;
+    /* box-shadow: 0px 0px 20px black; */
     margin: 5px;
     padding: 10px;
 }

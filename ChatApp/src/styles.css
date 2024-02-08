@@ -4,14 +4,17 @@
     box-sizing: border-box;
 }
 :root{
-    --background: #222222;
+    --background-green: rgba(31, 58, 32, 0.3);
+    --background: #101820;
+    --background-light-3: #192632;
+    --background-light-4: #1f2d3a;
     --background-light: #333333;
     --background-light-2: #444444;
     --text: white;
     --text-light: grey;
     --shadow: black;
     --shadow-light: rgb(23, 23, 23);
-    --green-dark: #295D56;
+    --green-dark: #0c342e;
     --blue-dark: #39465B;
     --blue-light: #617fa3;
     --green: rgb(0, 255, 0);
