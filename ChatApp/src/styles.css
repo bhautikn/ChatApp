@@ -28,7 +28,10 @@ body{
     overflow-x: hidden;
 }
 
-html, body { height: 100%; }
+html, body {
+    height: 100%;
+    scroll-behavior: smooth;
+}
 
 body { 
     margin: 0; 
@@ -39,3 +42,25 @@ body {
     background-color: var(--background-light);
     color: var(--text);
 }
+
+/* width */
+::-webkit-scrollbar {
+    width: 2px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: rgb(91, 91, 91); 
+    border-radius: 10px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #b30000; 
+  }

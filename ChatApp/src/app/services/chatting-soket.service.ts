@@ -29,10 +29,17 @@ export class ChattingSoketService {
 	disconnectVideoCall(token:any){
 		this._socket.emit('disconnectVideoCall', token);
 	}
+	cancleVideoCall(token:any){
+		this._socket.emit('cancleVideoCall', token);
+	}
 	// listen event
+	onCancleVideoCall(){
+		return this._socket.fromEvent('cancleVideoCall');
+	}
 	onDisconnectVideoCall(){
 		return this._socket.fromEvent('disconnectVideoCall');
 	}
+
 	onPeerConnectionId(){
 		return this._socket.fromEvent('sendPeerConnectionId');
 	}

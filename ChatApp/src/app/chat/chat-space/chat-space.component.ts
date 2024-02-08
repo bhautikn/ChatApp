@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store';
 import { getAllChats, getChatByToken } from '../../reducer/chat.selector';
 import { addChat, appendData, resetChatData, resetresetUnreadToZero } from '../../reducer/chat.action';
 import { genrateData } from '../../functions';
+import { animation } from '@angular/animations';
 
 @Component({
   selector: 'app-chat-space',
@@ -35,16 +36,14 @@ export class ChatSpaceComponent implements OnInit {
   data: any;
   dataType = 'string';
   dropWater: any = new Audio('../assets/sounds/water_drop.mp3');
-  incomingRing: any = new Audio('../assets/sounds/phone-incoming.mp3');
   chats: any = [];
   curruntIndex:number = -1;
   isVideoCall: boolean = false;
   chatTitle: string = ''
 
   async ngOnInit() {
-    
+
     this.store.select(getAllChats).subscribe((data: any)=>{
-      console.log('Hello');
       this.chats = data.chat;
       if(this.curruntIndex == -1){
         this.curruntIndex  = this.chats.map((e:any) => e.token).indexOf(this.urlToken);
@@ -67,26 +66,9 @@ export class ChatSpaceComponent implements OnInit {
       }
       setTimeout(() => {
         this.scrollTop();
-      }, 200)
-      // if(this.curruntIndex >= 0){
-
-      // }
+      }, 10)
+      // this.store.dispatch(resetresetUnreadToZero({token: this.urlToken}));
     })
-
-    // this.store.select(getChatByToken({token: this.urlToken})).subscribe((data:any)=>{
-    //   if(data){
-    //     this.data = data.data
-    //     this.scrollTop();
-
-    //     setTimeout(() => {
-    //       this.scrollTop();
-    //     }, 200)
-    //     // this.store.dispatch(resetresetUnreadToZero({token: this.urlToken}));
-    //   }
-    //   else{
-    //     this.data = '';
-    //   }
-    // })
     if (screen.width < 700) {
       this.isOpenMenu = false;
     }
@@ -99,21 +81,25 @@ export class ChatSpaceComponent implements OnInit {
       const password: any = await this.passwordEnterPopUp();
       await this.authanticate(this.urlToken, password);
     }
-
+    this.name = this.chats[this.curruntIndex].name;
     //set status
-
     this._chat.status().subscribe((data: any) => {
       this.status = data;
     })
 
+    this._chat.onCancleVideoCall().subscribe(()=>{
+      console.log('cancling call');
+      Swal.close();
+    })
     this._chat.onReqVideoCall().subscribe((func: any) => {
-      this.incomingRing.play()
+      const incomingRing: any = new Audio('../assets/sounds/phone-incoming.mp3');
+      incomingRing.play()
       // this.incomingRing.loop=true;
 
       Swal.fire({
         title: "Incomming Video Call",
         iconHtml: "<i class='bi bi-telephone-inbound'></i>",
-        timer: 1000,
+        timer: 10000,
         customClass: 'swal-background',
         showClass: {
           popup: `
@@ -135,16 +121,12 @@ export class ChatSpaceComponent implements OnInit {
         confirmButtonText: "Answer"
       }).then((result) => {
         if (result.isConfirmed) {
-
           func(true);
-          this.incomingRing.pause()
+          incomingRing.pause()
           this.isVideoCall = true;
-
         } else if (!result.isConfirmed) {
-
           func(false)
-          this.incomingRing.pause()
-
+          incomingRing.pause()
         }
       });
     });
@@ -268,7 +250,7 @@ export class ChatSpaceComponent implements OnInit {
 
   setData(child: any) {
     if (this.status == 'offline') {
-      tost({ title: 'Your Freind is offline', icon: 'warning' });
+      tost({ title: 'Your Freind is offline', icon: 'warning' }, true);
     }
     this.dropWater.play();
     // this.data += child;
@@ -291,18 +273,16 @@ export class ChatSpaceComponent implements OnInit {
   videoCall() {
 
     function clearAllThings() {
-      clearInterval(videoReq)
       clearInterval(MusicPlayId)
-      clearInterval(timerInterval)
       phoneCallMusic.pause();
       Swal.close()
     }
 
-    let timerInterval: any;
     const phoneCallMusic = new Audio('../assets/sounds/phone-outgoing.mp3')
     const MusicPlayId = setInterval(() => {
       phoneCallMusic.play();
     }, 500);
+
     Swal.fire({
       customClass: 'swal-background',
       position: "top-end",
@@ -313,33 +293,33 @@ export class ChatSpaceComponent implements OnInit {
       showCancelButton: true,
       willClose: () => {
         clearAllThings();
+        this._chat.cancleVideoCall(this.authToken);
+        tost({ title: 'User is busy', icon: 'info' });
       }
     }).then((result: any) => {
       if (!result.isConfirmed) {
         clearAllThings();
+        this._chat.cancleVideoCall(this.authToken);
       }
     })
+    this._chat.reqVideoCall(this.authToken, (data: any) => {
 
-    let videoReq = setInterval(() => {
-      this._chat.reqVideoCall(this.authToken, (data: any) => {
-        console.log(data);
-        if (data != 'err') {
-          clearAllThings();
-        };
-        if (data == true) {
-          this.isVideoCall = true;
-        };
-      })
-    }, 1000);
-    setTimeout(() => {
-      clearInterval(videoReq);
-    }, 10 * 1000)
-
+      if (data != 'err') {
+        clearAllThings();
+        tost({ title: 'User is busy', icon: 'info' })
+      };
+      if (data == true) {
+        clearAllThings();
+        this.isVideoCall = true;
+      };
+    })
   }
+
   handleVideoCallCutEvent(event: any) {
     console.log(event)
     this.isVideoCall = false;
   }
+
   clearChat() {
     this.data = '';
     this.store.dispatch(resetChatData({token: this.urlToken}))

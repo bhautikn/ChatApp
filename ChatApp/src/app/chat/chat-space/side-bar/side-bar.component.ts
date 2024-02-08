@@ -32,12 +32,15 @@ export class SideBarComponent {
     this.store.select(getAllChats).subscribe((data:any)=>{
       this.chats = data.chat;
     })
+    setTimeout(()=>{
+    }, 50)
     // if (this.chats.length == 0) {
     //   this._nevigate.navigate(['/']);
     // };
   }
   redirect(to: string) {
     this._nevigate.navigate([to]);
+    this.urlToken = to.split('/')[2];
     this.onreload.emit(to);
   }
   handleChange(index: number, event: any) {

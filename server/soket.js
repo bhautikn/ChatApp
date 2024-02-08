@@ -66,16 +66,27 @@ module.exports = (io) => {
                 }
                 const freind = await getFreindByToken(data.token, socket.id);
 
-                io.timeout(1000).to(freind).emit('reqVideoCall', (err, res) => {
+                io.timeout(10000).to(freind).emit('reqVideoCall', (err, res) => {
                     if (err) callback('err');
                     if (res[0] == true) callback(true);
                     else if (res[0] == false) callback(false);
                 })
         })
+
+        socket.on('cancleVideoCall', async (id) => {
+            console.log('req come here');
+            const { data, err } = verifyJWTToken(id);
+            if (err) {
+                return socket.emit('error', 'Somthing Went Wrong');
+            } else {
+                const freind = await getFreindByToken(data.token, socket.id);
+                io.to(freind).emit('cancleVideoCall');
+            }
+        })
+
         socket.on('disconnectVideoCall', async (id) => {
 
             const { data, err } = verifyJWTToken(id);
-            console.log(data, err);
             if (err) {
                 return socket.emit('error', 'Somthing Went Wrong');
             } else {

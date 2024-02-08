@@ -11,7 +11,6 @@ import {
 } from './chat.action';
 
 import { getChats } from "../../environments/environment.development";
-import { Token } from "@angular/compiler";
 
 
 
@@ -31,7 +30,6 @@ function commitR(state:any){
     localStorage.setItem('chats', JSON.stringify(state))
 }
 function appendDataR(state: any, token: number, data: any) {
-    console.log('called reducder append data')
     const index = getIndexByToken(state, token);
     if (index >= 0) {
         let tempData = { ...state[index], data: state[index].data + data, unread: state[index].unread + 1 }
@@ -42,7 +40,6 @@ function appendDataR(state: any, token: number, data: any) {
 
 function resetDataR(state: any, token: any) {
     
-    console.log('called reducder reset data')
     const index = getIndexByToken(state, token);
     if(index >= 0){
         let tempData = { ...state[index], data: '' }
@@ -52,7 +49,6 @@ function resetDataR(state: any, token: any) {
 }
 
 function deleteChatR(state: any, index: number) {
-    console.log('called reducder delete data')
     localStorage.removeItem(state[index].token);
     return [
         ...state.slice(0, index),
@@ -73,7 +69,6 @@ function resetUnreadToZeroR(state: any, token: any) {
     return state;
 }
 function setChatNameR(state: any, token: any, name: string) {
-    console.log('called reducder set name data')
 
     for (let i in state) {
         if (state[i].token == token) {

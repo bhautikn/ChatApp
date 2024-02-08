@@ -67,24 +67,26 @@ export function getChats() {
 export function updateChat(chats:any){
   localStorage.setItem('chats', JSON.stringify(chats));
 }
-export function tost(props:any) {
+export function tost(props:any, animation:boolean = false) {
+
   var toastMixin = Swal.mixin({
     toast: true,
-    animation: true,
+    animation: animation,
     position: 'top-right',
     showConfirmButton: false,
-    timer: 3000,
+    timer: 2000,
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.addEventListener('mouseenter', Swal.stopTimer)
       toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
   });
-  toastMixin.fire(
-    props
-  );
+  setTimeout(()=>{
+    toastMixin.fire(
+      props
+    );
+  }, 50)
 }
-
 export function deleteChat(urlToken: any){
   localStorage.removeItem(urlToken)
   let chats = getChats();
