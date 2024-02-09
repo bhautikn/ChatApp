@@ -39,7 +39,8 @@ export const formateTime = (date:any) => {
     return "few seconds ago";
 }
 
-export function formatAMPM(date: Date) {
+export function formatAMPM(date: any) {
+  date = new Date(date);
   var hours: any = date.getHours();
   var minutes: any = date.getMinutes();
   var ampm = hours >= 12 ? 'pm' : 'am';

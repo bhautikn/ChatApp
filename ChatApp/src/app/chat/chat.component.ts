@@ -46,7 +46,7 @@ export class ChatComponent {
           token: data.token,
           cretaed: today,
           name: this.chatTitle,
-          data: '',
+          data: [],
           unread: 0,
         }
 

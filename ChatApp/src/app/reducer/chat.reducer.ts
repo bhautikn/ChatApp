@@ -27,12 +27,25 @@ export const chatReducer = createReducer(
 function commitR(state: any) {
     localStorage.setItem('chats', JSON.stringify(state))
 }
+// function appendDataR(state: any, token: number, data: any) {
+//     const index = getIndexByToken(state, token);
+//     if (index >= 0) {
+//         let tempData = { 
+//             ...state[index], 
+//             data: state[index].data + data, 
+//             unread: state[index].unread + 1 
+//         }
+//         return changeObjectBetweenArray(state, tempData, index);
+//     }
+//     return state;
+// }
+
 function appendDataR(state: any, token: number, data: any) {
     const index = getIndexByToken(state, token);
     if (index >= 0) {
         let tempData = { 
             ...state[index], 
-            data: state[index].data + data, 
+            data: [...state[index].data, data], 
             unread: state[index].unread + 1 
         }
         return changeObjectBetweenArray(state, tempData, index);
@@ -40,12 +53,11 @@ function appendDataR(state: any, token: number, data: any) {
     return state;
 }
 
-
 function resetDataR(state: any, token: any) {
 
     const index = getIndexByToken(state, token);
     if (index >= 0) {
-        let tempData = { ...state[index], data: '', unread: 0 }
+        let tempData = { ...state[index], data: [], unread: 0 }
         return changeObjectBetweenArray(state, tempData, index);
     }
     return state;

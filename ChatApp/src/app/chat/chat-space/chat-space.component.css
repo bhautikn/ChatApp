@@ -228,13 +228,26 @@ nav {
 
 }
 /* massage to css set */
-::ng-deep .to,
-::ng-deep .from {
+.to {
     margin: 5px 0;
+    animation: chat-animation-to 200ms linear;
 }
-
-::ng-deep .to .massage,
-::ng-deep .from .massage {
+.from{
+    margin: 5px 0;
+    animation: chat-animation-from 200ms linear;
+}
+@keyframes chat-animation-to {
+    from {
+        transform: translateX(-20px);
+    }
+}
+@keyframes chat-animation-from {
+    from {
+        transform: translateX(20px);
+    }
+}
+.to .massage, .from .massage {
+    /* background-color: green; */
     padding: 2px;
     float: right;
     width: max-content;
@@ -243,8 +256,7 @@ nav {
     max-width: 60%;
 }
 
-::ng-deep .to .text,
-::ng-deep .from .text {
+.to .text, .from .text {
     background-color: var(--to);
     padding: 10px;
     font-size: 1.2em;
@@ -253,7 +265,7 @@ nav {
 
 }
 
-::ng-deep .to .massage-status {
+.to .massage-status {
     float: right;
     font-size: 0.7em;
 }
@@ -261,37 +273,35 @@ nav {
 /* massage to set css end here */
 /* massage from set css start here */
 
-::ng-deep .from .massage {
+.from .massage {
     float: left;
 }
 
-::ng-deep .to .text {
+.to .text {
     border-end-end-radius: 0;
 }
 
-::ng-deep .from .text {
+.from .text {
     /* background-color: var(--from-dark); */
     border: 1px solid grey;
     background-color: transparent;
     border-top-left-radius: 0;
 }
 
-::ng-deep .from img,
-::ng-deep .to img {
+.from img, .to img {
     max-width: 200px;
     border-radius: 100px;
     /* display: none; */
 }
 
-::ng-deep .from .time,
-::ng-deep .to .time {
+.from .time, .to .time {
     font-size: 0.6em;
     float: right;
     line-height: 12px;
     margin: 0 1px;
 }
 
-::ng-deep .from .time {
+.from .time {
     float: left;
 }
 
@@ -340,8 +350,8 @@ nav {
     .gif-menu{
         width: 100%;
     }
-    ::ng-deep .to .massage,
-    ::ng-deep .from .massage {
+      .to .massage,
+      .from .massage {
         max-width: 100%;
     }
 }

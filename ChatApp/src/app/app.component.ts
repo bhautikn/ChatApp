@@ -1,24 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-// import { getChats } from '../environments/environment.development';
+
 import { ChattingSoketService } from './services/chatting-soket.service';
 
-import { Store, select } from '@ngrx/store';
-// import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 
-// import {
-//   loadChats,
-//   resetChat
-// } from './reducer/chat.action';
-// import { selectAllChats } from './reducer/chat.selector';
-// import { Chat } from './model/chat.model';
-// import { RootReducerState } from './reducer';
-// import { UserListReq } from './reducer/chat.action';
 import { getAllChats } from './reducer/chat.selector';
 import { appendData, commit } from './reducer/chat.action';
-import { genrateData } from './functions';
-import { Token } from '@angular/compiler';
-import { Socket } from 'ngx-socket-io';
 // import { appendData, resetChatData, setChatName } from './reducer/chat.action';
 
 @Component({
@@ -50,6 +38,8 @@ export class AppComponent {
     })
     this._chat.onReceive().subscribe(({ massage, dataType, to }: any) => {
       this.addFrom(massage, dataType, to)
+
+
       this.dropWater.play();
     })
 
@@ -79,35 +69,47 @@ export class AppComponent {
 
 
   addFrom(text: any, dataType: string, token:any) {
-    var child = '';
+    // var child = '';
 
+    let obj: any = {
+      type: dataType,
+      time: new Date().toString(),
+      sended_or_recived: 'from',
+    }
     switch (dataType) {
       case 'string':
-        child = genrateData('text', 'from', text);
+       
+        obj.text = text; 
+        // child = genrateData('text', 'from', text);
         break;
 
       case 'gif':
-        child = genrateData('image', 'from', text);
+        obj.url = text;
+        // child = genrateData('image', 'from', text);
         break;
 
       case 'image':
         let blob = new Blob([text])
         let myFile: File = new File([blob], "file.jpg")
         let src: any = URL.createObjectURL(myFile);
-        child = genrateData('image', 'from', src);
+        obj.src = src;
+        // child = genrateData('image', 'from', src);
         break;
 
       case 'video':
         let blobVideo = new Blob([text])
         let myFileVideo: File = new File([blobVideo], "file.mp4")
         let srcVideo: any = URL.createObjectURL(myFileVideo);
-        child = genrateData('video', 'from', srcVideo);
+        obj.src = srcVideo;
+        // child = genrateData('video', 'from', srcVideo);
         break;
-
+      
     }
-    this.setData(token, child);
+    
+    this.setData(token, obj);
   }
-  setData(token: any, child: any) {
-    this.store.dispatch(appendData({ token: token, data: child }));
+  setData(token: any, obj: any) {
+    this.store.dispatch(appendData({ token: token, data: obj }));
+    // this.store.dispatch(appendData({ token: token, data: child }));
   }
 }

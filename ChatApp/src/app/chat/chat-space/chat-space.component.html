@@ -73,10 +73,54 @@
 
                 <div class="end-container">
 
-                    <div class="chats-container container" [innerHtml]="data">
+                    <!-- <div class="chats-container container" [innerHtml]="data">
+
+                    </div> -->
+                    <div class="chats-container container">
+
+                        <div *ngFor="let oneChatData of data;index as i">
+
+                            <div class="row">
+                                <div [class]=oneChatData.sended_or_recived>
+                                    <div class="massage">
+
+                                        <div class="text" *ngIf="oneChatData.type == 'string'">
+                                            {{oneChatData.text}}
+                                        </div>
+
+                                        <div *ngIf="oneChatData.type == 'video'" >
+                                            <video width="320" height="240" class="text"
+                                                controls>
+                                                <source [src]=oneChatData.src type="video/mp4">
+                                            </video><br>
+                                        </div>
+
+                                        <div *ngIf="oneChatData.type == 'image'" >
+                                            <img 
+                                                
+                                                [src]=oneChatData.src 
+                                                class="text"
+                                                alt="image" 
+                                            /> <br>
+                                        </div>
+                                        <div *ngIf="oneChatData.type == 'gif'" >
+                                            <img 
+                                                
+                                                [src]=oneChatData.url 
+                                                class="text"
+                                                alt="image"
+                                                /> <br>
+                                        </div>
+
+                                        <div class="time">{{formatAMPM(oneChatData.time)}}</div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
 
                     </div>
-                    
 
                     <div class="container-text-last container">
                         <div class="text-feild">
