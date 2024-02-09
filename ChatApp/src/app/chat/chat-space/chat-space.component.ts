@@ -3,12 +3,13 @@ import { ChattingSoketService } from '../../services/chatting-soket.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiChatService } from '../../services/api-chat.service';
 import Swal from 'sweetalert2';
-import { deleteChat, formatAMPM, getChats, getToday, setChat, tost, updateChat } from '../../../environments/environment.development'
+import { formatAMPM, getChats, getToday, setChat, tost, updateChat } from '../../../environments/environment.development'
 import { Store } from '@ngrx/store';
 import { getAllChats, getChatByToken } from '../../reducer/chat.selector';
-import { addChat, appendData, resetChatData, resetresetUnreadToZero } from '../../reducer/chat.action';
+import { addChat, appendData, deleteChat, resetChatData, resetresetUnreadToZero } from '../../reducer/chat.action';
 import { genrateData } from '../../functions';
 import { animation } from '@angular/animations';
+
 
 @Component({
   selector: 'app-chat-space',
@@ -37,29 +38,29 @@ export class ChatSpaceComponent implements OnInit {
   dataType = 'string';
   dropWater: any = new Audio('../assets/sounds/water_drop.mp3');
   chats: any = [];
-  curruntIndex:number = -1;
+  curruntIndex: number = -1;
   isVideoCall: boolean = false;
   chatTitle: string = ''
 
   async ngOnInit() {
 
-    this.store.select(getAllChats).subscribe((data: any)=>{
+    this.store.select(getAllChats).subscribe((data: any) => {
       this.chats = data.chat;
-      if(this.curruntIndex == -1){
-        this.curruntIndex  = this.chats.map((e:any) => e.token).indexOf(this.urlToken);
-        if(this.curruntIndex >= 0 ){
-          if(this.chats[this.curruntIndex].data){
+      if (this.curruntIndex == -1) {
+        this.curruntIndex = this.chats.map((e: any) => e.token).indexOf(this.urlToken);
+        if (this.curruntIndex >= 0) {
+          if (this.chats[this.curruntIndex].data) {
             this.data = this.chats[this.curruntIndex].data;
-          }else{
+          } else {
             this.data = ''
           }
         }
       }
-      else{
-        if(this.curruntIndex >= 0 ){
-          if(this.chats[this.curruntIndex].data){
+      else {
+        if (this.curruntIndex >= 0) {
+          if (this.chats[this.curruntIndex].data) {
             this.data = this.chats[this.curruntIndex].data;
-          }else{
+          } else {
             this.data = ''
           }
         }
@@ -87,7 +88,7 @@ export class ChatSpaceComponent implements OnInit {
       this.status = data;
     })
 
-    this._chat.onCancleVideoCall().subscribe(()=>{
+    this._chat.onCancleVideoCall().subscribe(() => {
       console.log('cancling call');
       Swal.close();
     })
@@ -162,9 +163,10 @@ export class ChatSpaceComponent implements OnInit {
 
     let child = genrateData('text', 'to', text);
     this.setData(child);
-    this._chat.send(text, this.dataType, this.authToken);
+    this._chat.send(text, this.dataType, this.authToken, (data: any) => {
+      console.log(data)
+    });
     this._chat.sendStatus('online', this.authToken);
-
   }
 
   async authanticate(token: any, password: any) {
@@ -182,7 +184,7 @@ export class ChatSpaceComponent implements OnInit {
           }
         });
         if (!isFound) {
-          let name:string = await this.nameEnterPopUp();
+          let name: string = await this.nameEnterPopUp();
           let today = getToday();
 
           let obj = {
@@ -192,16 +194,16 @@ export class ChatSpaceComponent implements OnInit {
             data: '',
             unread: 0,
           }
-          this.store.dispatch(addChat({chatObj: obj}));
+          this.store.dispatch(addChat({ chatObj: obj }));
         }
         return;
       }
     })
   }
+
   joinChat() {
     this._chat.join(this.authToken)
   }
-
 
   deleteChat() {
     let isDelete = confirm("are you sure??")
@@ -209,19 +211,12 @@ export class ChatSpaceComponent implements OnInit {
       this._api.deleteChat(this.urlToken, this.authToken).subscribe((data: any) => {
 
         if (data.ok == 200) {
-          const { length,firstToken } = deleteChat(this.urlToken)
-          // if (length != 0) {
-          //   this._navigate.navigate(['/chat/' + firstToken]);
-          // }
-          // else {
-          // this._navigate.navigate(['/']);
-          // }
+          this.store.dispatch(deleteChat({ index: this.curruntIndex }))
           this._navigate.navigate(['/']);
         }
       });
     }
   }
-
 
   redirect(to: string) {
     this.data = '';
@@ -232,17 +227,23 @@ export class ChatSpaceComponent implements OnInit {
     let file = e.target.files[0];
     let child = '';
     if (file.type.split('/')[0] == 'image') {
-      this._chat.send(e.target.files[0], 'image', this.authToken);
+      this._chat.send(e.target.files[0], 'image', this.authToken, (data: any) => {
+        console.log(data)
+      });
       let src: any = URL.createObjectURL(file);
       child = genrateData('image', 'to', src);
     }
     else if (file.type.split('/')[0] == 'video') {
-      this._chat.send(file, 'video', this.authToken);
+      this._chat.send(file, 'video', this.authToken, (data: any) => {
+        console.log(data)
+      });
       let src: any = URL.createObjectURL(file);
       child = genrateData('video', 'to', src);
     }
     else {
-      this._chat.send(file, file.miamitype, this.authToken);
+      this._chat.send(file, file.miamitype, this.authToken, (data: any) => {
+        console.log(data)
+      });
       child = genrateData('other', 'to', null);
     }
     this.setData(child);
@@ -254,20 +255,22 @@ export class ChatSpaceComponent implements OnInit {
     }
     this.dropWater.play();
     // this.data += child;
-    this.store.dispatch(appendData({token: this.urlToken, data: child}))
+    this.store.dispatch(appendData({ token: this.urlToken, data: child }))
     setTimeout(() => {
       this.scrollTop()
     }, 50);
   }
 
-  
+
 
   sendGif(data: any) {
     this.gifMenu = false;
     let child = genrateData('image', 'to', data);
     this.setData(child)
     this._chat.sendStatus('online', this.authToken);
-    this._chat.send(data, 'gif', this.authToken);
+    this._chat.send(data, 'gif', this.authToken, (data: any) => {
+      console.log(data)
+    });
   }
 
   videoCall() {
@@ -304,14 +307,14 @@ export class ChatSpaceComponent implements OnInit {
     })
     this._chat.reqVideoCall(this.authToken, (data: any) => {
 
-      if (data != 'err') {
+      if(data == false){
         clearAllThings();
         tost({ title: 'User is busy', icon: 'info' })
-      };
+      }
       if (data == true) {
         clearAllThings();
         this.isVideoCall = true;
-      };
+      }
     })
   }
 
@@ -322,7 +325,7 @@ export class ChatSpaceComponent implements OnInit {
 
   clearChat() {
     this.data = '';
-    this.store.dispatch(resetChatData({token: this.urlToken}))
+    this.store.dispatch(resetChatData({ token: this.urlToken }))
     // this.setChatData(this.urlToken, '');
   }
   goBack() {
@@ -385,7 +388,7 @@ export class ChatSpaceComponent implements OnInit {
     })
     return outPassword;
   }
-  async nameEnterPopUp(){
+  async nameEnterPopUp() {
     let Outname: string = 'Anonymouse';
     await Swal.fire({
       title: 'Chat Name',

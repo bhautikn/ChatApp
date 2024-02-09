@@ -42,6 +42,7 @@ export class SideBarComponent {
     this._nevigate.navigate([to]);
     this.store.dispatch(resetresetUnreadToZero({token: this.urlToken}))
     this.urlToken = to.split('/')[2];
+    this.store.dispatch(resetresetUnreadToZero({token: this.urlToken}))
     this.onreload.emit(to);
   }
   handleChange(index: number, event: any) {

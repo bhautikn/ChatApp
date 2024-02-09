@@ -6,13 +6,14 @@
         <video class="otherVideo" autoplay></video>
     </div>
     <div class="myVideoContainer">
-        <video class="myVideo" autoplay> </video>
+        <video class="myVideo" autoplay controls> </video>
     </div>
 </div>
+
 <div class="sidebar-controls">
     <div class="controls-icon">
-        <i class="bi bi-mic" *ngIf="isAudio" (click)="isAudio = false"></i>
-        <i class="bi bi-mic-mute" *ngIf="!isAudio" (click)="isAudio = true"></i>
+        <i class="bi bi-mic" *ngIf="isAudio" (click)="setAudio(true)"></i>
+        <i class="bi bi-mic-mute" *ngIf="!isAudio" (click)="setAudio(false)"></i>
     </div>
     <div class="controls-icon">
         <i class="bi bi-camera-video" *ngIf="isVideo" (click)="setVideo(true)"></i>

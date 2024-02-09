@@ -9,11 +9,13 @@ export class ChattingSoketService {
   constructor(private _socket:Socket) { }
 
 	//emit event
-	send(massage:any, dataType:any ,auth:string) {
-		this._socket.emit('massage', massage, dataType, auth);
+	send(massage:any, dataType:any ,auth:string, callback: any) {
+		this._socket.emit('massage', massage, dataType, auth, (res: any)=>{
+			callback(res);
+		});
 	} 
-	join(authToken:string, callback = ()=>{}){
-		this._socket.emit('join', authToken, callback);
+	join(authToken:string){
+		this._socket.emit('join', authToken);
 	}
 	sendStatus(status:any, token:any){
 		this._socket.emit('status', status, token);

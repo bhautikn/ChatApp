@@ -1,7 +1,7 @@
 <nav>
-    <div class="row">
+    <div class="row super-main-container">
         <!--  -->
-        <div class="side-nav p-0 m-0"  [ngClass]="{'show-sidenav': isOpenMenu == true}">
+        <div class="side-nav p-0 m-0" [ngClass]="{'show-sidenav': isOpenMenu == true}">
             <app-side-bar class="w-25" (onreload)="reloadPage($event)"></app-side-bar>
         </div>
         <div class="col">
@@ -70,12 +70,13 @@
                 <app-gif (onsendGif)="sendGif($event)"></app-gif>
             </div>
             <div class="main-container">
-                
+
                 <div class="end-container">
 
                     <div class="chats-container container" [innerHtml]="data">
 
                     </div>
+                    
 
                     <div class="container-text-last container">
                         <div class="text-feild">
@@ -94,12 +95,8 @@
                                         <i class="bi bi-x" *ngIf="gifMenu"></i>
                                     </div>
                                 </div>
-                                <textarea 
-                                    placeholder="Massage" 
-                                    (keyup)="input($event)" 
-                                    class="form-control"
-                                    id="textarea" rows="1"
-                                ></textarea>
+                                <textarea placeholder="Massage" (keyup)="input($event)" class="form-control"
+                                    id="textarea" rows="1"></textarea>
 
                                 <div class="icon send-btn-chat-space" (click)="addTo()">
                                     <i class="bi bi-send p-2 px-3"></i>

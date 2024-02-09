@@ -24,6 +24,7 @@ export class VideoCallComponent {
   freindpeerToken: any = null;
   localstream: any = null;
   connecting: boolean = true;
+
   ngOnInit() {
     this.setMyVideo()
 
@@ -114,12 +115,48 @@ export class VideoCallComponent {
   setVideo(isVideo: boolean) {
     if (isVideo) {
       this.isVideo = false;
-      this.video.srcObject.getVideoTracks()[0].stop();
+      try{
+        this.localstream.getVideoTracks().forEach((track: any) => {
+          track.enabled = false;
+        });
+      }catch(e){
+        console.log('error in stoping track', e)
+      }
     }
     else {
+      try{
+        this.localstream.getVideoTracks().forEach((track: any) => {
+          track.enabled = true;
+        });
+      }catch(e){
+        console.log('error in stoping track', e)
+      }
       this.isVideo = true
     }
   }
+  setAudio(isAudio: boolean) {
+    if (isAudio) {
+      this.isAudio = false;
+      try{
+        this.localstream.getAudioTracks().forEach((track: any) => {
+          track.enabled = false;
+        });
+      }catch(e){
+        console.log('error in stoping track', e)
+      }
+    }
+    else {
+      try{
+        this.localstream.getAudioTracks().forEach((track: any) => {
+          track.enabled = true;
+        });
+      }catch(e){
+        console.log('error in stoping track', e)
+      }
+      this.isAudio = true
+    }
+  }
+
   endCall() {
     this.clearAllTraks();
     this.closeVideoCall();
@@ -131,8 +168,12 @@ export class VideoCallComponent {
   }
 
   clearAllTraks() {
-    this.localstream.getTracks().forEach((track: any) => {
-      track.stop();
-    });
+    try{
+      this.localstream.getTracks().forEach((track: any) => {
+        track.stop();
+      });
+    }catch(e){
+      console.log('error in stoping track', e);
+    }
   }
 } 

@@ -30,11 +30,16 @@ function commitR(state: any) {
 function appendDataR(state: any, token: number, data: any) {
     const index = getIndexByToken(state, token);
     if (index >= 0) {
-        let tempData = { ...state[index], data: state[index].data + data, unread: state[index].unread + 1 }
+        let tempData = { 
+            ...state[index], 
+            data: state[index].data + data, 
+            unread: state[index].unread + 1 
+        }
         return changeObjectBetweenArray(state, tempData, index);
     }
     return state;
 }
+
 
 function resetDataR(state: any, token: any) {
 

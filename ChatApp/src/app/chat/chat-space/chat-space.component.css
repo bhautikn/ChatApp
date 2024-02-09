@@ -2,7 +2,9 @@ nav {
     background-color: var(--background-light-3);
     padding: 5px;
 }
-
+.super-main-container{
+    overflow-y: hidden;
+}
 .cross-icon {
     width: max-content;
     margin-left: 10px;
