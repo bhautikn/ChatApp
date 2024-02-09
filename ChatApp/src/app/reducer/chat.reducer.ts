@@ -12,8 +12,6 @@ import {
 
 import { getChats } from "../../environments/environment.development";
 
-
-
 const initialState: any = getChats();
 
 export const chatReducer = createReducer(
@@ -26,7 +24,7 @@ export const chatReducer = createReducer(
     on(addChat, (state, props) => (addChatR(state, props.chatObj))),
     on(commit, (state) => (commitR(state)))
 );
-function commitR(state:any){
+function commitR(state: any) {
     localStorage.setItem('chats', JSON.stringify(state))
 }
 function appendDataR(state: any, token: number, data: any) {
@@ -39,10 +37,10 @@ function appendDataR(state: any, token: number, data: any) {
 }
 
 function resetDataR(state: any, token: any) {
-    
+
     const index = getIndexByToken(state, token);
-    if(index >= 0){
-        let tempData = { ...state[index], data: '' }
+    if (index >= 0) {
+        let tempData = { ...state[index], data: '', unread: 0 }
         return changeObjectBetweenArray(state, tempData, index);
     }
     return state;

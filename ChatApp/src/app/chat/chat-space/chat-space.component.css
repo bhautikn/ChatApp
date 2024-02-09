@@ -20,13 +20,18 @@ nav {
 .cross-icon:hover {
     background-color: rgb(10, 10, 10, 0.2);
 }
-
+.show-sidenav{
+    /* background-color: red; */
+    width: 15% !important;
+    display: block;
+    visibility: visible !important;
+}
 .side-nav {
-    float: left;
     width: max-content;
-    width: 15%;
-    transition-duration: 500ms;
-    animation: side-nav 500ms;
+    width: 0px;
+    visibility: hidden;
+    /* height: 90vh; */
+    transition-duration: 300ms;
     padding: 10px;
 }
 
@@ -325,8 +330,10 @@ nav {
 }
 
 @media screen and (max-width: 700px) {
-    .side-nav {
-        width: 40%;
+    .show-sidenav {
+        width: 40% !important;
+        /* position: absolute; */
+        /* background-color: var(--blue-dark); */
     }
     .gif-menu{
         width: 100%;
@@ -337,8 +344,8 @@ nav {
     }
 }
 @media screen and (max-width: 500px) {
-    .side-nav {
-        width: 100%;
+    .show-sidenav {
+        width: 90% !important;
     }
 }
 
@@ -350,8 +357,6 @@ nav {
     background-color: rgba(10, 10, 10, 0.2);
     backdrop-filter: blur(5px);
     position: absolute;
-    /* bottom: 15%; */
-    /* left: 25%; */
 }
 
 /* video call section */

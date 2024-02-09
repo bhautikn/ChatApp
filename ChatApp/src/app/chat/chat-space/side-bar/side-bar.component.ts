@@ -4,7 +4,7 @@ import { getChats } from '../../../../environments/environment.development';
 import { ChattingSoketService } from '../../../services/chatting-soket.service';
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../../reducer/chat.selector';
-import { deleteChat } from '../../../reducer/chat.action';
+import { deleteChat, resetresetUnreadToZero } from '../../../reducer/chat.action';
 
 @Component({
   selector: 'app-side-bar',
@@ -32,14 +32,15 @@ export class SideBarComponent {
     this.store.select(getAllChats).subscribe((data:any)=>{
       this.chats = data.chat;
     })
-    setTimeout(()=>{
-    }, 50)
+    // setTimeout(()=>{
+    // }, 50)
     // if (this.chats.length == 0) {
     //   this._nevigate.navigate(['/']);
     // };
   }
   redirect(to: string) {
     this._nevigate.navigate([to]);
+    this.store.dispatch(resetresetUnreadToZero({token: this.urlToken}))
     this.urlToken = to.split('/')[2];
     this.onreload.emit(to);
   }

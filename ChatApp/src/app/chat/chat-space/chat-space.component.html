@@ -1,11 +1,12 @@
 <nav>
     <div class="row">
-        <div class="side-nav p-0 m-0" *ngIf="isOpenMenu">
+        <!--  -->
+        <div class="side-nav p-0 m-0"  [ngClass]="{'show-sidenav': isOpenMenu == true}">
             <app-side-bar class="w-25" (onreload)="reloadPage($event)"></app-side-bar>
         </div>
         <div class="col">
             <div class="row">
-                <div class="cross-icon">
+                <div class="cross-icon position-reletive">
                     <i class="bi bi-x" *ngIf="isOpenMenu" (click)="isOpenMenu = false"></i>
                     <i class="bi bi-list" *ngIf="!isOpenMenu" (click)="isOpenMenu = true"></i>
                 </div>
@@ -17,7 +18,8 @@
                                 d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
                         </svg>
                     </a>
-                    <div class="name">{{name}}</div>
+                    <!-- [title]="name" -->
+                    <div class="name text-truncate w-50" [title]="name">{{name}}</div>
                     <div>
                         <div *ngIf="status == 'online'" class="green-dot"></div>
                         <div *ngIf="status == 'offline'" class="grey-dot"></div>

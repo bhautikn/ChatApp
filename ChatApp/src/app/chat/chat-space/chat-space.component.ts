@@ -294,7 +294,7 @@ export class ChatSpaceComponent implements OnInit {
       willClose: () => {
         clearAllThings();
         this._chat.cancleVideoCall(this.authToken);
-        tost({ title: 'User is busy', icon: 'info' });
+        // tost({ title: 'User is busy', icon: 'info' });
       }
     }).then((result: any) => {
       if (!result.isConfirmed) {

@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const Users = require('./models/Users');
-const Chats = require('./models/Chats');
 
 dotenv.config();
 const SIGN = process.env.JWT_SECRET_KEY;
@@ -27,10 +26,12 @@ module.exports = (io) => {
                 token = data.token;
             }
             if (login) {
-                console.log(await countToken(token))
-                if (await countToken(token) == 1) {
+                const total_paticipate = await countToken(token);
+
+                if (total_paticipate == 1) {
 
                     const friendId = await getIdByToken(token);
+
                     await add(socket.id, token, login);
                     await updateFreind(socket.id, friendId);
 
@@ -38,7 +39,7 @@ module.exports = (io) => {
                     io.to(socket.id).emit('status', 'online');
                     io.to(friendId).emit('status', 'online');
 
-                } else if (await countToken(token) == 0) {
+                } else if (total_paticipate == 0) {
                     await add(socket.id, token, login);
                 }
             }
@@ -49,14 +50,19 @@ module.exports = (io) => {
             if (err) {
                 return socket.emit('error', 'Somthing Went Wrong');
             }
-            if (await getStatus(socket.id)) {
+            // if (await getStatus(socket.id)) {
+
                 if (dataType == 'string') {
                     massage = HTMLSPACIALCHAR(massage);
                 }
-
-                const freind = await getFreindByToken(data.token, socket.id);
-                io.to(freind).emit('recive', { massage: massage, dataType: dataType, to: data.token});
-            }
+                try{
+                    const freind = await getFreindByToken(data.token, socket.id);
+                    io.to(freind).emit('recive', { massage: massage, dataType: dataType, to: data.token});
+                }catch(e){
+                    console.log('erro occure', e);
+                    return socket.emit('error', 'Somthing Went Wrong');
+                }
+            // }
         })
 
         socket.on('reqVideoCall', async (id, callback) => {

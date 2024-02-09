@@ -7,20 +7,21 @@
     </div>
     <div (click)="redirect('/chat/'+item.token)" class="links" *ngFor="let item of chats; index as i">
         <div class="position-relative">
-            
-            <span *ngIf="item.unread > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" >
-                {{item.unread}}
-              <span class="visually-hidden">unread messages</span>
+            <span *ngIf="item.token != urlToken">
+                <span *ngIf="item.unread > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" >
+                    {{item.unread}}
+                </span>
             </span>
-
         </div>
         <div class="list-item" [ngClass]="{'list-active': item.token == urlToken}">
-            
             <div>
-                {{item.name | slice:0:15}}
-                <div class="trash" (click)="handleDeleteChat(i)">
+                <div class="text-truncate w-50 float-start" [title]="item.name">
+                    {{item.name}}
+                </div>
+                <div class="trash w-25 float-end text-center" (click)="handleDeleteChat(i)" title="Delete">
                     <i class="bi bi-trash"></i>
                 </div>
+                <div class="clearfix"></div>
             </div>
             <div class="created-at">{{item.cretaed}}</div>
         </div>

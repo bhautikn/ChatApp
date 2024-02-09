@@ -18,6 +18,7 @@ import { getAllChats } from './reducer/chat.selector';
 import { appendData, commit } from './reducer/chat.action';
 import { genrateData } from './functions';
 import { Token } from '@angular/compiler';
+import { Socket } from 'ngx-socket-io';
 // import { appendData, resetChatData, setChatName } from './reducer/chat.action';
 
 @Component({
@@ -41,7 +42,9 @@ export class AppComponent {
     window.onunload = (e)=>{
       this.store.dispatch(commit());
     }
+
     this.store.select(getAllChats).subscribe((data) => {
+
       this.chats = data.chat;
       this.joinAllChat(this.chats);
     })
