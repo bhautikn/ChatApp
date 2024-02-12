@@ -4,6 +4,7 @@ import {
     appendData,
     commit,
     deleteChat,
+    deletePerticulerChat,
     resetChatData,
     resetresetUnreadToZero,
     setChatName
@@ -22,23 +23,28 @@ export const chatReducer = createReducer(
     on(resetChatData, (state, props) => (resetDataR(state, props.token))),
     on(resetresetUnreadToZero, (state, props) => (resetUnreadToZeroR(state, props.token))),
     on(addChat, (state, props) => (addChatR(state, props.chatObj))),
+    on(deletePerticulerChat, (state, props) => (deletePerticulerChatR(state, props.token, props.index))),
     on(commit, (state) => (commitR(state)))
 );
 function commitR(state: any) {
     localStorage.setItem('chats', JSON.stringify(state))
 }
-// function appendDataR(state: any, token: number, data: any) {
-//     const index = getIndexByToken(state, token);
-//     if (index >= 0) {
-//         let tempData = { 
-//             ...state[index], 
-//             data: state[index].data + data, 
-//             unread: state[index].unread + 1 
-//         }
-//         return changeObjectBetweenArray(state, tempData, index);
-//     }
-//     return state;
-// }
+function deletePerticulerChatR(state:any, token:any, index:any){
+    const chatIndex:number = getIndexByToken(state, token);
+    if(chatIndex >= 0){
+        let tempData = {
+            ...state[chatIndex], 
+            data: [
+                ...state[chatIndex].data.slice(0, index), 
+                ...state[chatIndex].data.slice(index + 1)
+            ]
+        };
+        return changeObjectBetweenArray(state, tempData, chatIndex);
+    }else{
+        return state;
+    }
+
+}
 
 function appendDataR(state: any, token: number, data: any) {
     const index = getIndexByToken(state, token);

@@ -6,9 +6,7 @@ import Swal from 'sweetalert2';
 import { formatAMPM, getToday, tost } from '../../../environments/environment.development'
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../reducer/chat.selector';
-import { addChat, appendData, deleteChat, resetChatData } from '../../reducer/chat.action';
-import { genrateData } from '../../functions';
-import { animation } from '@angular/animations';
+import { addChat, appendData, deleteChat, deletePerticulerChat, resetChatData } from '../../reducer/chat.action';
 
 
 @Component({
@@ -42,12 +40,10 @@ export class ChatSpaceComponent implements OnInit {
   isVideoCall: boolean = false;
   chatTitle: string = ''
   formatAMPM = formatAMPM;
-  
-  async ngOnInit() {
 
+  async ngOnInit() {
     this.store.select(getAllChats).subscribe((data: any) => {
       this.chats = data.chat;
-      console.log(this.chats)
       if (this.curruntIndex == -1) {
         this.curruntIndex = this.chats.map((e: any) => e.token).indexOf(this.urlToken);
         if (this.curruntIndex >= 0) {
@@ -70,7 +66,6 @@ export class ChatSpaceComponent implements OnInit {
       setTimeout(() => {
         this.scrollTop();
       }, 10)
-      // this.store.dispatch(resetresetUnreadToZero({token: this.urlToken}));
     })
     if (screen.width < 700) {
       this.isOpenMenu = false;
@@ -81,8 +76,14 @@ export class ChatSpaceComponent implements OnInit {
     if (this.authToken == '' || !this.authToken) {
 
       //set for login screen
-      const password: any = await this.passwordEnterPopUp();
-      await this.authanticate(this.urlToken, password);
+      const { password, isConfirmed }: any = await this.passwordEnterPopUp();
+      if (isConfirmed == false) {
+        this._navigate.navigate(['/']);
+        return;
+      }
+      else {
+        await this.authanticate(this.urlToken, password);
+      }
     }
     this.name = this.chats[this.curruntIndex].name;
     //set status
@@ -143,25 +144,27 @@ export class ChatSpaceComponent implements OnInit {
     }
 
     { // block for auto height
-      // e.target.style.height = 0;
-      // let max = 100;
-      // let height = e.target.scrollHeight;
-      // if (height < max) {
-      //   e.target.style.height = (e.target.scrollHeight) + "px";
-      // } else {
-      //   e.target.style.height = (100) + "px";
-      // }
+      e.target.style.height = 0;
+      let max = 100;
+      let height = e.target.scrollHeight;
+      if (height < max) {
+        e.target.style.height = (e.target.scrollHeight) + "px";
+      } else {
+        e.target.style.height = (100) + "px";
+      }
     }
 
   }
   addTo() {
     const textArea: any = document.querySelector('#textarea');
     let text: string = textArea.value;
-    textArea.style.height = '0px';
-    // let time: any = formatAMPM(new Date());
 
     if (text == "\n" || text == '' || !text || text.trim() == '') return;
-    textArea.value = "";
+
+    setTimeout(() => {
+      textArea.value = "";
+      textArea.style.height = '0px';
+    }, 1)
 
     const obj = {
       type: 'string',
@@ -170,8 +173,6 @@ export class ChatSpaceComponent implements OnInit {
       sended_or_recived: 'to',
     }
     this.store.dispatch(appendData({ token: this.urlToken, data: obj }));
-    let child = genrateData('text', 'to', text);
-    // this.setData(child);
     this._chat.send(text, this.dataType, this.authToken, (data: any) => {
       console.log(data)
     });
@@ -181,8 +182,14 @@ export class ChatSpaceComponent implements OnInit {
   async authanticate(token: any, password: any) {
     await this._api.authanticate(token, password).subscribe(async (data: any) => {
       if (data.login == false) {
-        password = await this.passwordEnterPopUp();
-        this.authanticate(token, password);
+        const { password, isConfirmed } = await this.passwordEnterPopUp('wrong password try again!!');
+        if (!isConfirmed) {
+          this._navigate.navigate(['/']);
+          return;
+        }
+        else {
+          this.authanticate(token, password);
+        }
       } else {
         localStorage.setItem(token, data.id);
         let isFound: boolean = false;
@@ -235,7 +242,7 @@ export class ChatSpaceComponent implements OnInit {
   uploadFile(e: any) {
     let file = e.target.files[0];
 
-    let obj:any = {
+    let obj: any = {
       time: new Date().toString(),
       sended_or_recived: 'to',
     }
@@ -246,10 +253,8 @@ export class ChatSpaceComponent implements OnInit {
         console.log(data)
       });
       let src: any = URL.createObjectURL(file);
-
       obj.type = 'image';
       obj.src = src;
-      // child = genrateData('image', 'to', src);
     }
     else if (file.type.split('/')[0] == 'video') {
       this._chat.send(file, 'video', this.authToken, (data: any) => {
@@ -258,7 +263,6 @@ export class ChatSpaceComponent implements OnInit {
       let src: any = URL.createObjectURL(file);
       obj.type = 'video';
       obj.src = src;
-      // child = genrateData('video', 'to', src);
     }
     else {
       this._chat.send(file, file.miamitype, this.authToken, (data: any) => {
@@ -266,7 +270,6 @@ export class ChatSpaceComponent implements OnInit {
       });
       obj.type = 'other';
       obj.data = null;
-      // child = genrateData('other', 'to', null);
     }
     this.setData(obj);
   }
@@ -276,7 +279,6 @@ export class ChatSpaceComponent implements OnInit {
       tost({ title: 'Your Freind is offline', icon: 'warning' }, true);
     }
     this.dropWater.play();
-    // this.data += child;
     this.store.dispatch(appendData({ token: this.urlToken, data: obj }))
     setTimeout(() => {
       this.scrollTop()
@@ -293,10 +295,9 @@ export class ChatSpaceComponent implements OnInit {
       time: new Date().toString(),
       sended_or_recived: 'to',
     }
+
     this.gifMenu = false;
     this.store.dispatch(appendData({ token: this.urlToken, data: obj }));
-    // let child = genrateData('image', 'to', data);
-    // this.setData(child)
     this._chat.sendStatus('online', this.authToken);
     this._chat.send(data, 'gif', this.authToken, (data: any) => {
       console.log(data)
@@ -337,7 +338,7 @@ export class ChatSpaceComponent implements OnInit {
     })
     this._chat.reqVideoCall(this.authToken, (data: any) => {
 
-      if(data == false){
+      if (data == false) {
         clearAllThings();
         tost({ title: 'User is busy', icon: 'info' })
       }
@@ -354,12 +355,9 @@ export class ChatSpaceComponent implements OnInit {
   }
 
   clearChat() {
-    // this.data = [];
     this.store.dispatch(resetChatData({ token: this.urlToken }))
-    // this.setChatData(this.urlToken, '');
   }
   goBack() {
-    // this.setChatData(this.urlToken, this.data);
     this.redirect('/');
   }
   reloadPage(url: any) {
@@ -375,20 +373,24 @@ export class ChatSpaceComponent implements OnInit {
     container.scrollTop = container.scrollHeight;
   }
 
-  async passwordEnterPopUp() {
-    let outPassword: string = ''
+  async passwordEnterPopUp(massage: string = 'Enter password') {
+    let outPassword: any = { password: '', isConfirmed: false }
 
     await Swal.fire({
-      title: "Enter password",
+      title: massage,
       input: "password",
       customClass: 'swal-background',
       inputAttributes: {
         autocapitalize: "off"
       },
       showCancelButton: true,
+      cancelButtonText: 'go back',
       preConfirm: (password) => {
-        outPassword = password;
+        outPassword.password = password;
       }
+    }).then((result) => {
+      outPassword.isConfirmed = result.isConfirmed;
+      outPassword.password = result.value;
     })
     return outPassword;
   }
@@ -407,5 +409,44 @@ export class ChatSpaceComponent implements OnInit {
       }
     })
     return Outname;
+  }
+  deletePerticulerChat(index: any) {
+    this.store.dispatch(deletePerticulerChat({ index: index, token: this.urlToken }));
+  }
+  copyToClipBord(text: string) {
+    navigator.clipboard.writeText(text);
+    tost({ title: 'Text Copied', icon: 'success' });
+  }
+  downloadFile(src: any, type: string) {
+    var a: any = document.createElement("a");
+    document.body.appendChild(a);
+    a.style = "display: none";
+    if (type == 'image') {
+      var fileName = Math.random().toString(36).substring(7) + '.png';
+    }
+    else if (type == 'video') {
+      var fileName = Math.random().toString(36).substring(7) + '.mp4';
+    }
+    else if (type == 'gif') {
+      var fileName = Math.random().toString(36).substring(7) + '.gif';
+    } else {
+      var fileName = Math.random().toString(36).substring(7) + '.file';
+    }
+    a.href = src;
+    a.download = fileName;
+    a.click();
+  }
+  showImage(url: any) {
+    Swal.fire({
+      imageUrl: url,
+      width: '100%',
+      // imageHeight: '100vh',
+      showCloseButton: true,
+      background: 'transparent',
+      showConfirmButton: false,
+      showClass: {
+        popup: 'animated fadeInDown faster',
+      }
+    });
   }
 }

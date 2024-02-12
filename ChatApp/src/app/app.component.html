@@ -9,9 +9,10 @@
       </div>
     </div>
   </div>
-  <!-- <div *ngFor="let todo of chats">
+  <!-- <div *ngFor="let todo of chats"> 
     {{todo.data | json}}
   </div> -->
 </nav>
-
-<router-outlet></router-outlet>
+<main [@routerAnimations]="prepareRoute(outlet)" class="content">
+  <router-outlet #outlet="outlet"></router-outlet>
+</main>

@@ -69,4 +69,8 @@ body {
 }
 
 
-/* data title style */
+/* page routing animation */
+
+main{
+  position: relative;
+}

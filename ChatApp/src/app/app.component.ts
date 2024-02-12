@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-
+import { Router, RouterOutlet } from '@angular/router';
+import { fader } from './route-animations';
 import { ChattingSoketService } from './services/chatting-soket.service';
-
 import { Store } from '@ngrx/store';
-
 import { getAllChats } from './reducer/chat.selector';
 import { appendData, commit } from './reducer/chat.action';
 // import { appendData, resetChatData, setChatName } from './reducer/chat.action';
@@ -12,7 +10,8 @@ import { appendData, commit } from './reducer/chat.action';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
+  animations: [fader]
 })
 export class AppComponent {
   constructor(
@@ -28,6 +27,7 @@ export class AppComponent {
   async ngOnInit() {
 
     window.onunload = (e)=>{
+      this._chat.disconnect();
       this.store.dispatch(commit());
     }
 
@@ -111,5 +111,8 @@ export class AppComponent {
   setData(token: any, obj: any) {
     this.store.dispatch(appendData({ token: token, data: obj }));
     // this.store.dispatch(appendData({ token: token, data: child }));
+  }
+  prepareRoute(outlet: RouterOutlet) {
+    return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }
 }

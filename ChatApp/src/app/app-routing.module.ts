@@ -11,7 +11,7 @@ import { UploadComponent } from './post/live/upload/upload.component';
 
 const routes: Routes = [
   { path:'', component:ChatComponent },
-  { path:'chat/:token', component:ChatSpaceComponent },
+  { path:'chat/:token', component:ChatSpaceComponent , data: { animation: 'fader' } },
   { path:'post', component:PostComponent },
   { path:'post/add', component:AddComponent },
   { path:'post/live/upload', component:UploadComponent },

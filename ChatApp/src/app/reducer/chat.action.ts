@@ -7,4 +7,6 @@ export const appendData = createAction('[Chat Component] append data', props<{ t
 export const deleteChat = createAction('[Chat Component] delete chat', props<{ index:any }>());
 export const resetresetUnreadToZero = createAction('[Chat Component] reset unread zero', props<{ token:any }>());
 export const addChat = createAction('[Chat Component] add chat', props<{ chatObj:any }>());
+export const deletePerticulerChat = createAction('[Chat Component] delete one chat', props<{token: any, index: any}>());
 export const commit = createAction('[Chat Component] commit');
+

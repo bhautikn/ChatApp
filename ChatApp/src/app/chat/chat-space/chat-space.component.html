@@ -82,44 +82,57 @@
 
                             <div class="row">
                                 <div [class]=oneChatData.sended_or_recived>
+                                    <div class="btn-group"
+                                        [ngClass]="{'float-end': oneChatData.sended_or_recived == 'to'}">
+                                        <div class="" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-chevron-down option"></i>
+                                        </div>
+                                        <ul class="dropdown-menu p-0">
+                                            <li class="dropdown-item p-2" 
+                                                *ngIf=" oneChatData.type=='string' " 
+                                                (click)="copyToClipBord(oneChatData.text)">
+                                                <i class="bi bi-clipboard"></i>
+                                                Copy
+                                            </li>
+                                            <li class="dropdown-item p-2" *ngIf="oneChatData.type != 'string' "
+                                                (click)="downloadFile(oneChatData.src,oneChatData.type)"
+                                            >
+                                                <i class="bi bi-download"></i>
+                                                Download
+                                            </li>
+                                            <li>
+                                                <hr class="p-0 m-0">
+                                            </li>
+                                            <li class="dropdown-item text-danger p-2" (click)="deletePerticulerChat(i)">
+                                                <i class="bi bi-trash"></i>
+                                                Delete
+                                            </li>
+                                        </ul>
+                                    </div>
                                     <div class="massage">
-
                                         <div class="text" *ngIf="oneChatData.type == 'string'">
                                             {{oneChatData.text}}
                                         </div>
 
-                                        <div *ngIf="oneChatData.type == 'video'" >
-                                            <video width="320" height="240" class="text"
-                                                controls>
+                                        <div *ngIf="oneChatData.type == 'video'">
+                                            <video width="320" height="240" class="text" controls>
                                                 <source [src]=oneChatData.src type="video/mp4">
                                             </video><br>
                                         </div>
 
-                                        <div *ngIf="oneChatData.type == 'image'" >
-                                            <img 
-                                                
-                                                [src]=oneChatData.src 
-                                                class="text"
-                                                alt="image" 
-                                            /> <br>
+                                        <div *ngIf="oneChatData.type == 'image'" (click)="showImage(oneChatData.src)">
+                                            <img [src]=oneChatData.src class="text" /> <br>
                                         </div>
-                                        <div *ngIf="oneChatData.type == 'gif'" >
-                                            <img 
-                                                
-                                                [src]=oneChatData.url 
-                                                class="text"
-                                                alt="image"
-                                                /> <br>
+                                        
+                                        <div *ngIf="oneChatData.type == 'gif'" (click)="showImage(oneChatData.src)">
+                                            <img [src]=oneChatData.url class="text" alt="image" /> <br>
                                         </div>
 
                                         <div class="time">{{formatAMPM(oneChatData.time)}}</div>
                                     </div>
                                 </div>
                             </div>
-
-
                         </div>
-
                     </div>
 
                     <div class="container-text-last container">
@@ -139,9 +152,8 @@
                                         <i class="bi bi-x" *ngIf="gifMenu"></i>
                                     </div>
                                 </div>
-                                <textarea placeholder="Massage" (keyup)="input($event)" class="form-control"
+                                <textarea placeholder="Massage" (keypress)="input($event)" class="form-control"
                                     id="textarea" rows="1"></textarea>
-
                                 <div class="icon send-btn-chat-space" (click)="addTo()">
                                     <i class="bi bi-send p-2 px-3"></i>
                                 </div>

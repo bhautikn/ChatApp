@@ -97,7 +97,6 @@ export class SinglePostComponent {
       showClass: {
         popup: 'animated fadeInDown faster',
       }
-
     });
   }
 }
