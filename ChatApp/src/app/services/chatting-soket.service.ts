@@ -9,8 +9,8 @@ export class ChattingSoketService {
   constructor(private _socket:Socket) { }
 
 	//emit event
-	send(massage:any, dataType:any ,auth:string, callback: any) {
-		this._socket.emit('massage', massage, dataType, auth, (res: any)=>{
+	send(massage:any, dataType:any ,auth:string, id:any, callback: any) {
+		this._socket.emit('massage', massage, dataType, auth, id, (res: any)=>{
 			callback(res);
 		});
 	} 

@@ -40,3 +40,13 @@ export function genrateData(miamitype: string, fromOrTo: string, data: any): str
     `;
     return child;
   }
+
+  export function decodeHTMLEntities (str:any) {
+    if(str && typeof str === 'string') {
+      // strip script/html tags
+      str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+      str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+    }
+  
+    return str;
+  }

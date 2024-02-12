@@ -5,13 +5,14 @@ import { ChattingSoketService } from './services/chatting-soket.service';
 import { Store } from '@ngrx/store';
 import { getAllChats } from './reducer/chat.selector';
 import { appendData, commit } from './reducer/chat.action';
+import { Observable } from 'rxjs';
 // import { appendData, resetChatData, setChatName } from './reducer/chat.action';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-  animations: [fader]
+  // animations: [fader]
 })
 export class AppComponent {
   constructor(
@@ -26,23 +27,20 @@ export class AppComponent {
 
   async ngOnInit() {
 
-    window.onunload = (e)=>{
+    window.onunload = (e) => {
       this._chat.disconnect();
       this.store.dispatch(commit());
     }
 
     this.store.select(getAllChats).subscribe((data) => {
-
       this.chats = data.chat;
-      this.joinAllChat(this.chats);
     })
-    this._chat.onReceive().subscribe(({ massage, dataType, to }: any) => {
-      this.addFrom(massage, dataType, to)
+    this.joinAllChat(this.chats);
 
-
+    this._chat.onReceive().subscribe((data: any) => {
       this.dropWater.play();
+      this.addFrom(data.massage, data.dataType, data.to)
     })
-
   }
 
   async joinAllChat(chats: any) {
@@ -68,7 +66,7 @@ export class AppComponent {
   }
 
 
-  addFrom(text: any, dataType: string, token:any) {
+  addFrom(text: any, dataType: string, token: any) {
     // var child = '';
 
     let obj: any = {
@@ -78,8 +76,8 @@ export class AppComponent {
     }
     switch (dataType) {
       case 'string':
-       
-        obj.text = text; 
+
+        obj.text = text;
         // child = genrateData('text', 'from', text);
         break;
 
@@ -103,9 +101,9 @@ export class AppComponent {
         obj.src = srcVideo;
         // child = genrateData('video', 'from', srcVideo);
         break;
-      
+
     }
-    
+
     this.setData(token, obj);
   }
   setData(token: any, obj: any) {

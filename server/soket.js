@@ -27,7 +27,7 @@ module.exports = (io) => {
             }
             if (login) {
                 const total_paticipate = await countToken(token);
-                console.log(total_paticipate, token, login);
+                // console.log(total_paticipate, token, login);
 
                 if (total_paticipate == 1) {
 
@@ -46,23 +46,24 @@ module.exports = (io) => {
             }
         })
 
-        socket.on('massage', async (massage, dataType, id, callback) => {
-            const { err, data } = verifyJWTToken(id);
+        socket.on('massage', async (massage, dataType, token, massageId, callback) => {
+            const { err, data } = verifyJWTToken(token);
             if (err) {
                 return socket.emit('error', 'Somthing Went Wrong');
             }
-            // if (await getStatus(socket.id)) {
 
             if (dataType == 'string') {
                 massage = HTMLSPACIALCHAR(massage);
             }
             try {
                 const freind = await getFreindByToken(data.token, socket.id);
-                io.to(freind).emit('recive', { massage: massage, dataType: dataType, to: data.token });
-                callback({ sucsess: true });
+                //todo: send call back to user
+                io.to(freind).emit('recive', { massage: massage, dataType: dataType, to: data.token})
+                callback({ id: massageId, status: 'sent'});
+
             } catch (e) {
                 console.log('erro occure', e);
-                callback({ sucsess: false });
+                callback({ id: massageId, sucsess: false });
                 return socket.emit('error', 'Somthing Went Wrong');
             }
         })

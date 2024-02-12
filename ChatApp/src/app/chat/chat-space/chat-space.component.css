@@ -14,7 +14,9 @@ nav {
     transition-duration: 200ms;
     border-radius: 5px;
 }
-
+.text-small{
+    font-size: 0.7em !important;
+}
 .dropdown-item {
     cursor: pointer;
 }

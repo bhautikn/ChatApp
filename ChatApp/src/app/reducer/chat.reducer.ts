@@ -5,6 +5,7 @@ import {
     commit,
     deleteChat,
     deletePerticulerChat,
+    massageSendedServer,
     resetChatData,
     resetresetUnreadToZero,
     setChatName
@@ -24,10 +25,29 @@ export const chatReducer = createReducer(
     on(resetresetUnreadToZero, (state, props) => (resetUnreadToZeroR(state, props.token))),
     on(addChat, (state, props) => (addChatR(state, props.chatObj))),
     on(deletePerticulerChat, (state, props) => (deletePerticulerChatR(state, props.token, props.index))),
+    on(massageSendedServer,(state, props) => (massageSendedServerR( state, props.token, props.id ))),
     on(commit, (state) => (commitR(state)))
 );
+
 function commitR(state: any) {
     localStorage.setItem('chats', JSON.stringify(state))
+}
+function massageSendedServerR(state:any, token:any, id:any){
+    const chatIndex:number = getIndexByToken(state, token);
+    if(chatIndex >= 0){
+        let tempData = {
+            ...state[chatIndex], 
+            data: state[chatIndex].data.map((item:any) => {
+                if(item.id == id){
+                    return {...item, status: 'sent'}
+                }
+                return item;
+            })
+        };
+        return changeObjectBetweenArray(state, tempData, chatIndex);
+    }else{
+        return state;
+    }
 }
 function deletePerticulerChatR(state:any, token:any, index:any){
     const chatIndex:number = getIndexByToken(state, token);
@@ -52,7 +72,8 @@ function appendDataR(state: any, token: number, data: any) {
         let tempData = { 
             ...state[index], 
             data: [...state[index].data, data], 
-            unread: state[index].unread + 1 
+            unread: state[index].unread + 1,
+            modified: new Date().toString()
         }
         return changeObjectBetweenArray(state, tempData, index);
     }
@@ -83,10 +104,12 @@ function addChatR(state: any, obj: any) {
 }
 function resetUnreadToZeroR(state: any, token: any) {
     const index = getIndexByToken(state, token);
+
     if (index >= 0) {
-        const tempData = { ...state[index], unread: 0 }
+        const tempData = { ...state[index], unread: 0, modified: new Date().toString() }
         return changeObjectBetweenArray(state, tempData, index);
     }
+
     return state;
 }
 function setChatNameR(state: any, token: any, name: string) {

@@ -6,8 +6,8 @@ import Swal from 'sweetalert2';
 import { formatAMPM, getToday, tost } from '../../../environments/environment.development'
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../reducer/chat.selector';
-import { addChat, appendData, deleteChat, deletePerticulerChat, resetChatData } from '../../reducer/chat.action';
-
+import { addChat, appendData, deleteChat, deletePerticulerChat, massageSendedServer, resetChatData } from '../../reducer/chat.action';
+import { decodeHTMLEntities } from '../../functions';
 
 @Component({
   selector: 'app-chat-space',
@@ -26,7 +26,7 @@ export class ChatSpaceComponent implements OnInit {
 
   urlToken: any = this._route.snapshot.params['token'];
   chatOption: boolean = false;
-  isOpenMenu = true;
+  isOpenMenu = false;
   gifMenu: boolean = false;
   authToken: any = '';
   name = 'Your Freind';
@@ -92,7 +92,6 @@ export class ChatSpaceComponent implements OnInit {
     })
 
     this._chat.onCancleVideoCall().subscribe(() => {
-      console.log('cancling call');
       Swal.close();
     })
     this._chat.onReqVideoCall().subscribe((func: any) => {
@@ -142,7 +141,6 @@ export class ChatSpaceComponent implements OnInit {
       this.addTo();
       return;
     }
-
     { // block for auto height
       e.target.style.height = 0;
       let max = 100;
@@ -169,14 +167,15 @@ export class ChatSpaceComponent implements OnInit {
     const obj = {
       type: 'string',
       text: text,
-      time: new Date().toString(),
-      sended_or_recived: 'to',
+      // time: new Date().toString(),
+      // sended_or_recived: 'to',
     }
-    this.store.dispatch(appendData({ token: this.urlToken, data: obj }));
-    this._chat.send(text, this.dataType, this.authToken, (data: any) => {
-      console.log(data)
-    });
-    this._chat.sendStatus('online', this.authToken);
+    // this.store.dispatch(appendData({ token: this.urlToken, data: obj }));
+    // this._chat.send(text, this.dataType, this.authToken, (data: any) => {
+    //   console.log(data)
+    // });
+    this.setData(text, obj);
+    // this._chat.sendStatus('online', this.authToken);
   }
 
   async authanticate(token: any, password: any) {
@@ -242,47 +241,53 @@ export class ChatSpaceComponent implements OnInit {
   uploadFile(e: any) {
     let file = e.target.files[0];
 
-    let obj: any = {
-      time: new Date().toString(),
-      sended_or_recived: 'to',
-    }
+    let obj: any = {}
 
     // let child = '';
     if (file.type.split('/')[0] == 'image') {
-      this._chat.send(e.target.files[0], 'image', this.authToken, (data: any) => {
-        console.log(data)
-      });
+      // this._chat.send(e.target.files[0], 'image', this.authToken, (data: any) => {
+      //   console.log(data)
+      // });
       let src: any = URL.createObjectURL(file);
       obj.type = 'image';
       obj.src = src;
     }
     else if (file.type.split('/')[0] == 'video') {
-      this._chat.send(file, 'video', this.authToken, (data: any) => {
-        console.log(data)
-      });
+      // this._chat.send(file, 'video', this.authToken, (data: any) => {
+      //   console.log(data)
+      // });
       let src: any = URL.createObjectURL(file);
       obj.type = 'video';
       obj.src = src;
     }
     else {
-      this._chat.send(file, file.miamitype, this.authToken, (data: any) => {
-        console.log(data)
-      });
       obj.type = 'other';
       obj.data = null;
     }
-    this.setData(obj);
+    this.setData(file, obj);
   }
 
-  setData(obj: any) {
+  setData(data: any, obj: any) {
     if (this.status == 'offline') {
       tost({ title: 'Your Freind is offline', icon: 'warning' }, true);
     }
     this.dropWater.play();
-    this.store.dispatch(appendData({ token: this.urlToken, data: obj }))
+
+    obj.time = new Date().toString()
+    obj.sended_or_recived = 'to';
+    obj.id = Date.now();
+
+
+    this._chat.send(data, obj.type, this.authToken, obj.id ,({ id, status }: any) => {
+      this.store.dispatch(massageSendedServer({ token: this.urlToken, id: id }));
+    });
+
     setTimeout(() => {
       this.scrollTop()
     }, 50);
+    this._chat.sendStatus('online', this.authToken);
+
+    this.store.dispatch(appendData({ token: this.urlToken, data: obj }));
   }
 
 
@@ -292,20 +297,14 @@ export class ChatSpaceComponent implements OnInit {
       type: 'gif',
       text: '',
       url: data,
-      time: new Date().toString(),
-      sended_or_recived: 'to',
     }
 
     this.gifMenu = false;
-    this.store.dispatch(appendData({ token: this.urlToken, data: obj }));
-    this._chat.sendStatus('online', this.authToken);
-    this._chat.send(data, 'gif', this.authToken, (data: any) => {
-      console.log(data)
-    });
+
+    this.setData(data, obj);
   }
 
   videoCall() {
-
     function clearAllThings() {
       clearInterval(MusicPlayId)
       phoneCallMusic.pause();
@@ -350,7 +349,6 @@ export class ChatSpaceComponent implements OnInit {
   }
 
   handleVideoCallCutEvent(event: any) {
-    console.log(event)
     this.isVideoCall = false;
   }
 
@@ -414,7 +412,7 @@ export class ChatSpaceComponent implements OnInit {
     this.store.dispatch(deletePerticulerChat({ index: index, token: this.urlToken }));
   }
   copyToClipBord(text: string) {
-    navigator.clipboard.writeText(text);
+    navigator.clipboard.writeText(decodeHTMLEntities(text));
     tost({ title: 'Text Copied', icon: 'success' });
   }
   downloadFile(src: any, type: string) {
