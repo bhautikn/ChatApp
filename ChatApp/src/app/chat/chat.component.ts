@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { formatAMPM, getChats, setChat } from '../../environments/environment.development';
 import { Store } from '@ngrx/store';
 import { addChat } from '../reducer/chat.action';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -23,6 +24,8 @@ export class ChatComponent {
   sucsessCreated: boolean = false;
   FailHappen: boolean = false;
   chatTitle: string = '';
+  createChatLoading: boolean = false;
+  sendEmailLoading: boolean = false;
   // optional
   email: string = '';
   comment: string = '';
@@ -37,8 +40,10 @@ export class ChatComponent {
     setTimeout(() => { this.showClip = true }, 1000);
   }
   createChat() {
+    this.createChatLoading = true;
     this._api.setChat(this.token, this.password).subscribe((data: any) => {
       if (data.status == 200) {
+        this.createChatLoading = false;
         this.sucsessCreated = true;
         let date = new Date();
         let today = date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear() + ' ' + formatAMPM(date);
@@ -67,9 +72,17 @@ export class ChatComponent {
     if (this.email == '' || this.comment == '') {
       return alert('Please fill the email and comment');
     }
+    this.sendEmailLoading = true;
     this._api.sendEmail(this.email, this.comment, this.fullUrl).subscribe((data: any) => {
       if (data.status == 200) {
-        alert('Email sent');
+        this.sendEmailLoading = false;
+        Swal.fire({
+          title: 'Email sent',
+          text: 'The email has been sent successfully',
+          icon: 'success',
+          customClass: 'swal-background',
+          confirmButtonText: 'OK'
+        })
       } else {
         alert('Email not sent');
       }

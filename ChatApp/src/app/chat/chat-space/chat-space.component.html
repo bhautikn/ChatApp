@@ -69,14 +69,23 @@
             <div *ngIf="gifMenu" class="gif-menu container w-50 float-end">
                 <app-gif (onsendGif)="sendGif($event)"></app-gif>
             </div>
+
+
             <div class="main-container">
 
                 <div class="end-container">
-
-                    <!-- <div class="chats-container container" [innerHtml]="data">
-
-                    </div> -->
                     <div class="chats-container container">
+
+                        <div class="center-logo-while-no-chat" *ngIf="data.length == 0">
+                            <div>
+                                <div>
+                                    <i class="bi bi-chat-right-text"></i>
+                                </div>
+                            </div>
+                            <div>
+                                No Chat
+                            </div>
+                        </div>
 
                         <div *ngFor="let oneChatData of data;index as i">
 
@@ -87,28 +96,34 @@
 
                                             <div class="btn-group py-0 m-0"
                                                 [ngClass]="{'float-end': oneChatData.sended_or_recived == 'to'}">
-                                                
+
                                                 <div class="m-0 p-0" data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="bi bi-chevron-down text-small option px-1 m-0"></i>
                                                 </div>
 
                                                 <ul class="dropdown-menu p-0">
-                                                    <li class="dropdown-item p-2" 
-                                                        *ngIf=" oneChatData.type=='string' " 
+                                                    <li class="dropdown-item p-2" *ngIf=" oneChatData.type=='string' "
                                                         (click)="copyToClipBord(oneChatData.text)">
                                                         <i class="bi bi-clipboard"></i>
                                                         Copy
                                                     </li>
                                                     <li class="dropdown-item p-2" *ngIf="oneChatData.type != 'string' "
-                                                        (click)="downloadFile(oneChatData.src,oneChatData.type)"
-                                                    >
+                                                        (click)="downloadFile(oneChatData.src,oneChatData.type)">
                                                         <i class="bi bi-download"></i>
                                                         Download
                                                     </li>
                                                     <li>
                                                         <hr class="p-0 m-0">
                                                     </li>
-                                                    <li class="dropdown-item text-danger p-2" (click)="deletePerticulerChat(i)">
+                                                    <li class="dropdown-item p-2" (click)="showInfo(oneChatData)">
+                                                        <i class="bi bi-info-circle"></i>
+                                                        Details
+                                                    </li>
+                                                    <li>
+                                                        <hr class="p-0 m-0">
+                                                    </li>
+                                                    <li class="dropdown-item text-danger p-2"
+                                                        (click)="deletePerticulerChat(i)">
                                                         <i class="bi bi-trash"></i>
                                                         Delete
                                                     </li>
@@ -118,28 +133,30 @@
                                             <div class="p-2" *ngIf="oneChatData.type == 'string'">
                                                 {{oneChatData.text}}
                                             </div>
-    
+
                                         </div>
 
                                         <div *ngIf="oneChatData.type == 'video'">
-                                            <video width="320" height="240" class="text" controls>
+                                            <video width="320" height="240" controls>
                                                 <source [src]=oneChatData.src type="video/mp4">
                                             </video><br>
                                         </div>
 
                                         <div *ngIf="oneChatData.type == 'image'" (click)="showImage(oneChatData.src)">
-                                            <img [src]=oneChatData.src class="text" /> <br>
+                                            <img [src]=oneChatData.src /> <br>
                                         </div>
-                                        
+
                                         <div *ngIf="oneChatData.type == 'gif'" (click)="showImage(oneChatData.src)">
-                                            <img [src]=oneChatData.url class="text" alt="image" /> <br>
+                                            <img [src]=oneChatData.url alt="image" /> <br>
                                         </div>
 
                                         <div class="time">
-                                            {{formatAMPM(oneChatData.time)}} 
+                                            {{formatAMPM(oneChatData.time)}}
                                             <span *ngIf="oneChatData.status == 'sent'">
                                                 <i class="bi bi-check-all" style="font-size: 1.5em !important;"></i>
-                                                <!-- [ngClass]="'text-success': oneChatData.status == 'seen'" -->
+                                            </span>
+                                            <span *ngIf="!oneChatData.status && oneChatData.sended_or_recived == 'to'">
+                                                <i class="bi bi-clock" style="font-size: 1em !important;"></i>
                                             </span>
                                         </div>
                                     </div>

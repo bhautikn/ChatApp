@@ -2,9 +2,9 @@ svg{
     cursor: pointer;
 }
 .loading-ani{
-    border: 5px solid var(--green-dark);
+    border: 5px solid var(--text);
     border-radius: 300px;
-    border-top: 5px solid var(--background-light);
+    border-top: 5px solid var(--background-light-4);
     height: 30px;
     width: 30px;
     animation: loading-animation 500ms linear infinite;

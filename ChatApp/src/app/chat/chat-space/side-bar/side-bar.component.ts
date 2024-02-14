@@ -5,6 +5,7 @@ import { ChattingSoketService } from '../../../services/chatting-soket.service';
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../../reducer/chat.selector';
 import { deleteChat, resetresetUnreadToZero } from '../../../reducer/chat.action';
+import { deleteChatByToken } from '../../../functions';
 
 @Component({
   selector: 'app-side-bar',
@@ -56,7 +57,15 @@ export class SideBarComponent {
     this.isChangingName = false
   }
   handleDeleteChat(index: number) {
-    // const { length , firstToken} = deleteChat(this.chats[index].token);
+    
+    // deleteChatByToken({
+    //   urlToken: this.chats[index].token,
+    //   authToken: localStorage.getItem(this.chats[index].token),
+    //   api: _,
+    //   store: this.store,
+    //   curruntIndex: index
+    // });
+
     this.store.dispatch(deleteChat({index: index}))
     // this._nevigate.navigate(['/']);
   }

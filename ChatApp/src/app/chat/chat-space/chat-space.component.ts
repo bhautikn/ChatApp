@@ -7,7 +7,7 @@ import { formatAMPM, getToday, tost } from '../../../environments/environment.de
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../reducer/chat.selector';
 import { addChat, appendData, deleteChat, deletePerticulerChat, massageSendedServer, resetChatData } from '../../reducer/chat.action';
-import { decodeHTMLEntities } from '../../functions';
+import { decodeHTMLEntities, deleteChatByToken } from '../../functions';
 
 @Component({
   selector: 'app-chat-space',
@@ -26,7 +26,7 @@ export class ChatSpaceComponent implements OnInit {
 
   urlToken: any = this._route.snapshot.params['token'];
   chatOption: boolean = false;
-  isOpenMenu = false;
+  isOpenMenu = true;
   gifMenu: boolean = false;
   authToken: any = '';
   name = 'Your Freind';
@@ -135,6 +135,19 @@ export class ChatSpaceComponent implements OnInit {
     });
   }
 
+  ngAfterViewInit() {
+    var holder: any = document.querySelector('.main-container');
+    const handleDragElement = (e: any) => {
+      e.preventDefault();
+      this.uploadFile(null, e.dataTransfer.files[0]);
+    }
+    holder.ondragover = function () { this.style.border = '2px dashed green'; return false; };
+    holder.ondragend = function () { this.style.border = '1px solid rgb(51, 51, 51)'; return false; };
+    holder.ondrop = function (e: any) {
+      handleDragElement(e);
+      this.style.border = '1px solid rgb(51, 51, 51)';
+    }
+  }
   input(e: any) {
     this._chat.sendStatus('typing', this.authToken)
     if (e.keyCode == 13) {
@@ -167,15 +180,8 @@ export class ChatSpaceComponent implements OnInit {
     const obj = {
       type: 'string',
       text: text,
-      // time: new Date().toString(),
-      // sended_or_recived: 'to',
     }
-    // this.store.dispatch(appendData({ token: this.urlToken, data: obj }));
-    // this._chat.send(text, this.dataType, this.authToken, (data: any) => {
-    //   console.log(data)
-    // });
     this.setData(text, obj);
-    // this._chat.sendStatus('online', this.authToken);
   }
 
   async authanticate(token: any, password: any) {
@@ -220,17 +226,17 @@ export class ChatSpaceComponent implements OnInit {
     this._chat.join(this.authToken)
   }
 
-  deleteChat() {
-    let isDelete = confirm("are you sure??")
-    if (isDelete) {
-      this._api.deleteChat(this.urlToken, this.authToken).subscribe((data: any) => {
+  async deleteChat() {
 
-        if (data.ok == 200) {
-          this.store.dispatch(deleteChat({ index: this.curruntIndex }))
-          this._navigate.navigate(['/']);
-        }
-      });
-    }
+    await deleteChatByToken({
+      urlToken: this.urlToken, 
+      authToken: this.authToken,
+      api: this._api,
+      store: this.store,
+      curruntIndex: this.curruntIndex,
+    });
+    this._navigate.navigate(['/']);
+
   }
 
   redirect(to: string) {
@@ -238,24 +244,19 @@ export class ChatSpaceComponent implements OnInit {
     this._navigate.navigate([to]);
   }
 
-  uploadFile(e: any) {
-    let file = e.target.files[0];
+  uploadFile(e: any, file: any = null) {
+
+    file = file || e.target.files[0];
 
     let obj: any = {}
 
     // let child = '';
     if (file.type.split('/')[0] == 'image') {
-      // this._chat.send(e.target.files[0], 'image', this.authToken, (data: any) => {
-      //   console.log(data)
-      // });
       let src: any = URL.createObjectURL(file);
       obj.type = 'image';
       obj.src = src;
     }
     else if (file.type.split('/')[0] == 'video') {
-      // this._chat.send(file, 'video', this.authToken, (data: any) => {
-      //   console.log(data)
-      // });
       let src: any = URL.createObjectURL(file);
       obj.type = 'video';
       obj.src = src;
@@ -278,7 +279,7 @@ export class ChatSpaceComponent implements OnInit {
     obj.id = Date.now();
 
 
-    this._chat.send(data, obj.type, this.authToken, obj.id ,({ id, status }: any) => {
+    this._chat.send(data, obj.type, this.authToken, obj.id, ({ id, status }: any) => {
       this.store.dispatch(massageSendedServer({ token: this.urlToken, id: id }));
     });
 
@@ -446,5 +447,20 @@ export class ChatSpaceComponent implements OnInit {
         popup: 'animated fadeInDown faster',
       }
     });
+  }
+  showInfo(data: any) {
+
+    Swal.fire({
+      title: 'Info',
+      html: `
+      <div style='text-left'>
+        type: ${data.type}<br>
+        sended at: ${data.time}<br>
+        data: ${data.url || data.text}<br>
+        status: ${data.status}<br>
+      </div>
+      `
+    });
+    console.log(data);
   }
 }

@@ -1,52 +1,36 @@
-import { formatAMPM } from "../environments/environment.development";
+import Swal from "sweetalert2";
+import { deleteChat } from "./reducer/chat.action";
 
-export function genrateData(miamitype: string, fromOrTo: string, data: any): string {
+export function decodeHTMLEntities(str: any) {
+  if (str && typeof str === 'string') {
+    // strip script/html tags
+    str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+    str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+  }
+  return str;
+}
 
-    let forVideo = `
-      <video width="320" height="240" class="text" controls>
-        <source src='${data}' type="video/mp4" >
-      </video> <br>
-    `;
-    let forImage = `
-      <img src='${data}' class="text"> <br>
-    `;
-    let forText = `
-      <div class="text">${data}</div>
-    `;
-    let forOther = `
-      <div></div>
-    `
-    switch (miamitype) {
-      case 'text':
-        return getStrBydata(forText, fromOrTo);
-      case 'image':
-        return getStrBydata(forImage, fromOrTo);
-      case 'video':
-        return getStrBydata(forVideo, fromOrTo);
-      default:
-        return ''
+export async function deleteChatByToken({ urlToken, authToken, api, store, curruntIndex }: any) {
+  await Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!"
+  }).then((result) => {
+    if (result.isConfirmed) {
+      api.deleteChat(urlToken, authToken).subscribe((data: any) => {
+        if (data.ok == 200) {
+          store.dispatch(deleteChat({ index: curruntIndex }))
+        }
+      });
+      Swal.fire({
+        title: "Deleted!",
+        text: "Your file has been deleted.",
+        icon: "success"
+      });
     }
-  }
-  export function getStrBydata(data: string, fromOrTo: string) {
-    let child = `
-      <div class="row">
-          <div class="${fromOrTo}">
-              <div class="massage">
-                ${data}
-                <div class="time">${formatAMPM(new Date())}</div>
-              </div>
-          </div>
-      </div>
-    `;
-    return child;
-  }
-
-  export function decodeHTMLEntities (str:any) {
-    if(str && typeof str === 'string') {
-      // strip script/html tags
-      str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
-      str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
-    }
-  
-    return str;
-  }
+  });
+}

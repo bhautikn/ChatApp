@@ -211,7 +211,16 @@ nav {
 .send-btn-chat-space .bi-send:hover{
     background-color: none;
 }
-
+.center-logo-while-no-chat{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    height: 50vh;
+    font-size: 4em !important;
+    color: var(--text-light);
+    width: 100%;
+}
 .massage-text .icon{
     display: flex;
     justify-content: center;
@@ -238,7 +247,7 @@ nav {
     margin: 5px 0;
     animation: chat-animation-from 200ms linear;
 }
-@keyframes chat-animation-to {
+/* @keyframes chat-animation-to {
     from {
         transform: translateX(-20px);
     }
@@ -247,7 +256,7 @@ nav {
     from {
         transform: translateX(20px);
     }
-}
+} */
 .to .massage, .from .massage {
     /* background-color: green; */
     padding: 2px;
@@ -255,7 +264,7 @@ nav {
     width: max-content;
     line-break: anywhere;
     min-width: 50px;
-    max-width: 60%;
+    max-width: 50%;
 }
 
 .to .text, .from .text {
@@ -292,8 +301,13 @@ nav {
 
 .from img, .to img {
     max-width: 200px;
-    border-radius: 100px;
-    /* display: none; */
+    border-bottom-left-radius:10px;
+    border-top-left-radius:10px;
+}
+.from img{
+    border-radius: 0px;
+    border-top-right-radius:10px;
+    border-bottom-right-radius: 10px;
 }
 
 .from .time, .to .time {

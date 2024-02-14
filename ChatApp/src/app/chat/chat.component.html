@@ -13,8 +13,9 @@
                             [(ngModel)]="password">
                     </div>
                     <div class="row">
-                        <div class="col text-end p-0">
+                        <div class="col text-end p-0 d-flex flex-row-reverse gap-2 align-items-center">
                             <button class="btn btn-info" (click)="createChat()" autocomplete="off">Create Chat</button>
+                            <span *ngIf="createChatLoading"><div class="loading-ani"></div></span>
                         </div>
                     </div>
                 </div>
@@ -56,8 +57,9 @@
                 ></textarea>
 
                 <div class="my-2"></div>
-                <div class="col text-end p-0">
+                <div class="col text-end p-0 d-flex flex-row-reverse align-items-center gap-2">
                     <button class="btn btn-info" (click)="inviteFreind()" autocomplete="off">Invite</button>
+                    <span *ngIf="sendEmailLoading"><div class="loading-ani"></div></span>
                 </div>
             </div>
         </div>

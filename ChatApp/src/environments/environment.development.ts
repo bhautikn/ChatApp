@@ -88,18 +88,7 @@ export function tost(props:any, animation:boolean = false) {
     );
   }, 50)
 }
-export function deleteChat(urlToken: any){
-  localStorage.removeItem(urlToken)
-  let chats = getChats();
-  chats = chats.filter((item:any)=>{
-    return item.token !=  urlToken;
-  })
-  localStorage.setItem('chats', JSON.stringify(chats))
-  return {
-    length: chats.length,
-    firstToken: length!=0?chats[0].token:'',
-  }
-}
+
 
 export function getToday(){
   const date = new Date();

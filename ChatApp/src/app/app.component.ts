@@ -38,6 +38,7 @@ export class AppComponent {
     this.joinAllChat(this.chats);
 
     this._chat.onReceive().subscribe((data: any) => {
+      console.log(data);
       this.dropWater.play();
       this.addFrom(data.massage, data.dataType, data.to)
     })

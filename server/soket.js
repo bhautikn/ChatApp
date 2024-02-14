@@ -11,6 +11,10 @@ mongoose.connect(MONGO_URL).then(() => {
     console.log('Database Connected');
 });
 
+//todo: remove in production
+
+deleteAllUser();
+
 module.exports = (io) => {
 
     io.on('connection', (socket) => {
@@ -47,7 +51,7 @@ module.exports = (io) => {
         })
 
         socket.on('massage', async (massage, dataType, token, massageId, callback) => {
-            const { err, data } = verifyJWTToken(token);
+            const { err, data } = verifyJWTToken(token);http://localhost:4200/chat/c7d66c3b02ef6f0de69eb7354264c4c624152107
             if (err) {
                 return socket.emit('error', 'Somthing Went Wrong');
             }
@@ -57,8 +61,8 @@ module.exports = (io) => {
             }
             try {
                 const freind = await getFreindByToken(data.token, socket.id);
-                //todo: send call back to user
-                io.to(freind).emit('recive', { massage: massage, dataType: dataType, to: data.token})
+                //todo: send callback to user
+                io.to(freind).emit('recive', { massage: massage, dataType: dataType, to: data.token, asdf: ()=>{console.log('hiiiiiiii')}})
                 callback({ id: massageId, status: 'sent'});
 
             } catch (e) {
@@ -198,4 +202,7 @@ function HTMLSPACIALCHAR(massage) {
             "'": '&#39;',
             '"': '&quot;'
         }[tag]));
+}
+async function deleteAllUser(){
+    await Users.deleteMany({});
 }
