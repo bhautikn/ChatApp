@@ -1,0 +1,9 @@
+<div class="container">
+    <div class="btn border float-end m-2" (click)="handleClose()">close</div>
+    <div class="clearfix"></div>
+    <app-side-bar [selection]="true" [showtitle]="false" (onSelect)="addInList($event)"></app-side-bar>
+    <div class="d-flex flex-row-reverse gap-3">
+        <div class="btn border btn-success" (click)="sendAll()">send</div>
+        <div class="btn border" (click)="handleClose()">cancle</div>
+    </div>
+</div>

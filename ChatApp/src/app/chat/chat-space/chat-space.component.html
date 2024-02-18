@@ -91,6 +91,7 @@
 
                             <div class="row">
                                 <div [class]=oneChatData.sended_or_recived>
+                                    
                                     <div class="massage">
                                         <div class="text d-flex align-items-start p-0">
 
@@ -102,7 +103,7 @@
                                                 </div>
 
                                                 <ul class="dropdown-menu p-0">
-                                                    <li class="dropdown-item p-2" *ngIf=" oneChatData.type=='string' "
+                                                    <li class="dropdown-item p-2" *ngIf="oneChatData.type=='string' "
                                                         (click)="copyToClipBord(oneChatData.text)">
                                                         <i class="bi bi-clipboard"></i>
                                                         Copy
@@ -111,6 +112,13 @@
                                                         (click)="downloadFile(oneChatData.src,oneChatData.type)">
                                                         <i class="bi bi-download"></i>
                                                         Download
+                                                    </li>
+                                                    <li>
+                                                        <hr class="p-0 m-0">
+                                                    </li>
+                                                    <li class="dropdown-item p-2" (click)="forward(oneChatData)">
+                                                        <i class="bi bi-reply rotate-180"></i>
+                                                        forward
                                                     </li>
                                                     <li>
                                                         <hr class="p-0 m-0">
@@ -152,13 +160,19 @@
 
                                         <div class="time">
                                             {{formatAMPM(oneChatData.time)}}
+                                            <span *ngIf="oneChatData.status == 'pending'">
+                                                <i class="bi bi-clock" style="font-size: 1em !important;"></i>
+                                            </span>
                                             <span *ngIf="oneChatData.status == 'sent'">
                                                 <i class="bi bi-check-all" style="font-size: 1.5em !important;"></i>
                                             </span>
-                                            <span *ngIf="!oneChatData.status && oneChatData.sended_or_recived == 'to'">
-                                                <i class="bi bi-clock" style="font-size: 1em !important;"></i>
+                                            <span *ngIf="oneChatData.status === 'failed'">
+                                                <i class="bi bi-x-octagon text-danger" style="font-size: 1em !important;"></i>
                                             </span>
                                         </div>
+                                    </div>
+                                    <div class="float-end text-center d-flex h-100 align-items-center mx-2" *ngIf="oneChatData.status == 'failed'" (click)="resendMassage(i)">
+                                        <i class="bi bi-arrow-clockwise option "></i>
                                     </div>
                                 </div>
                             </div>
@@ -168,7 +182,8 @@
                     <div class="container-text-last container">
                         <div class="text-feild">
                             <div class="massage-text">
-                                <div class="icon">
+
+                                <div class="icon left-icon" *ngIf="chatLefticons">
                                     <label for="file-upload">
                                         <i class="bi bi-file-earmark"></i>
                                     </label>
@@ -176,12 +191,13 @@
                                         (change)="uploadFile($event)" accept="image/jpeg, image/png, video/mp4">
                                 </div>
 
-                                <div class="icon">
+                                <div class="icon left-icon" *ngIf="chatLefticons">
                                     <div (click)="gifMenu = !gifMenu">
                                         <i class="bi bi-filetype-gif" *ngIf="!gifMenu"></i>
                                         <i class="bi bi-x" *ngIf="gifMenu"></i>
                                     </div>
                                 </div>
+
                                 <textarea placeholder="Massage" (keypress)="input($event)" class="form-control"
                                     id="textarea" rows="1"></textarea>
                                 <div class="icon send-btn-chat-space" (click)="addTo()">
@@ -198,3 +214,9 @@
 <app-video-call *ngIf="isVideoCall" class="videocall-component" [authToken]="authToken"
     (onCutVideoCall)="handleVideoCallCutEvent($event)">
 </app-video-call>
+<app-forward 
+    *ngIf="isForwarding"
+    [data]="forwardData"
+    (onForward)="closeForward($event)" 
+    class="videocall-component"
+></app-forward>

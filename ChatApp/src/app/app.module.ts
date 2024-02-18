@@ -26,6 +26,7 @@ import { UploadComponent } from './post/live/upload/upload.component';
 import { GIFComponent } from './gif/gif.component';
 import { StoreModule } from '@ngrx/store';
 import { chatReducer } from './reducer/chat.reducer';
+import { ForwardComponent } from './chat/forward/forward.component';
 
 const config: SocketIoConfig = {
     url: environment.soketUrl,
@@ -48,7 +49,8 @@ const config: SocketIoConfig = {
     LiveComponent,
     SinglePostComponent,
     UploadComponent,
-    GIFComponent
+    GIFComponent,
+    ForwardComponent
   ],
   imports: [
     BrowserModule,

@@ -42,6 +42,12 @@
     transition-duration: 500ms;
     animation: side-nav 500ms;
 }
+.selected{
+    background-color: seagreen !important;
+    transition-duration: 200ms;
+    z-index: 200;
+
+}
 @keyframes side-nav {
     from{
         opacity: 0.3;

@@ -1,16 +1,16 @@
-exports.HTMLSPACIALCHAR = function(str) {
+exports.HTMLSPACIALCHAR = function (str) {
   return str.replace(/[&<>'"]/g,
-      tag => ({
-          '&': '&amp;',
-          '<': '&lt;',
-          '>': '&gt;',
-          "'": '&#39;',
-          '"': '&quot;'
-      }[tag]));
+    tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag]));
 }
 
-exports.isSet = function(args) {
+exports.isSet = function (args) {
   if (!args || args == '' || args.trim() == '' || args == 'undefined')
-      return false;
+    return false;
   return true;
 }

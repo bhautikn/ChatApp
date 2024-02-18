@@ -2,10 +2,10 @@ import { createReducer, on } from "@ngrx/store";
 import {
     addChat,
     appendData,
+    changeStatus,
     commit,
     deleteChat,
     deletePerticulerChat,
-    massageSendedServer,
     resetChatData,
     resetresetUnreadToZero,
     setChatName
@@ -25,21 +25,21 @@ export const chatReducer = createReducer(
     on(resetresetUnreadToZero, (state, props) => (resetUnreadToZeroR(state, props.token))),
     on(addChat, (state, props) => (addChatR(state, props.chatObj))),
     on(deletePerticulerChat, (state, props) => (deletePerticulerChatR(state, props.token, props.index))),
-    on(massageSendedServer,(state, props) => (massageSendedServerR( state, props.token, props.id ))),
+    on(changeStatus,(state, props) => (changeStatusR( state, props.token, props.id, props.status ))),
     on(commit, (state) => (commitR(state)))
 );
 
 function commitR(state: any) {
     localStorage.setItem('chats', JSON.stringify(state))
 }
-function massageSendedServerR(state:any, token:any, id:any){
+function changeStatusR(state:any, token:any, id:any, status:any){
     const chatIndex:number = getIndexByToken(state, token);
     if(chatIndex >= 0){
         let tempData = {
             ...state[chatIndex], 
             data: state[chatIndex].data.map((item:any) => {
                 if(item.id == id){
-                    return {...item, status: 'sent'}
+                    return {...item, status: status}
                 }
                 return item;
             })

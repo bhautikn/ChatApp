@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { formatAMPM, getToday, tost } from '../../../environments/environment.development'
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../reducer/chat.selector';
-import { addChat, appendData, deleteChat, deletePerticulerChat, massageSendedServer, resetChatData } from '../../reducer/chat.action';
+import { addChat, appendData, changeStatus, deletePerticulerChat, resetChatData } from '../../reducer/chat.action';
 import { decodeHTMLEntities, deleteChatByToken } from '../../functions';
 
 @Component({
@@ -38,6 +38,9 @@ export class ChatSpaceComponent implements OnInit {
   chats: any = [];
   curruntIndex: number = -1;
   isVideoCall: boolean = false;
+  chatLefticons:boolean = true;
+  isForwarding:boolean = false;
+  forwardData: any;
   chatTitle: string = ''
   formatAMPM = formatAMPM;
 
@@ -149,7 +152,8 @@ export class ChatSpaceComponent implements OnInit {
     }
   }
   input(e: any) {
-    this._chat.sendStatus('typing', this.authToken)
+    this.typing(true);
+    // this._chat.sendStatus('typing', this.authToken)
     if (e.keyCode == 13) {
       this.addTo();
       return;
@@ -164,7 +168,16 @@ export class ChatSpaceComponent implements OnInit {
         e.target.style.height = (100) + "px";
       }
     }
-
+  }
+  typing(isTyping:any){
+    if(isTyping && this.chatLefticons){
+      this._chat.sendStatus('typing', this.authToken);
+      this.chatLefticons = false;
+    }
+    else if(!isTyping && !this.chatLefticons){
+      this._chat.sendStatus('online', this.authToken);
+      this.chatLefticons = true;
+    }
   }
   addTo() {
     const textArea: any = document.querySelector('#textarea');
@@ -277,16 +290,24 @@ export class ChatSpaceComponent implements OnInit {
     obj.time = new Date().toString()
     obj.sended_or_recived = 'to';
     obj.id = Date.now();
+    obj.status = 'pending';
 
 
     this._chat.send(data, obj.type, this.authToken, obj.id, ({ id, status }: any) => {
-      this.store.dispatch(massageSendedServer({ token: this.urlToken, id: id }));
+      this.store.dispatch(changeStatus({ token: this.urlToken, id: id , status: status}));
     });
-
+    setTimeout(() => {
+      const tempData = this.data.find((e: any) => e.id == obj.id);
+      if(tempData.status == 'pending'){
+        this.store.dispatch(changeStatus({ token: this.urlToken, id: obj.id, status: 'failed' }));
+      }
+    }, 20*1000);
     setTimeout(() => {
       this.scrollTop()
+
     }, 50);
-    this._chat.sendStatus('online', this.authToken);
+    // this._chat.sendStatus('online', this.authToken);
+    this.typing(false);
 
     this.store.dispatch(appendData({ token: this.urlToken, data: obj }));
   }
@@ -462,5 +483,21 @@ export class ChatSpaceComponent implements OnInit {
       `
     });
     console.log(data);
+  }
+  forward(data:any){
+    this.isForwarding = true;
+    this.forwardData = data;
+  }
+  closeForward(e:any){
+    this.isForwarding = false;
+    this.forwardData = null;
+  }
+  resendMassage(index:any){
+    let obj:any = {};
+    obj.url = this.data[index].url;
+    obj.text = this.data[index].text;
+    obj.type = this.data[index].type;
+
+    this.setData(this.data[index].text || this.data[index].url, obj);
   }
 }

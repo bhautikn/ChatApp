@@ -51,7 +51,7 @@ module.exports = (io) => {
         })
 
         socket.on('massage', async (massage, dataType, token, massageId, callback) => {
-            const { err, data } = verifyJWTToken(token);http://localhost:4200/chat/c7d66c3b02ef6f0de69eb7354264c4c624152107
+            const { err, data } = verifyJWTToken(token); http://localhost:4200/chat/c7d66c3b02ef6f0de69eb7354264c4c624152107
             if (err) {
                 return socket.emit('error', 'Somthing Went Wrong');
             }
@@ -62,8 +62,8 @@ module.exports = (io) => {
             try {
                 const freind = await getFreindByToken(data.token, socket.id);
                 //todo: send callback to user
-                io.to(freind).emit('recive', { massage: massage, dataType: dataType, to: data.token, asdf: ()=>{console.log('hiiiiiiii')}})
-                callback({ id: massageId, status: 'sent'});
+                io.to(freind).emit('recive', { massage: massage, dataType: dataType, to: data.token, asdf: () => { console.log('hiiiiiiii') } })
+                callback({ id: massageId, status: 'sent' });
 
             } catch (e) {
                 console.log('erro occure', e);
@@ -179,8 +179,13 @@ async function getFreindByToken(token, id) {
     }
 }
 async function getIdByToken(token) {
-    const data = await Users.findOne({ token: token });
-    return data.id;
+    try {
+        const data = await Users.findOne({ token: token });
+        return data.id;
+    } catch (e) {
+        console.log('error occur at getIdByToken', e);
+        return false;
+    }
 }
 async function updateOnlineStatus(id) {
     await Users.updateOne({ id: id }, { $set: { online: false } });
@@ -203,6 +208,6 @@ function HTMLSPACIALCHAR(massage) {
             '"': '&quot;'
         }[tag]));
 }
-async function deleteAllUser(){
+async function deleteAllUser() {
     await Users.deleteMany({});
 }

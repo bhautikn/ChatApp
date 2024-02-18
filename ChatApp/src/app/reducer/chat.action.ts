@@ -8,7 +8,7 @@ export const deleteChat = createAction('[Chat Component] delete chat', props<{ i
 export const resetresetUnreadToZero = createAction('[Chat Component] reset unread zero', props<{ token:any }>());
 export const addChat = createAction('[Chat Component] add chat', props<{ chatObj:any }>());
 export const deletePerticulerChat = createAction('[Chat Component] delete one chat', props<{token: any, index: any}>());
-export const massageSendedServer = createAction('[Chat Component] massage sended server', props<{token: any, id: any}>());
+export const changeStatus = createAction('[Chat Component] massage sended server', props<{token: any, id: any, status:any}>());
 export const commit = createAction('[Chat Component] commit');
 
 
