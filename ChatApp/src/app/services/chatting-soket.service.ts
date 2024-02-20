@@ -2,64 +2,62 @@ import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
-export class ChattingSoketService {	
+export class ChattingSoketService {
 
-  constructor(private _socket:Socket) { }
+	constructor(private _socket: Socket) { }
 
 	//emit event
-	send(massage:any, dataType:any ,auth:string, id:any, callback: any) {
-		this._socket.emit('massage', massage, dataType, auth, id, (res: any)=>{
-			callback(res);
-		});
-	} 
-	join(authToken:string){
+	send(massage: any, dataType: any, auth: string, id: any, callback: any) {
+		this._socket.emit('massage', { massage: massage, dataType: dataType, token: auth, massageId: id }, callback);
+	}
+	join(authToken: string) {
 		this._socket.emit('join', authToken);
 	}
-	sendStatus(status:any, token:any){
+	sendStatus(status: any, token: any) {
 		this._socket.emit('status', status, token);
 	}
-	reqVideoCall(authToken:any, callback:Function){
-		this._socket.emit('reqVideoCall', authToken, (res:any)=>{
+	reqVideoCall(authToken: any, callback: Function) {
+		this._socket.emit('reqVideoCall', authToken, (res: any) => {
 			callback(res);
 		})
 	}
-	sendPeerConnectionId(token: any, peerToken:any){
+	sendPeerConnectionId(token: any, peerToken: any) {
 		this._socket.emit('sendPeerConnectionId', token, peerToken)
 	}
-	disconnectVideoCall(token:any){
+	disconnectVideoCall(token: any) {
 		this._socket.emit('disconnectVideoCall', token);
 	}
-	cancleVideoCall(token:any){
+	cancleVideoCall(token: any) {
 		this._socket.emit('cancleVideoCall', token);
 	}
 	// listen event
-	onCancleVideoCall(){
+	onCancleVideoCall() {
 		return this._socket.fromEvent('cancleVideoCall');
 	}
-	onDisconnectVideoCall(){
+	onDisconnectVideoCall() {
 		return this._socket.fromEvent('disconnectVideoCall');
 	}
 
-	onPeerConnectionId(){
+	onPeerConnectionId() {
 		return this._socket.fromEvent('sendPeerConnectionId');
 	}
-	status(){
+	status() {
 		return this._socket.fromEvent('status')
 	}
-	onReceive() {
-		return this._socket.fromEvent('recive');
+	onReceive(callback: any) {
+		return this._socket.on('recive', callback);
 	}
-	onReqVideoCall(){
+	onReqVideoCall() {
 		return this._socket.fromEvent('reqVideoCall')
 	}
 
 	// disconnect socket connection
-	disconnect(){
-		this._socket.disconnect();		
+	disconnect() {
+		this._socket.disconnect();
 	}
-	connect(){
+	connect() {
 		this._socket.connect();
 	}
 }

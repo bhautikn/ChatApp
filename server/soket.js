@@ -50,8 +50,8 @@ module.exports = (io) => {
             }
         })
 
-        socket.on('massage', async (massage, dataType, token, massageId, callback) => {
-            const { err, data } = verifyJWTToken(token); http://localhost:4200/chat/c7d66c3b02ef6f0de69eb7354264c4c624152107
+        socket.on('massage', async ({ massage, dataType, token, massageId }, callback) => {
+            const { err, data } = verifyJWTToken(token);
             if (err) {
                 return socket.emit('error', 'Somthing Went Wrong');
             }
@@ -62,8 +62,15 @@ module.exports = (io) => {
             try {
                 const freind = await getFreindByToken(data.token, socket.id);
                 //todo: send callback to user
-                io.to(freind).emit('recive', { massage: massage, dataType: dataType, to: data.token, asdf: () => { console.log('hiiiiiiii') } })
-                callback({ id: massageId, status: 'sent' });
+                // callback({ id: massageId, status: 'sent' });
+                // callback({ id: massageId, status: 'sent223232' });
+                io.timeout(20 * 60).to(freind).emit('recive', { massage: massage, dataType: dataType, to: data.token, id: massageId }, (err, obj) => {
+                    if (err) {
+                        console.log(err)
+                    } else {
+                        callback(obj[0])
+                    }
+                });
 
             } catch (e) {
                 console.log('erro occure', e);
@@ -199,14 +206,16 @@ async function getStatus(id) {
         return data.online;
 }
 function HTMLSPACIALCHAR(massage) {
-    return massage.replace(/[&<>'"]/g,
-        tag => ({
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            "'": '&#39;',
-            '"': '&quot;'
-        }[tag]));
+    if (typeof massage == 'string') {
+        return massage.replace(/[&<>'"]/g,
+            tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag]));
+    }
 }
 async function deleteAllUser() {
     await Users.deleteMany({});

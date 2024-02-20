@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { fader } from './route-animations';
 import { ChattingSoketService } from './services/chatting-soket.service';
 import { Store } from '@ngrx/store';
 import { getAllChats } from './reducer/chat.selector';
 import { appendData, commit } from './reducer/chat.action';
-import { Observable } from 'rxjs';
+// import { fader } from './route-animations';
 // import { appendData, resetChatData, setChatName } from './reducer/chat.action';
 
 @Component({
@@ -37,8 +36,9 @@ export class AppComponent {
     })
     this.joinAllChat(this.chats);
 
-    this._chat.onReceive().subscribe((data: any) => {
-      console.log(data);
+    this._chat.onReceive((data: any, callback:any)=>{
+      // console.log(data);
+      callback({ id: data.id, status: 'seen' });
       this.dropWater.play();
       this.addFrom(data.massage, data.dataType, data.to)
     })
@@ -67,8 +67,7 @@ export class AppComponent {
   }
 
 
-  addFrom(text: any, dataType: string, token: any) {
-    // var child = '';
+  addFrom(data: any, dataType: string, token: any) {
 
     let obj: any = {
       type: dataType,
@@ -78,38 +77,32 @@ export class AppComponent {
     switch (dataType) {
       case 'string':
 
-        obj.text = text;
-        // child = genrateData('text', 'from', text);
+        obj.data = data;
         break;
 
       case 'gif':
-        obj.url = text;
-        // child = genrateData('image', 'from', text);
+        obj.data = data;
         break;
 
       case 'image':
-        let blob = new Blob([text])
+        let blob = new Blob([data])
         let myFile: File = new File([blob], "file.jpg")
         let src: any = URL.createObjectURL(myFile);
-        obj.src = src;
-        // child = genrateData('image', 'from', src);
+        obj.data = src;
         break;
 
       case 'video':
-        let blobVideo = new Blob([text])
+        let blobVideo = new Blob([data])
         let myFileVideo: File = new File([blobVideo], "file.mp4")
         let srcVideo: any = URL.createObjectURL(myFileVideo);
-        obj.src = srcVideo;
-        // child = genrateData('video', 'from', srcVideo);
+        obj.data = srcVideo;
         break;
-
     }
 
     this.setData(token, obj);
   }
   setData(token: any, obj: any) {
     this.store.dispatch(appendData({ token: token, data: obj }));
-    // this.store.dispatch(appendData({ token: token, data: child }));
   }
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];

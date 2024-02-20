@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { deleteChat } from "./reducer/chat.action";
+import { appendData, changeStatus, deleteChat } from "./reducer/chat.action";
 
 export function decodeHTMLEntities(str: any) {
   if (str && typeof str === 'string') {
@@ -33,4 +33,30 @@ export async function deleteChatByToken({ urlToken, authToken, api, store, curru
       });
     }
   });
+}
+
+export function sendDataToFreind(obj: any, _chat: any, authToken: any, urlToken: any, store: any) {
+
+  //todo: change status after 20 seconds if not received fix this
+
+  // store.select(getAllChats).subscribe((data: any) => {
+  //   setTimeout(() => {
+  //     const filterddata = data.chat.find((e: any) => e.token == urlToken);
+  //     const tempData = filterddata.data.find((e: any) => e.id == obj.id);
+  //     console.log(tempData, 'tempData.status', tempData.status == 'pending');
+  //     if (tempData.status == 'pending') {
+  //       store.dispatch(changeStatus({ token: urlToken, id: obj.id, status: 'failed' }));
+  //     }
+  //   }, 20 * 1000);
+  // })
+
+  _chat.send(obj.sendableData, obj.type, authToken, obj.id, (data: any) => {
+    if (data) {
+      store.dispatch(changeStatus({ token: urlToken, id: data.id, status: data.status }));
+    } else {
+      store.dispatch(changeStatus({ token: urlToken, id: obj.id, status: 'failed' }));
+    }
+  });
+
+  store.dispatch(appendData({ token: urlToken, data: obj }));
 }

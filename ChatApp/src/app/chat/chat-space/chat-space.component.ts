@@ -7,7 +7,7 @@ import { formatAMPM, getToday, tost } from '../../../environments/environment.de
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../reducer/chat.selector';
 import { addChat, appendData, changeStatus, deletePerticulerChat, resetChatData } from '../../reducer/chat.action';
-import { decodeHTMLEntities, deleteChatByToken } from '../../functions';
+import { decodeHTMLEntities, deleteChatByToken, sendDataToFreind } from '../../functions';
 
 @Component({
   selector: 'app-chat-space',
@@ -26,7 +26,7 @@ export class ChatSpaceComponent implements OnInit {
 
   urlToken: any = this._route.snapshot.params['token'];
   chatOption: boolean = false;
-  isOpenMenu = true;
+  isOpenMenu = false;
   gifMenu: boolean = false;
   authToken: any = '';
   name = 'Your Freind';
@@ -38,11 +38,12 @@ export class ChatSpaceComponent implements OnInit {
   chats: any = [];
   curruntIndex: number = -1;
   isVideoCall: boolean = false;
-  chatLefticons:boolean = true;
-  isForwarding:boolean = false;
+  chatLefticons: boolean = true;
+  isForwarding: boolean = false;
   forwardData: any;
   chatTitle: string = ''
   formatAMPM = formatAMPM;
+  URL = window.URL;
 
   async ngOnInit() {
     this.store.select(getAllChats).subscribe((data: any) => {
@@ -61,6 +62,7 @@ export class ChatSpaceComponent implements OnInit {
         if (this.curruntIndex >= 0) {
           if (this.chats[this.curruntIndex].data) {
             this.data = this.chats[this.curruntIndex].data;
+            console.log(this.data);
           } else {
             this.data = []
           }
@@ -169,12 +171,12 @@ export class ChatSpaceComponent implements OnInit {
       }
     }
   }
-  typing(isTyping:any){
-    if(isTyping && this.chatLefticons){
+  typing(isTyping: any) {
+    if (isTyping && this.chatLefticons) {
       this._chat.sendStatus('typing', this.authToken);
       this.chatLefticons = false;
     }
-    else if(!isTyping && !this.chatLefticons){
+    else if (!isTyping && !this.chatLefticons) {
       this._chat.sendStatus('online', this.authToken);
       this.chatLefticons = true;
     }
@@ -192,9 +194,10 @@ export class ChatSpaceComponent implements OnInit {
 
     const obj = {
       type: 'string',
-      text: text,
+      data: text,
+      sendableData: text
     }
-    this.setData(text, obj);
+    this.setData(obj);
   }
 
   async authanticate(token: any, password: any) {
@@ -242,7 +245,7 @@ export class ChatSpaceComponent implements OnInit {
   async deleteChat() {
 
     await deleteChatByToken({
-      urlToken: this.urlToken, 
+      urlToken: this.urlToken,
       authToken: this.authToken,
       api: this._api,
       store: this.store,
@@ -258,72 +261,56 @@ export class ChatSpaceComponent implements OnInit {
   }
 
   uploadFile(e: any, file: any = null) {
-
     file = file || e.target.files[0];
 
     let obj: any = {}
-
-    // let child = '';
     if (file.type.split('/')[0] == 'image') {
       let src: any = URL.createObjectURL(file);
       obj.type = 'image';
-      obj.src = src;
+      obj.data = src;
+      obj.sendableData = file;
     }
     else if (file.type.split('/')[0] == 'video') {
       let src: any = URL.createObjectURL(file);
-      obj.type = 'video';
-      obj.src = src;
+      obj.type = 'video'; 
+      obj.data = src;
+      obj.sendableData = file
     }
     else {
-      obj.type = 'other';
-      obj.data = null;
+      obj.type = file.miamitype;
+      obj.data = file;
+      obj.sendableData = file
     }
-    this.setData(file, obj);
+    this.setData(obj);
   }
 
-  setData(data: any, obj: any) {
-    if (this.status == 'offline') {
-      tost({ title: 'Your Freind is offline', icon: 'warning' }, true);
-    }
-    this.dropWater.play();
-
+  setData(obj: any) {
     obj.time = new Date().toString()
     obj.sended_or_recived = 'to';
     obj.id = Date.now();
     obj.status = 'pending';
 
+    if (this.status == 'offline') {
+      tost({ title: 'Your Freind is offline', icon: 'warning' }, true);
+    }
+    this.dropWater.play();
+    sendDataToFreind(obj, this._chat, this.authToken, this.urlToken, this.store);
 
-    this._chat.send(data, obj.type, this.authToken, obj.id, ({ id, status }: any) => {
-      this.store.dispatch(changeStatus({ token: this.urlToken, id: id , status: status}));
-    });
     setTimeout(() => {
-      const tempData = this.data.find((e: any) => e.id == obj.id);
-      if(tempData.status == 'pending'){
-        this.store.dispatch(changeStatus({ token: this.urlToken, id: obj.id, status: 'failed' }));
-      }
-    }, 20*1000);
-    setTimeout(() => {
-      this.scrollTop()
-
+      this.scrollTop();
     }, 50);
-    // this._chat.sendStatus('online', this.authToken);
+
     this.typing(false);
-
-    this.store.dispatch(appendData({ token: this.urlToken, data: obj }));
   }
-
-
 
   sendGif(data: any) {
     const obj = {
       type: 'gif',
-      text: '',
-      url: data,
+      data: data,
+      sendableData: data,
     }
-
     this.gifMenu = false;
-
-    this.setData(data, obj);
+    this.setData(obj);
   }
 
   videoCall() {
@@ -477,27 +464,29 @@ export class ChatSpaceComponent implements OnInit {
       <div style='text-left'>
         type: ${data.type}<br>
         sended at: ${data.time}<br>
-        data: ${data.url || data.text}<br>
+        data: ${data.data}<br>
         status: ${data.status}<br>
       </div>
       `
     });
     console.log(data);
   }
-  forward(data:any){
+  forward(data: any) {
     this.isForwarding = true;
     this.forwardData = data;
   }
-  closeForward(e:any){
+  closeForward(e: any) {
     this.isForwarding = false;
     this.forwardData = null;
   }
-  resendMassage(index:any){
-    let obj:any = {};
-    obj.url = this.data[index].url;
-    obj.text = this.data[index].text;
-    obj.type = this.data[index].type;
+  resendMassage(index: any) {
+    let obj: any = { 
+      ...this.data[index], 
+      id: Date.now(), 
+      status: 'pending' 
+    };
 
-    this.setData(this.data[index].text || this.data[index].url, obj);
+
+    this.setData(obj);
   }
 }

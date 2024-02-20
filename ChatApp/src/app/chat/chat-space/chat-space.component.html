@@ -91,7 +91,7 @@
 
                             <div class="row">
                                 <div [class]=oneChatData.sended_or_recived>
-                                    
+
                                     <div class="massage">
                                         <div class="text d-flex align-items-start p-0">
 
@@ -104,12 +104,12 @@
 
                                                 <ul class="dropdown-menu p-0">
                                                     <li class="dropdown-item p-2" *ngIf="oneChatData.type=='string' "
-                                                        (click)="copyToClipBord(oneChatData.text)">
+                                                        (click)="copyToClipBord(oneChatData.data)">
                                                         <i class="bi bi-clipboard"></i>
                                                         Copy
                                                     </li>
                                                     <li class="dropdown-item p-2" *ngIf="oneChatData.type != 'string' "
-                                                        (click)="downloadFile(oneChatData.src,oneChatData.type)">
+                                                        (click)="downloadFile(oneChatData.data,oneChatData.type)">
                                                         <i class="bi bi-download"></i>
                                                         Download
                                                     </li>
@@ -139,23 +139,23 @@
                                             </div>
 
                                             <div class="p-2" *ngIf="oneChatData.type == 'string'">
-                                                {{oneChatData.text}}
+                                                {{oneChatData.data}}
                                             </div>
 
                                         </div>
 
                                         <div *ngIf="oneChatData.type == 'video'">
                                             <video width="320" height="240" controls>
-                                                <source [src]=oneChatData.src type="video/mp4">
+                                                <source [src]=oneChatData.data type="video/mp4">
                                             </video><br>
                                         </div>
 
-                                        <div *ngIf="oneChatData.type == 'image'" (click)="showImage(oneChatData.src)">
-                                            <img [src]=oneChatData.src /> <br>
+                                        <div *ngIf="oneChatData.type == 'image'" (click)="showImage(oneChatData.data)">
+                                            <img [src]=oneChatData.data /> <br>
                                         </div>
 
-                                        <div *ngIf="oneChatData.type == 'gif'" (click)="showImage(oneChatData.src)">
-                                            <img [src]=oneChatData.url alt="image" /> <br>
+                                        <div *ngIf="oneChatData.type == 'gif'" (click)="showImage(oneChatData.data)">
+                                            <img [src]=oneChatData.data alt="image" /> <br>
                                         </div>
 
                                         <div class="time">
@@ -167,11 +167,17 @@
                                                 <i class="bi bi-check-all" style="font-size: 1.5em !important;"></i>
                                             </span>
                                             <span *ngIf="oneChatData.status === 'failed'">
-                                                <i class="bi bi-x-octagon text-danger" style="font-size: 1em !important;"></i>
+                                                <i class="bi bi-x-octagon text-danger"
+                                                    style="font-size: 1em !important;"></i>
+                                            </span>
+                                            <span *ngIf="oneChatData.status === 'seen'">
+                                                <i class="bi bi-check-all text-info"
+                                                    style="font-size: 1.5em !important;"></i>
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="float-end text-center d-flex h-100 align-items-center mx-2" *ngIf="oneChatData.status == 'failed'" (click)="resendMassage(i)">
+                                    <div class="float-end text-center d-flex h-100 align-items-center mx-2"
+                                        *ngIf="oneChatData.status == 'failed'" (click)="resendMassage(i)">
                                         <i class="bi bi-arrow-clockwise option "></i>
                                     </div>
                                 </div>
@@ -214,9 +220,5 @@
 <app-video-call *ngIf="isVideoCall" class="videocall-component" [authToken]="authToken"
     (onCutVideoCall)="handleVideoCallCutEvent($event)">
 </app-video-call>
-<app-forward 
-    *ngIf="isForwarding"
-    [data]="forwardData"
-    (onForward)="closeForward($event)" 
-    class="videocall-component"
-></app-forward>
+<app-forward *ngIf="isForwarding" [data]="forwardData" (onForward)="closeForward($event)"
+    class="videocall-component"></app-forward>
