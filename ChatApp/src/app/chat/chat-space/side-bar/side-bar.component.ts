@@ -1,11 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { getChats } from '../../../../environments/environment.development';
 import { ChattingSoketService } from '../../../services/chatting-soket.service';
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../../reducer/chat.selector';
 import { deleteChat, resetresetUnreadToZero } from '../../../reducer/chat.action';
-import { deleteChatByToken } from '../../../functions';
 
 @Component({
   selector: 'app-side-bar',
@@ -17,7 +15,6 @@ export class SideBarComponent {
   constructor(
     private _route: ActivatedRoute,
     private _nevigate: Router,
-    private _chat: ChattingSoketService,
     private store: Store,
   ) { }
   @Input() showtitle: boolean = true;
@@ -30,6 +27,8 @@ export class SideBarComponent {
   chats: any;
   dropWater: any = new Audio('../assets/sounds/water_drop.mp3');
   selectedObj: any = {};
+  searching: boolean = false;
+  searchArray: any = [];
 
   ngOnInit(): void {
     this.store.select(getAllChats).subscribe((data: any) => {
@@ -58,22 +57,8 @@ export class SideBarComponent {
     console.log(index)
     this.isChangingName = false
   }
-  handleDeleteChat(index: number) {
-
-    // deleteChatByToken({
-    //   urlToken: this.chats[index].token,
-    //   authToken: localStorage.getItem(this.chats[index].token),
-    //   api: _,
-    //   store: this.store,
-    //   curruntIndex: index
-    // });
-
-    this.store.dispatch(deleteChat({ index: index }))
-    // this._nevigate.navigate(['/']);
-  }
   handleClick(token: any, i: any) {
     if (this.selection) {
-      // console.log(this.selectedObj);
       if(this.selectedObj[token]){
         delete this.selectedObj[token];
       }else{
@@ -87,5 +72,16 @@ export class SideBarComponent {
   isKeyInObject(key:any){
     // console.log(key in  this.selectedObj)
     return key in this.selectedObj;
+  }
+  searchChats(e:any){
+    if(e.target.value == ''){
+      this.searching = false;
+    }else{
+      this.searching = true;
+    }
+    this.searchArray = this.chats.filter((chat:any)=>{
+      return chat.name.toLowerCase().includes(e.target.value.toLowerCase());
+    });
+    console.log(this.searchArray, 'sdsd');
   }
 }

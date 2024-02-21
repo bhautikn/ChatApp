@@ -26,6 +26,7 @@
     "ngx-socket-io": "^4.6.1",
     "peerjs": "^1.5.2",
     "rxjs": "~7.8.0",
+    "socket.io-stream": "^0.9.1",
     "sweetalert2": "^11.10.5"
   },
   "devDependencies": {

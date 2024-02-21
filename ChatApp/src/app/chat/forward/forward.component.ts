@@ -23,8 +23,7 @@ export class ForwardComponent {
   sendAll() {
     for (let i in this.members) {
       const authToken: string = localStorage.getItem(i)!;
-      this.data.id = Date.now();
-      sendDataToFreind(this.data, this._chat, authToken, i, this.store);
+      sendDataToFreind({...this.data, id: Date.now()}, this._chat, authToken, i, this.store);
     }
     this.onForward.emit();
   }

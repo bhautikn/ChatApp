@@ -6,8 +6,9 @@ import Swal from 'sweetalert2';
 import { formatAMPM, getToday, tost } from '../../../environments/environment.development'
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../reducer/chat.selector';
-import { addChat, appendData, changeStatus, deletePerticulerChat, resetChatData } from '../../reducer/chat.action';
+import { addChat, deletePerticulerChat, resetChatData } from '../../reducer/chat.action';
 import { decodeHTMLEntities, deleteChatByToken, sendDataToFreind } from '../../functions';
+
 
 @Component({
   selector: 'app-chat-space',

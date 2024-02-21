@@ -1,0 +1,20 @@
+.list-item{
+    padding: 10px;
+    margin-left: 15px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    background-color: var(--background-light);
+    cursor: pointer;
+}
+.list-item:hover{
+    background-color: rgb(10, 10, 10, 0.2);
+    transition-duration: 200ms;
+}
+.list-active{
+    background-color: rgba(10, 10, 10, 0.3);
+}
+.created-at{
+    font-size: 0.7em;
+    width: max-content;
+    margin-left: auto;
+}
