@@ -3,11 +3,10 @@ import { ChattingSoketService } from '../../services/chatting-soket.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiChatService } from '../../services/api-chat.service';
 import Swal from 'sweetalert2';
-import { formatAMPM, getToday, tost } from '../../../environments/environment.development'
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../reducer/chat.selector';
 import { addChat, deletePerticulerChat, resetChatData } from '../../reducer/chat.action';
-import { decodeHTMLEntities, deleteChatByToken, sendDataToFreind } from '../../functions';
+import { decodeHTMLEntities, deleteChatByToken, formatAMPM, sendDataToFreind, tost } from '../../functions';
 
 
 @Component({
@@ -214,6 +213,7 @@ export class ChatSpaceComponent implements OnInit {
         }
       } else {
         localStorage.setItem(token, data.id);
+        this._chat.join(this.authToken);
         let isFound: boolean = false;
         this.chats.forEach((element: any) => {
           if (element.token == this.urlToken) {
@@ -223,11 +223,9 @@ export class ChatSpaceComponent implements OnInit {
         });
         if (!isFound) {
           let name: string = await this.nameEnterPopUp();
-          let today = getToday();
-
           let obj = {
             token: this.urlToken,
-            cretaed: today,
+            cretaed: new Date().toString(),
             name: name,
             data: [],
             unread: 0,
@@ -486,8 +484,6 @@ export class ChatSpaceComponent implements OnInit {
       id: Date.now(), 
       status: 'pending' 
     };
-
-
     this.setData(obj);
   }
 }

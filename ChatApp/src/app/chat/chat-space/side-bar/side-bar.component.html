@@ -8,7 +8,7 @@
     <ng-template #searchBar>
         <div>
             <input type="search" placeholder="search" (keyup)="searchChats($event)"
-                class="form-control my-3 w-50 ms-auto">
+                class="form-control my-3 w-50 ms-auto search-bar">
         </div>
     </ng-template>
     <span *ngIf="!searching; else searchedChats">

@@ -147,12 +147,9 @@ module.exports = (io) => {
 }
 function verifyJWTToken(token) {
     try {
-
         var decoded = jwt.verify(token, SIGN);
         return { data: decoded }
-
     } catch (err) {
-
         return { err: err };
     }
 }
@@ -205,6 +202,7 @@ async function getStatus(id) {
     if (data)
         return data.online;
 }
+
 function HTMLSPACIALCHAR(massage) {
     if (typeof massage == 'string') {
         return massage.replace(/[&<>'"]/g,

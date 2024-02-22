@@ -75,3 +75,9 @@ body {
 main{
   position: relative;
 }
+
+.form-control{
+  background-color: var(--background);
+  border: 1px solid gray;
+  box-shadow: none !important;
+}

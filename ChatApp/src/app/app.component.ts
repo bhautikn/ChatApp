@@ -5,7 +5,6 @@ import { Store } from '@ngrx/store';
 import { getAllChats } from './reducer/chat.selector';
 import { appendData, commit } from './reducer/chat.action';
 // import { fader } from './route-animations';
-// import { appendData, resetChatData, setChatName } from './reducer/chat.action';
 
 @Component({
   selector: 'app-root',
@@ -37,7 +36,6 @@ export class AppComponent {
     this.joinAllChat(this.chats);
 
     this._chat.onReceive((data: any, callback:any)=>{
-      // console.log(data);
       callback({ id: data.id, status: 'seen' });
       this.dropWater.play();
       this.addFrom(data.massage, data.dataType, data.to)

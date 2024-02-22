@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ApiChatService } from '../services/api-chat.service';
 import { Router } from '@angular/router';
-import { formatAMPM, getChats, setChat } from '../../environments/environment.development';
 import { Store } from '@ngrx/store';
 import { addChat } from '../reducer/chat.action';
 import Swal from 'sweetalert2';
@@ -30,10 +29,6 @@ export class ChatComponent {
   email: string = '';
   comment: string = '';
 
-  ngOnInit() {
-    this.chats = getChats();
-  }
-
   copyToClipBord() {
     navigator.clipboard.writeText(this.fullUrl);
     this.showClip = false;
@@ -45,11 +40,9 @@ export class ChatComponent {
       if (data.status == 200) {
         this.createChatLoading = false;
         this.sucsessCreated = true;
-        let date = new Date();
-        let today = date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear() + ' ' + formatAMPM(date);
         let obj = {
           token: data.token,
-          cretaed: today,
+          cretaed: new Date().toString(),
           name: this.chatTitle,
           data: [],
           unread: 0,

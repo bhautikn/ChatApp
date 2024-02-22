@@ -11,8 +11,7 @@ import {
     setChatName
 
 } from './chat.action';
-
-import { getChats } from "../../environments/environment.development";
+import { getChats } from "../functions";
 
 const initialState: any = getChats();
 

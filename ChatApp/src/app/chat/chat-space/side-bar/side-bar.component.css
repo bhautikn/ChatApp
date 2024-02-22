@@ -29,7 +29,10 @@
     background-color: seagreen !important;
     transition-duration: 200ms;
     z-index: 200;
-
+}
+.search-bar:focus{
+    width: 60% !important;
+    transition-duration: 200ms;
 }
 @keyframes side-nav {
     from{
