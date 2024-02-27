@@ -1,9 +1,6 @@
 .list{
     margin-top: 15px;
 }
-
-
-
 .links{
     text-decoration: none;
     color: var(--text);
@@ -29,6 +26,9 @@
     background-color: seagreen !important;
     transition-duration: 200ms;
     z-index: 200;
+}
+.search-bar{
+    margin: 0 10px;
 }
 .search-bar:focus{
     width: 60% !important;

@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const dotenv = require('dotenv');
+const { HTMLSPACIALCHAR } = require("../functions");
 dotenv.config()
 
 const mailOptions = {
@@ -62,6 +63,7 @@ exports.SendMail = (
 
 let getEmailTemplate = async (emailTemplate, body) => {
     try {
+        body.comment = HTMLSPACIALCHAR(body.comment);
         let html = emailTemplate.body_html;
         let template = html.replaceAll("{chat_link}", body.chat_link);
         template = template.replace("{comment}", body.comment);

@@ -1,15 +1,11 @@
 <nav>
     <div class="row super-main-container">
         <!--  -->
-        <div class="side-nav p-0 m-0" [ngClass]="{'show-sidenav': isOpenMenu == true}">
+        <div class="side-nav p-0 m-0 show-sidenav">
             <app-side-bar class="w-25" (onreload)="reloadPage($event)"></app-side-bar>
         </div>
         <div class="col">
             <div class="row">
-                <div class="cross-icon position-reletive">
-                    <i class="bi bi-x" *ngIf="isOpenMenu" (click)="isOpenMenu = false"></i>
-                    <i class="bi bi-list" *ngIf="!isOpenMenu" (click)="isOpenMenu = true"></i>
-                </div>
                 <div class="col">
                     <a (click)="goBack()" class="aroow-left">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
@@ -41,7 +37,7 @@
 
                     <div class="btn-group">
                         <div class="" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bi bi-three-dots-vertical option" (click)="chatOption = !chatOption"></i>
+                            <i class="bi bi-three-dots-vertical option" ></i>
                         </div>
                         <ul class="dropdown-menu p-0">
                             <li class="dropdown-item p-2">

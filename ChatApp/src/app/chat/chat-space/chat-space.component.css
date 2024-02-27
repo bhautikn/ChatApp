@@ -26,7 +26,9 @@ nav {
 }
 .show-sidenav{
     /* background-color: red; */
-    width: 15% !important;
+    height: 90vh;
+    overflow: auto;
+    width: 20% !important;
     display: block;
     visibility: visible !important;
 }
@@ -363,24 +365,26 @@ nav {
         transform: translateY(-2px);
     }
 }
-
+@media screen and (max-width: 1080px){
+    .side-nav{
+        width: 30% !important;
+    }
+}
 @media screen and (max-width: 700px) {
     .show-sidenav {
-        width: 40% !important;
-        /* position: absolute; */
-        /* background-color: var(--blue-dark); */
+        width: 35% !important;
     }
     .gif-menu{
         width: 100%;
     }
       .to .massage,
       .from .massage {
-        max-width: 100%;
+        max-width: 90%;
     }
 }
 @media screen and (max-width: 500px) {
     .show-sidenav {
-        width: 90% !important;
+        display: none;
     }
 }
 

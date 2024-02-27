@@ -1,7 +1,7 @@
 GET http://localhost:3000/get-id
 ###
 
-GET http://localhost:3000/posts/search/
+GET https://chatapp-lr5a.onrender.com:3000/posts/search/
 content-type: application/json
 
 { "text": "Hello" }

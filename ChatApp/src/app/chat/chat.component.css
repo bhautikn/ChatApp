@@ -12,6 +12,9 @@ svg{
 .center{
     margin: 0 auto;
 }
+.back-navigation{
+    display: none;
+}
 .seclect-choice{
     background-color: var(--background-light-4);
     border-radius: 10px;
@@ -41,17 +44,54 @@ svg{
     width: 40%;
 }
 .joined-chat-container{
-    width: 30%;
+    /* width: 30%; */
+    max-height: 90vh;
+    overflow: auto;
 }
 .linebreak{
     line-break: anywhere;
 }
+.add-chat-btn{
+    display: none;
+    position: fixed;
+    right: 20px;
+    bottom: 30px;
+    align-items: center;
+    text-align: center;
+}
 @media screen and (max-width: 768px){
+    .add-chat-btn{
+        display: block;
+    }
     .create-chat-container{
         width: 100%;
     }
     .joined-chat-container{
         width: 100%;
+        padding-top: 0 !important;
+        background-color: transparent;
     }
-    
+    .title-header-join-chat{
+        display: none;
+    }
+    .create-chat-div{
+        /* display: none; */
+        height: 100vh;
+        z-index: 500;
+        padding: 0 !important;
+        margin: 0 !important;
+        border-radius: 0 !important;
+        position: absolute;
+    }
+    .main-top-container{
+        padding: 0 !important;
+    }
+    .back-navigation{
+        display: block;
+    }
+    .alert-massage-info{
+        width: 100% !important;
+        position: absolute !important;
+        top: 0;
+    }
 }

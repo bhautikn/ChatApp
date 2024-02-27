@@ -17,6 +17,7 @@ export class ChatComponent {
   linkUrl: string = '';
   fullUrl: string = ''
   token = '';
+  width = screen.width; 
   showClip = true;
   password: string = '';
   chats: any = [];
@@ -25,20 +26,32 @@ export class ChatComponent {
   chatTitle: string = '';
   createChatLoading: boolean = false;
   sendEmailLoading: boolean = false;
+  showcreateChat: boolean = true;
   // optional
   email: string = '';
   comment: string = '';
 
+  ngOnInit() {
+    if(screen.width < 768){
+      this.showcreateChat = false;
+    }
+  }
   copyToClipBord() {
     navigator.clipboard.writeText(this.fullUrl);
     this.showClip = false;
     setTimeout(() => { this.showClip = true }, 1000);
   }
   createChat() {
+    if (this.chatTitle == '') {
+      return alert('Please fill the chat title ');
+    }
+    if(this.password == ''){
+      return alert('Please fill the chat password');
+    }
     this.createChatLoading = true;
     this._api.setChat(this.token, this.password).subscribe((data: any) => {
+      this.createChatLoading = false;
       if (data.status == 200) {
-        this.createChatLoading = false;
         this.sucsessCreated = true;
         let obj = {
           token: data.token,

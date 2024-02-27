@@ -25,8 +25,7 @@ export class ChatSpaceComponent implements OnInit {
   ) { }
 
   urlToken: any = this._route.snapshot.params['token'];
-  chatOption: boolean = false;
-  isOpenMenu = false;
+  // chatOption: boolean = false;
   gifMenu: boolean = false;
   authToken: any = '';
   name = 'Your Freind';
@@ -41,6 +40,7 @@ export class ChatSpaceComponent implements OnInit {
   chatLefticons: boolean = true;
   isForwarding: boolean = false;
   forwardData: any;
+  // (click)="chatOption = !chatOption"
   chatTitle: string = ''
   formatAMPM = formatAMPM;
   URL = window.URL;
@@ -72,9 +72,6 @@ export class ChatSpaceComponent implements OnInit {
         this.scrollTop();
       }, 10)
     })
-    if (screen.width < 700) {
-      this.isOpenMenu = false;
-    }
 
     this.authToken = localStorage[this.urlToken];
 

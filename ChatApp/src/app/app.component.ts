@@ -4,6 +4,8 @@ import { ChattingSoketService } from './services/chatting-soket.service';
 import { Store } from '@ngrx/store';
 import { getAllChats } from './reducer/chat.selector';
 import { appendData, commit } from './reducer/chat.action';
+
+// import * as ss from '../../node_modules/socket.io-stream';
 // import { fader } from './route-animations';
 
 @Component({
@@ -24,7 +26,7 @@ export class AppComponent {
   dropWater: any = new Audio('../assets/sounds/water_drop.mp3');
 
   async ngOnInit() {
-
+    // console.log('ss',ss);
     window.onunload = (e) => {
       this._chat.disconnect();
       this.store.dispatch(commit());

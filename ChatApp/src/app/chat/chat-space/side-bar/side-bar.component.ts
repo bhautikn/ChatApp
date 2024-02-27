@@ -17,7 +17,7 @@ export class SideBarComponent {
     private _nevigate: Router,
     private store: Store,
   ) { }
-  @Input() showtitle: boolean = true;
+  // @Input() showtitle: boolean = true;
   @Input() selection: boolean = false;
   @Output() onSelect: EventEmitter<any> = new EventEmitter();
   @Output() onreload: EventEmitter<any> = new EventEmitter();
