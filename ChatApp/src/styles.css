@@ -27,13 +27,12 @@
 
 body {
   background-color: var(--background);
-  overflow-x: hidden;
 }
 
 html,
 body {
   height: 100%;
-  width: 100%;
+  width: 100vw;
   scroll-behavior: smooth;
 }
 

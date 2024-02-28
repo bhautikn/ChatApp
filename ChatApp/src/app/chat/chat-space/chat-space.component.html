@@ -1,11 +1,11 @@
 <nav>
-    <div class="row super-main-container">
+    <div class="row super-main-container w-100">
         <!--  -->
-        <div class="side-nav p-0 m-0 show-sidenav">
-            <app-side-bar class="w-25" (onreload)="reloadPage($event)"></app-side-bar>
+        <div class="side-nav  show-sidenav">
+            <app-side-bar (onreload)="reloadPage($event)"></app-side-bar>
         </div>
-        <div class="col">
-            <div class="row">
+        <div class="col p-0">
+            <div class="row px-1 py-2" *ngIf="!searchingChat">
                 <div class="col">
                     <a (click)="goBack()" class="aroow-left">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
@@ -47,6 +47,13 @@
                             <li>
                                 <hr class="p-0 m-0">
                             </li>
+                            <li class="dropdown-item p-2" (click)="searchingChat = true">
+                                <i class="bi bi-search"></i>
+                                Search Chat
+                            </li>
+                            <li>
+                                <hr class="p-0 m-0">
+                            </li>
                             <li class="dropdown-item p-2" (click)="clearChat()">
                                 <i class="bi bi-x-circle"></i>
                                 Clear Chat
@@ -62,24 +69,26 @@
                     </div>
                 </div>
             </div>
-            <div *ngIf="gifMenu" class="gif-menu container w-50 float-end">
-                <app-gif (onsendGif)="sendGif($event)"></app-gif>
-            </div>
 
-
-            <div class="bg-info-subtle w-100 p-2 mt-1" style="right: 0;" *ngIf="searchingChat">
+            <!-- search bar -->
+            <div class="row px-1 py-2" *ngIf="searchingChat">
                 <div class="d-flex gap-2 align-self-center">
-                    <input type="search" class="form-control" placeholder="search" (keyup)="handleSearch($event)">
+                    <input type="search" class="form-control" placeholder="search" (keyup)="handleSearch($event)" autofocus>
                     <div class="d-flex align-self-center gap-1" style="width: fit-content;">
-                        <span style="width: 70px;">{{ searchInfo.curruntIndex }} of {{ searchInfo.length }}</span>
-                        <i class="bi bi-arrow-up"></i>
-                        <i class="bi bi-arrow-down"></i>
+                        <span style="width: 70px;" class="d-flex align-self-center">{{ searchInfo.curruntIndex }} of {{ searchInfo.length }}</span>
+                        <i class="bi bi-arrow-up text-center option" (click)="incrementSearch(-1)"></i>
+                        <i class="bi bi-arrow-down text-center option" (click)="incrementSearch(1)"></i>
                     </div>
                     <div class="d-flex align-self-center btn" (click)="searchingChat= false">
                         <i class="bi bi-x-lg"></i>
                     </div>
                 </div>
             </div>
+
+            <div *ngIf="gifMenu" class="gif-menu container w-50 float-end">
+                <app-gif (onsendGif)="sendGif($event)"></app-gif>
+            </div>
+
             <div class="main-container">
 
                 <div class="end-container">
@@ -220,8 +229,8 @@
                                     </div>
                                 </div>
 
-                                <textarea placeholder="Massage" (keypress)="input($event)" class="form-control"
-                                    id="textarea" rows="1"></textarea>
+                                <textarea placeholder="Massage" (keydown)="input($event)" class="form-control"
+                                    id="textarea" rows="1" autofocus></textarea>
                                 <div class="icon send-btn-chat-space" (click)="addTo()">
                                     <i class="bi bi-send p-2 px-3"></i>
                                 </div>

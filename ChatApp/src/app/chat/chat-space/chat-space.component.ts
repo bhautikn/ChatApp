@@ -43,7 +43,7 @@ export class ChatSpaceComponent implements OnInit {
   forwardData: any;
 
   //searching chats
-  searchingChat: boolean = true;
+  searchingChat: boolean = false;
   searchArray: any = [];
   searchInfo: any = {
     curruntIndex: 0,
@@ -70,7 +70,6 @@ export class ChatSpaceComponent implements OnInit {
         if (this.curruntIndex >= 0) {
           if (this.chats[this.curruntIndex].data) {
             this.data = this.chats[this.curruntIndex].data;
-            console.log(this.data);
           } else {
             this.data = []
           }
@@ -204,7 +203,12 @@ export class ChatSpaceComponent implements OnInit {
   }
 
   input(e: any) {
-    this.typing(true);
+    if (e.target.value == '') {
+      this.typing(false);
+    }
+    else {
+      this.typing(true);
+    }
     // this._chat.sendStatus('typing', this.authToken)
     if (e.keyCode == 13) {
       this.addTo();
@@ -237,7 +241,10 @@ export class ChatSpaceComponent implements OnInit {
     const textArea: any = document.querySelector('#textarea');
     let text: string = textArea.value;
 
-    if (text == "\n" || text == '' || !text || text.trim() == '') return;
+    if (text == "\n" || text == '' || !text || text.trim() == '') {
+      this.typing(false);
+      return;
+    }
 
     setTimeout(() => {
       textArea.value = "";
@@ -288,10 +295,6 @@ export class ChatSpaceComponent implements OnInit {
       }
     })
   }
-
-  // joinChat() {
-  //   this._chat.join(this.authToken)
-  // }
 
   async deleteChat() {
 
@@ -601,35 +604,43 @@ export class ChatSpaceComponent implements OnInit {
   handleSearch(e: any) {
     const text = e.target.value;
     if (e.keyCode == 13) {
-
-      function animate(div: any) {
-        div.scrollIntoView({ behavior: "smooth", inline: "center" });
-        div.style.transitionDuration = '200ms';
-        div.style.background = 'rgba(0, 138, 188, 0.2)';
-        setTimeout(() => {
-          div.style.background = 'transparent'
-        }, 1000)
-      }
-
-      if (this.searchInfo.curruntIndex >= this.searchInfo.length) {
-        this.searchInfo.curruntIndex = 0;
-      }
-      const container: any = document.querySelector('.chats-container');
-      const div: any = document.getElementById(this.searchArray[this.searchInfo.curruntIndex].id);
-      animate(div);
-      this.searchInfo.curruntIndex++;
+      this.incrementSearch(1);
     }
     else if (text != '') {
-      this.searchArray = this.data.filter((element: any) => {
+      this.searchArray = [];
+      for (const element of this.data) {
         if (element.type == 'string') {
-          return element.data.indexOf(text) != -1;
+          if (element.data.indexOf(text) != -1) {
+            this.searchArray.push(element);
+          }
         }
-        return false;
-      })
+      }
       this.searchInfo = {
         length: this.searchArray.length,
         curruntIndex: 0
       }
     }
+  }
+
+  incrementSearch(inc: number) {
+    function animate(div: any) {
+      div.scrollIntoView({ behavior: "smooth", inline: "center" });
+      div.style.transitionDuration = '200ms';
+      div.style.background = 'rgba(0, 138, 188, 0.2)';
+      setTimeout(() => {
+        div.style.background = 'transparent'
+      }, 1000)
+    }
+
+    this.searchInfo.curruntIndex += inc;
+    if (this.searchInfo.curruntIndex <= 0) {
+      this.searchInfo.curruntIndex = this.searchArray.length - 1;
+    }
+    if (this.searchInfo.curruntIndex >= this.searchInfo.length) {
+      this.searchInfo.curruntIndex = 0;
+    }
+
+    const div: any = document.getElementById(this.searchArray[this.searchInfo.curruntIndex].id);
+    animate(div);
   }
 }

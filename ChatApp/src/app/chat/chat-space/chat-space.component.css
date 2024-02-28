@@ -1,9 +1,8 @@
 nav {
     background-color: var(--background-light-3);
-    padding: 5px;
 }
 .super-main-container{
-    overflow-y: hidden;
+    overflow: hidden;
 }
 .cross-icon {
     width: max-content;
@@ -164,7 +163,7 @@ nav {
         linear-gradient(to bottom, rgb(30, 30, 40) 1px, transparent 1px);
     height: 86vh;
     border-radius: 10px;
-    margin-top: 5px;
+    /* margin-top: 5px; */
     display: flex;
     align-items: flex-end;
     background-color: var(--background);

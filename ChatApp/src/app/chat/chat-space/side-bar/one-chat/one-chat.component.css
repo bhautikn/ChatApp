@@ -1,6 +1,6 @@
 .list-item{
     padding: 10px;
-    margin-left: 15px;
+    margin: 0 15px;
     margin-bottom: 5px;
     border-radius: 10px;
     background-color: var(--background-light);
