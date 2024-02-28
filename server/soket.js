@@ -112,6 +112,44 @@ module.exports = (io) => {
                 io.to(freind).emit('disconnectVideoCall');
             }
         })
+
+        //audio call
+        socket.on('reqAudioCall', async (id, callback) => {
+            const { err, data } = verifyJWTToken(id);
+            if (err) {
+                return socket.emit('error', 'Somthing Went Wrong');
+            }
+            const freind = await getFreindByToken(data.token, socket.id);
+
+            // console.log('use responded', freind);
+            io.timeout(10000).to(freind).emit('reqAudioCall', (err, res) => {
+                if (err) callback('err');
+                if (res[0] == true) callback(true);
+                else if (res[0] == false) callback(false);
+            })
+        })
+
+        socket.on('cancleAudioCall', async (id) => {
+            const { data, err } = verifyJWTToken(id);
+            if (err) {
+                return socket.emit('error', 'Somthing Went Wrong');
+            } else {
+                const freind = await getFreindByToken(data.token, socket.id);
+                io.to(freind).emit('cancleAudioCall');
+            }
+        })
+
+        socket.on('disconnectAudioCall', async (id) => {
+
+            const { data, err } = verifyJWTToken(id);
+            if (err) {
+                return socket.emit('error', 'Somthing Went Wrong');
+            } else {
+                const freind = await getFreindByToken(data.token, socket.id);
+                io.to(freind).emit('disconnectAudioCall');
+            }
+        })
+
         socket.on('sendPeerConnectionId', async (id, peerToken) => {
             const { data, err } = verifyJWTToken(id);
             if (err) {

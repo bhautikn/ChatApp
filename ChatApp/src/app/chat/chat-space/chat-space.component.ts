@@ -37,13 +37,21 @@ export class ChatSpaceComponent implements OnInit {
   chats: any = [];
   curruntIndex: number = -1;
   isVideoCall: boolean = false;
+  isAudioCall: boolean = false;
   chatLefticons: boolean = true;
   isForwarding: boolean = false;
   forwardData: any;
-  // (click)="chatOption = !chatOption"
+
+  //searching chats
+  searchingChat: boolean = true;
+  searchArray: any = [];
+  searchInfo: any = {
+    curruntIndex: 0,
+    lenght: 0,
+  };
+
   chatTitle: string = ''
   formatAMPM = formatAMPM;
-  URL = window.URL;
 
   async ngOnInit() {
     this.store.select(getAllChats).subscribe((data: any) => {
@@ -96,6 +104,7 @@ export class ChatSpaceComponent implements OnInit {
     this._chat.onCancleVideoCall().subscribe(() => {
       Swal.close();
     })
+
     this._chat.onReqVideoCall().subscribe((func: any) => {
       const incomingRing: any = new Audio('../assets/sounds/phone-incoming.mp3');
       incomingRing.play()
@@ -135,6 +144,49 @@ export class ChatSpaceComponent implements OnInit {
         }
       });
     });
+
+    //audio call
+
+    this._chat.onReqAudioCall().subscribe((func: any) => {
+      const incomingRing: any = new Audio('../assets/sounds/phone-incoming.mp3');
+      incomingRing.play()
+      // this.incomingRing.loop=true;
+
+      Swal.fire({
+        title: "Incomming Video Call",
+        iconHtml: "<i class='bi bi-telephone-inbound'></i>",
+        timer: 10000,
+        customClass: 'swal-background',
+        showClass: {
+          popup: `
+          animate__animated
+          animate__fadeInUp
+          animate__faster
+        `
+        },
+        hideClass: {
+          popup: `
+            animate__animated
+            animate__fadeOutDown
+            animate__faster
+          `
+        },
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Answer"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          func(true);
+          incomingRing.pause()
+          this.isAudioCall = true;
+        } else if (!result.isConfirmed) {
+          func(false)
+          incomingRing.pause()
+        }
+      });
+    });
+
   }
 
   ngAfterViewInit() {
@@ -150,6 +202,7 @@ export class ChatSpaceComponent implements OnInit {
       this.style.border = '1px solid rgb(51, 51, 51)';
     }
   }
+
   input(e: any) {
     this.typing(true);
     // this._chat.sendStatus('typing', this.authToken)
@@ -168,6 +221,7 @@ export class ChatSpaceComponent implements OnInit {
       }
     }
   }
+
   typing(isTyping: any) {
     if (isTyping && this.chatLefticons) {
       this._chat.sendStatus('typing', this.authToken);
@@ -178,6 +232,7 @@ export class ChatSpaceComponent implements OnInit {
       this.chatLefticons = true;
     }
   }
+
   addTo() {
     const textArea: any = document.querySelector('#textarea');
     let text: string = textArea.value;
@@ -234,9 +289,9 @@ export class ChatSpaceComponent implements OnInit {
     })
   }
 
-  joinChat() {
-    this._chat.join(this.authToken)
-  }
+  // joinChat() {
+  //   this._chat.join(this.authToken)
+  // }
 
   async deleteChat() {
 
@@ -268,7 +323,7 @@ export class ChatSpaceComponent implements OnInit {
     }
     else if (file.type.split('/')[0] == 'video') {
       let src: any = URL.createObjectURL(file);
-      obj.type = 'video'; 
+      obj.type = 'video';
       obj.data = src;
       obj.sendableData = file
     }
@@ -357,12 +412,62 @@ export class ChatSpaceComponent implements OnInit {
     this.isVideoCall = false;
   }
 
+  audioCall() {
+    function clearAllThings() {
+      clearInterval(MusicPlayId)
+      phoneCallMusic.pause();
+      Swal.close()
+    }
+
+    const phoneCallMusic = new Audio('../assets/sounds/phone-outgoing.mp3')
+    const MusicPlayId = setInterval(() => {
+      phoneCallMusic.play();
+    }, 500);
+
+    Swal.fire({
+      customClass: 'swal-background',
+      position: "top-end",
+      title: "Calling ...",
+      iconHtml: "<i class='bi bi-telephone-outbound call-icon fs-1'></i>",
+      timer: 10000,
+      timerProgressBar: true,
+      showCancelButton: true,
+      willClose: () => {
+        clearAllThings();
+        this._chat.cancleAudioCall(this.authToken);
+        // tost({ title: 'User is busy', icon: 'info' });
+      }
+    }).then((result: any) => {
+      if (!result.isConfirmed) {
+        clearAllThings();
+        this._chat.cancleAudioCall(this.authToken);
+      }
+    })
+    this._chat.reqAudioCall(this.authToken, (data: any) => {
+
+      if (data == false) {
+        clearAllThings();
+        tost({ title: 'User is busy', icon: 'info' })
+      }
+      if (data == true) {
+        clearAllThings();
+        this.isAudioCall = true;
+      }
+    })
+  }
+
+  handleAudioCallCutEvent(event: any) {
+    this.isAudioCall = false;
+  }
+
   clearChat() {
     this.store.dispatch(resetChatData({ token: this.urlToken }))
   }
+
   goBack() {
     this.redirect('/');
   }
+
   reloadPage(url: any) {
     this.curruntIndex = -1;
     this.urlToken = url.split('/')[2];
@@ -397,6 +502,7 @@ export class ChatSpaceComponent implements OnInit {
     })
     return outPassword;
   }
+
   async nameEnterPopUp() {
     let Outname: string = 'Anonymouse';
     await Swal.fire({
@@ -413,13 +519,16 @@ export class ChatSpaceComponent implements OnInit {
     })
     return Outname;
   }
+
   deletePerticulerChat(index: any) {
     this.store.dispatch(deletePerticulerChat({ index: index, token: this.urlToken }));
   }
+
   copyToClipBord(text: string) {
     navigator.clipboard.writeText(decodeHTMLEntities(text));
     tost({ title: 'Text Copied', icon: 'success' });
   }
+
   downloadFile(src: any, type: string) {
     var a: any = document.createElement("a");
     document.body.appendChild(a);
@@ -439,6 +548,7 @@ export class ChatSpaceComponent implements OnInit {
     a.download = fileName;
     a.click();
   }
+
   showImage(url: any) {
     Swal.fire({
       imageUrl: url,
@@ -452,6 +562,7 @@ export class ChatSpaceComponent implements OnInit {
       }
     });
   }
+
   showInfo(data: any) {
 
     Swal.fire({
@@ -467,20 +578,58 @@ export class ChatSpaceComponent implements OnInit {
     });
     console.log(data);
   }
+
   forward(data: any) {
     this.isForwarding = true;
     this.forwardData = data;
   }
+
   closeForward(e: any) {
     this.isForwarding = false;
     this.forwardData = null;
   }
+
   resendMassage(index: any) {
-    let obj: any = { 
-      ...this.data[index], 
-      id: Date.now(), 
-      status: 'pending' 
+    let obj: any = {
+      ...this.data[index],
+      id: Date.now(),
+      status: 'pending'
     };
     this.setData(obj);
+  }
+
+  handleSearch(e: any) {
+    const text = e.target.value;
+    if (e.keyCode == 13) {
+
+      function animate(div: any) {
+        div.scrollIntoView({ behavior: "smooth", inline: "center" });
+        div.style.transitionDuration = '200ms';
+        div.style.background = 'rgba(0, 138, 188, 0.2)';
+        setTimeout(() => {
+          div.style.background = 'transparent'
+        }, 1000)
+      }
+
+      if (this.searchInfo.curruntIndex >= this.searchInfo.length) {
+        this.searchInfo.curruntIndex = 0;
+      }
+      const container: any = document.querySelector('.chats-container');
+      const div: any = document.getElementById(this.searchArray[this.searchInfo.curruntIndex].id);
+      animate(div);
+      this.searchInfo.curruntIndex++;
+    }
+    else if (text != '') {
+      this.searchArray = this.data.filter((element: any) => {
+        if (element.type == 'string') {
+          return element.data.indexOf(text) != -1;
+        }
+        return false;
+      })
+      this.searchInfo = {
+        length: this.searchArray.length,
+        curruntIndex: 0
+      }
+    }
   }
 }

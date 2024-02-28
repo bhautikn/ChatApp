@@ -37,10 +37,10 @@ export class AppComponent {
     })
     this.joinAllChat(this.chats);
 
-    this._chat.onReceive((data: any, callback:any)=>{
+    this._chat.onReceive((data: any, callback: any) => {
       callback({ id: data.id, status: 'seen' });
       this.dropWater.play();
-      this.addFrom(data.massage, data.dataType, data.to)
+      this.addFrom(data.id, data.massage, data.dataType, data.to)
     })
   }
 
@@ -67,9 +67,10 @@ export class AppComponent {
   }
 
 
-  addFrom(data: any, dataType: string, token: any) {
+  addFrom(id: any, data: any, dataType: string, token: any) {
 
     let obj: any = {
+      id: id,
       type: dataType,
       time: new Date().toString(),
       sended_or_recived: 'from',

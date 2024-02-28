@@ -28,6 +28,8 @@ import { StoreModule } from '@ngrx/store';
 import { chatReducer } from './reducer/chat.reducer';
 import { ForwardComponent } from './chat/forward/forward.component';
 import { OneChatComponent } from './chat/chat-space/side-bar/one-chat/one-chat.component';
+import { AudioVisulizerComponent } from './chat/audio-visulizer/audio-visulizer.component';
+import { AudioCallComponent } from './chat/chat-space/audio-call/audio-call.component';
 
 const config: SocketIoConfig = {
     url: environment.soketUrl,
@@ -52,7 +54,9 @@ const config: SocketIoConfig = {
     UploadComponent,
     GIFComponent,
     ForwardComponent,
-    OneChatComponent
+    OneChatComponent,
+    AudioVisulizerComponent,
+    AudioCallComponent
   ],
   imports: [
     BrowserModule,

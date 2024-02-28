@@ -1,0 +1,22 @@
+<div class="body">
+    <div *ngIf="connecting" class="container">
+        <div class="call-text">Connecting ...</div>
+    </div>
+    <div>
+        <app-audio-visulizer *ngIf="!connecting" [localstream]="networkStream"></app-audio-visulizer>
+        <audio class="otherAudio" autoplay></audio>
+    </div>
+    <div class="myAudioContainer">
+        <audio class="myAudio" autoplay> </audio>
+    </div>
+</div>
+
+<div class="sidebar-controls">
+    <div class="controls-icon">
+        <i class="bi bi-mic" *ngIf="isAudio" (click)="setAudio(true)"></i>
+        <i class="bi bi-mic-mute" *ngIf="!isAudio" (click)="setAudio(false)"></i>
+    </div>
+    <div class="controls-icon bg-danger" (click)="endCall()">
+        <i class="bi bi-telephone"></i>
+    </div>
+</div>
