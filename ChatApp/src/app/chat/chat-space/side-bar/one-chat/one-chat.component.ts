@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { deleteChat } from '../../../../reducer/chat.action';
-import { formateDate } from '../../../../functions';
+import { formateDate, formateTime } from '../../../../functions';
 
 @Component({
   selector: 'app-one-chat',
@@ -14,6 +14,7 @@ export class OneChatComponent {
   @Input() i: number = -1;
   @Input() selection: boolean = false;
   @Input() urlToken: boolean = false;
+  formateTime = formateTime;
 
 formateDate = formateDate;
 

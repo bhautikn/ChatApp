@@ -1,8 +1,7 @@
-nav {
-    background-color: var(--background-light-3);
-}
+
 .super-main-container{
     overflow: hidden;
+    background-color: var(--background-light-3);
 }
 .cross-icon {
     width: max-content;
@@ -37,7 +36,7 @@ nav {
     visibility: hidden;
     /* height: 90vh; */
     transition-duration: 300ms;
-    padding: 10px;
+    /* padding: 10px; */
 }
 
 @keyframes side-nav {
@@ -393,8 +392,9 @@ nav {
     padding: 10px;
     border-radius: 5px;
     background-color: rgba(10, 10, 10, 0.2);
-    backdrop-filter: blur(5px);
-    position: absolute;
+    backdrop-filter: blur(2px);
+    z-index: 200;
+    /* position: absolute; */
 }
 
 /* video call section */

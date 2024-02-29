@@ -11,7 +11,7 @@ import {
     setChatName
 
 } from './chat.action';
-import { getChats } from "../functions";
+import { dateDiffInDays, getChats } from "../functions";
 
 const initialState: any = getChats();
 
@@ -24,42 +24,42 @@ export const chatReducer = createReducer(
     on(resetresetUnreadToZero, (state, props) => (resetUnreadToZeroR(state, props.token))),
     on(addChat, (state, props) => (addChatR(state, props.chatObj))),
     on(deletePerticulerChat, (state, props) => (deletePerticulerChatR(state, props.token, props.index))),
-    on(changeStatus,(state, props) => (changeStatusR( state, props.token, props.id, props.status ))),
+    on(changeStatus, (state, props) => (changeStatusR(state, props.token, props.id, props.status))),
     on(commit, (state) => (commitR(state)))
 );
 
 function commitR(state: any) {
     localStorage.setItem('chats', JSON.stringify(state))
 }
-function changeStatusR(state:any, token:any, id:any, status:any){
-    const chatIndex:number = getIndexByToken(state, token);
-    if(chatIndex >= 0){
+function changeStatusR(state: any, token: any, id: any, status: any) {
+    const chatIndex: number = getIndexByToken(state, token);
+    if (chatIndex >= 0) {
         let tempData = {
-            ...state[chatIndex], 
-            data: state[chatIndex].data.map((item:any) => {
-                if(item.id == id){
-                    return {...item, status: status}
+            ...state[chatIndex],
+            data: state[chatIndex].data.map((item: any) => {
+                if (item.id == id) {
+                    return { ...item, status: status }
                 }
                 return item;
             })
         };
         return changeObjectBetweenArray(state, tempData, chatIndex);
-    }else{
+    } else {
         return state;
     }
 }
-function deletePerticulerChatR(state:any, token:any, index:any){
-    const chatIndex:number = getIndexByToken(state, token);
-    if(chatIndex >= 0){
+function deletePerticulerChatR(state: any, token: any, index: any) {
+    const chatIndex: number = getIndexByToken(state, token);
+    if (chatIndex >= 0) {
         let tempData = {
-            ...state[chatIndex], 
+            ...state[chatIndex],
             data: [
-                ...state[chatIndex].data.slice(0, index), 
+                ...state[chatIndex].data.slice(0, index),
                 ...state[chatIndex].data.slice(index + 1)
             ]
         };
         return changeObjectBetweenArray(state, tempData, chatIndex);
-    }else{
+    } else {
         return state;
     }
 
@@ -68,13 +68,37 @@ function deletePerticulerChatR(state:any, token:any, index:any){
 function appendDataR(state: any, token: number, data: any) {
     const index = getIndexByToken(state, token);
     if (index >= 0) {
-        let tempData = { 
-            ...state[index], 
-            data: [...state[index].data, data], 
-            unread: state[index].unread + 1,
-            modified: new Date().toString()
+        const lastModified: any = new Date(state[index].modified);
+        let datediff = dateDiffInDays(lastModified, new Date());
+
+        if (datediff >= 1 || state[index].data.length == 0) {
+            let obj = {
+                type: 'sepretor',
+                data: new Date().toString(),
+            };
+            var tempData = {
+                ...state[index],
+                lastMassage: data.lastMassage,
+                data: [...state[index].data, obj, data],
+                unread: state[index].unread + 1,
+                modified: new Date().toString()
+            }
         }
-        return changeObjectBetweenArray(state, tempData, index);
+        else {
+            var tempData = {
+                ...state[index],
+                lastMassage: data.lastMassage,
+                data: [...state[index].data, data],
+                unread: state[index].unread + 1,
+                modified: new Date().toString()
+            }
+        }
+        // console.log(state[index].data.length)
+        return [
+            tempData,
+            ...state.slice(0, index),
+            ...state.slice(index + 1),
+        ];
     }
     return state;
 }
@@ -98,14 +122,14 @@ function deleteChatR(state: any, index: number) {
 }
 
 function addChatR(state: any, obj: any) {
-    state = [...state, obj];
+    state = [{ ...state, modified: state.created }, obj];
     return state;
 }
 function resetUnreadToZeroR(state: any, token: any) {
     const index = getIndexByToken(state, token);
 
     if (index >= 0) {
-        const tempData = { ...state[index], unread: 0, modified: new Date().toString() }
+        const tempData = { ...state[index], unread: 0 }
         return changeObjectBetweenArray(state, tempData, index);
     }
 
@@ -130,7 +154,7 @@ function changeObjectBetweenArray(state: any, tempData: any, index: any) {
     return [
         ...state.slice(0, index),
         tempData,
-        ...state.slice(index + 1)
+        ...state.slice(index + 1),
     ];
 }
 

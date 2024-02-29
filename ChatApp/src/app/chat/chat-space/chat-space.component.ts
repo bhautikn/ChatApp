@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../reducer/chat.selector';
 import { addChat, deletePerticulerChat, resetChatData } from '../../reducer/chat.action';
-import { decodeHTMLEntities, deleteChatByToken, formatAMPM, sendDataToFreind, tost } from '../../functions';
+import { decodeHTMLEntities, deleteChatByToken, formatAMPM, formateTime2, sendDataToFreind, tost } from '../../functions';
 
 
 @Component({
@@ -25,33 +25,36 @@ export class ChatSpaceComponent implements OnInit {
   ) { }
 
   urlToken: any = this._route.snapshot.params['token'];
-  // chatOption: boolean = false;
-  gifMenu: boolean = false;
+  chatTitle: string = ''
   authToken: any = '';
   name = 'Your Freind';
   status: any = 'offline';
-  statusColor = 'grey';
+
   data: any;
-  dataType = 'string';
-  dropWater: any = new Audio('../assets/sounds/water_drop.mp3');
-  chats: any = [];
   curruntIndex: number = -1;
+  chats: any = [];
+
+  gifMenu: boolean = false;
   isVideoCall: boolean = false;
   isAudioCall: boolean = false;
   chatLefticons: boolean = true;
   isForwarding: boolean = false;
   forwardData: any;
 
+  // date formatter
+  formateTime = formateTime2;
+  formatAMPM = formatAMPM;
+  
   //searching chats
   searchingChat: boolean = false;
   searchArray: any = [];
   searchInfo: any = {
-    curruntIndex: 0,
+    curruntIndex: -1,
     lenght: 0,
   };
 
-  chatTitle: string = ''
-  formatAMPM = formatAMPM;
+  //assets
+  dropWater: any = new Audio('../assets/sounds/water_drop.mp3');
 
   async ngOnInit() {
     this.store.select(getAllChats).subscribe((data: any) => {
@@ -87,7 +90,7 @@ export class ChatSpaceComponent implements OnInit {
       //set for login screen
       const { password, isConfirmed }: any = await this.passwordEnterPopUp();
       if (isConfirmed == false) {
-        this._navigate.navigate(['/']);
+        history.back();
         return;
       }
       else {
@@ -200,6 +203,14 @@ export class ChatSpaceComponent implements OnInit {
       handleDragElement(e);
       this.style.border = '1px solid rgb(51, 51, 51)';
     }
+
+    // let gifMenu:any = document.querySelector('#gif-menu');
+    // let reletivePos:any = document.querySelector('#textarea')?.getBoundingClientRect();
+
+    // gifMenu.style.bottom = reletivePos.bottom + 'px';
+    // gifMenu.style.left = reletivePos.left + 'px';
+
+    // console.log(reletivePos.top, reletivePos, gifMenu.offsetHeight);
   }
 
   input(e: any) {
@@ -254,7 +265,8 @@ export class ChatSpaceComponent implements OnInit {
     const obj = {
       type: 'string',
       data: text,
-      sendableData: text
+      sendableData: text,
+      lastMassage: `you: ${text}`
     }
     this.setData(obj);
   }
@@ -264,7 +276,8 @@ export class ChatSpaceComponent implements OnInit {
       if (data.login == false) {
         const { password, isConfirmed } = await this.passwordEnterPopUp('wrong password try again!!');
         if (!isConfirmed) {
-          this._navigate.navigate(['/']);
+          // this._navigate.navigate(['/post']);
+          console.log('navigate to /post ', window.history)
           return;
         }
         else {
@@ -298,14 +311,16 @@ export class ChatSpaceComponent implements OnInit {
 
   async deleteChat() {
 
-    await deleteChatByToken({
+    let res = await deleteChatByToken({
       urlToken: this.urlToken,
       authToken: this.authToken,
       api: this._api,
       store: this.store,
       curruntIndex: this.curruntIndex,
     });
-    this._navigate.navigate(['/']);
+    if(res){
+      this._navigate.navigate(['/']);
+    }
 
   }
 
@@ -323,22 +338,26 @@ export class ChatSpaceComponent implements OnInit {
       obj.type = 'image';
       obj.data = src;
       obj.sendableData = file;
+      obj.lastMassage = 'you: sended image'
     }
     else if (file.type.split('/')[0] == 'video') {
       let src: any = URL.createObjectURL(file);
       obj.type = 'video';
       obj.data = src;
       obj.sendableData = file
+      obj.lastMassage = 'you: sended video'
     }
     else {
       obj.type = file.miamitype;
       obj.data = file;
       obj.sendableData = file
+      obj.lastMassage = 'you: sended file'
     }
     this.setData(obj);
   }
 
   setData(obj: any) {
+    this.curruntIndex = 0;
     obj.time = new Date().toString()
     obj.sended_or_recived = 'to';
     obj.id = Date.now();
@@ -362,6 +381,7 @@ export class ChatSpaceComponent implements OnInit {
       type: 'gif',
       data: data,
       sendableData: data,
+      lastMassage: 'you: sended gif'
     }
     this.gifMenu = false;
     this.setData(obj);
@@ -495,7 +515,7 @@ export class ChatSpaceComponent implements OnInit {
         autocapitalize: "off"
       },
       showCancelButton: true,
-      cancelButtonText: 'go back',
+      cancelButtonText: 'cancel',
       preConfirm: (password) => {
         outPassword.password = password;
       }
@@ -596,7 +616,8 @@ export class ChatSpaceComponent implements OnInit {
     let obj: any = {
       ...this.data[index],
       id: Date.now(),
-      status: 'pending'
+      status: 'pending',
+      lastMassage: `you: ${this.data[index].data} `
     };
     this.setData(obj);
   }
@@ -617,7 +638,7 @@ export class ChatSpaceComponent implements OnInit {
       }
       this.searchInfo = {
         length: this.searchArray.length,
-        curruntIndex: 0
+        curruntIndex: -1
       }
     }
   }
@@ -633,7 +654,7 @@ export class ChatSpaceComponent implements OnInit {
     }
 
     this.searchInfo.curruntIndex += inc;
-    if (this.searchInfo.curruntIndex <= 0) {
+    if (this.searchInfo.curruntIndex <= -1) {
       this.searchInfo.curruntIndex = this.searchArray.length - 1;
     }
     if (this.searchInfo.curruntIndex >= this.searchInfo.length) {
@@ -642,5 +663,21 @@ export class ChatSpaceComponent implements OnInit {
 
     const div: any = document.getElementById(this.searchArray[this.searchInfo.curruntIndex].id);
     animate(div);
+  }
+
+  openSetting(){
+    // todo: write code to open setting
+  }
+
+  closeOrOpenSearch(val:boolean){
+    if(val){
+      this.searchingChat = true;
+      console.log('searchingChat', this.searchingChat);
+      setTimeout(() => {
+        document.getElementById('search-input')?.focus();
+      }, 10);
+    }else{
+      this.searchingChat = false;
+    }
   }
 }

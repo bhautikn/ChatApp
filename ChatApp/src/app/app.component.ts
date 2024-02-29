@@ -77,12 +77,13 @@ export class AppComponent {
     }
     switch (dataType) {
       case 'string':
-
         obj.data = data;
+        obj.lastMassage = `friend: ${data}`
         break;
 
       case 'gif':
         obj.data = data;
+        obj.lastMassage = `friend: sended gif`;
         break;
 
       case 'image':
@@ -90,6 +91,7 @@ export class AppComponent {
         let myFile: File = new File([blob], "file.jpg")
         let src: any = URL.createObjectURL(myFile);
         obj.data = src;
+        obj.lastMassage = `friend: sended image`;
         break;
 
       case 'video':
@@ -97,6 +99,7 @@ export class AppComponent {
         let myFileVideo: File = new File([blobVideo], "file.mp4")
         let srcVideo: any = URL.createObjectURL(myFileVideo);
         obj.data = srcVideo;
+        obj.lastMassage = `friend: sended video`;
         break;
     }
 
