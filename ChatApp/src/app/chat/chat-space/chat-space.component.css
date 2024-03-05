@@ -1,8 +1,8 @@
-
-.super-main-container{
+.super-main-container {
     overflow: hidden;
     background-color: var(--background-light-3);
 }
+
 .cross-icon {
     width: max-content;
     margin-left: 10px;
@@ -12,9 +12,11 @@
     transition-duration: 200ms;
     border-radius: 5px;
 }
-.text-small{
+
+.text-small {
     font-size: 0.7em !important;
 }
+
 .dropdown-item {
     cursor: pointer;
 }
@@ -22,7 +24,8 @@
 .cross-icon:hover {
     background-color: rgb(10, 10, 10, 0.2);
 }
-.show-sidenav{
+
+.show-sidenav {
     /* background-color: red; */
     height: 90vh;
     overflow: auto;
@@ -30,6 +33,7 @@
     display: block;
     visibility: visible !important;
 }
+
 .side-nav {
     width: max-content;
     width: 0px;
@@ -150,11 +154,13 @@
     overflow-y: auto;
     display: block;
 }
-.end-container .container-text-last{
+
+.end-container .container-text-last {
     display: flex;
     justify-content: center;
-    border-radius: 0 0 10px 10px ;
+    border-radius: 0 0 10px 10px;
 }
+
 .main-container {
     background-size: 30px 30px;
     background-image:
@@ -168,7 +174,7 @@
     background-color: var(--background);
     border: 1px solid rgb(51, 51, 51);
 }
- 
+
 .end-container {
     display: flex;
     flex-direction: column;
@@ -196,24 +202,29 @@
     border: 1px solid grey;
     border-radius: 10px;
 }
-.massage-text #textarea{
+
+.massage-text #textarea {
     background-color: transparent;
     border: 0;
     box-shadow: none;
     padding-left: 5px;
     padding-right: 5px;
 }
-.send-btn-chat-space{
+
+.send-btn-chat-space {
     border: 0;
     border-radius: 5px;
 }
-.send-btn-chat-space:hover{
+
+.send-btn-chat-space:hover {
     background-color: var(--blue-light);
 }
-.send-btn-chat-space .bi-send:hover{
+
+.send-btn-chat-space .bi-send:hover {
     background-color: none;
 }
-.center-logo-while-no-chat{
+
+.center-logo-while-no-chat {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -223,8 +234,9 @@
     color: var(--text-light);
     width: 100%;
 }
-.massage-text .icon{
-    transition-duration: 200ms;
+
+.massage-text .icon {
+    /* transition-duration: 200ms; */
     background-color: var(--blue-dark);
     display: flex;
     font-size: 1.2em;
@@ -233,27 +245,33 @@
     text-align: center;
     margin: 1px;
 }
-.left-icon{
+
+.left-icon {
     border-radius: 5px;
     padding: 5px;
 }
-.massage-text .icon i{
-    border-radius:5px;
+
+.massage-text .icon i {
+    border-radius: 5px;
     padding: 5px;
     text-align: center;
 }
-.massage-text .icon:hover{
+
+.massage-text .icon:hover {
     background-color: var(--blue-light);
 }
+
 /* massage to css set */
 .to {
     margin: 5px 0;
-    animation: chat-animation-to 200ms linear;
+    /* animation: chat-animation-to 200ms linear; */
 }
-.from{
+
+.from {
     margin: 5px 0;
-    animation: chat-animation-from 200ms linear;
+    /* animation: chat-animation-from 200ms linear; */
 }
+
 /* @keyframes chat-animation-to {
     from {
         transform: translateX(-20px);
@@ -264,7 +282,8 @@
         transform: translateX(20px);
     }
 } */
-.to .massage, .from .massage {
+.to .massage,
+.from .massage {
     /* background-color: green; */
     padding: 2px;
     float: right;
@@ -274,7 +293,8 @@
     max-width: 50%;
 }
 
-.to .text, .from .text {
+.to .text,
+.from .text {
     background-color: var(--to);
     padding: 10px;
     font-size: 1.2em;
@@ -306,18 +326,21 @@
     border-top-left-radius: 0;
 }
 
-.from img, .to img {
+.from img,
+.to img {
     max-width: 200px;
-    border-bottom-left-radius:10px;
-    border-top-left-radius:10px;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
 }
-.from img{
+
+.from img {
     border-radius: 0px;
-    border-top-right-radius:10px;
+    border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
 }
 
-.from .time, .to .time {
+.from .time,
+.to .time {
     font-size: 0.6em;
     float: right;
     line-height: 12px;
@@ -326,6 +349,22 @@
 
 .from .time {
     float: left;
+}
+
+.progress {
+    width: 100%;
+    height: 10px;
+    background-color: grey;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: green;
+    border-radius: 5px;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 0.5em;
 }
 
 @keyframes massage {
@@ -363,23 +402,28 @@
         transform: translateY(-2px);
     }
 }
-@media screen and (max-width: 1080px){
-    .side-nav{
+
+@media screen and (max-width: 1080px) {
+    .side-nav {
         width: 30% !important;
     }
 }
+
 @media screen and (max-width: 700px) {
     .show-sidenav {
         width: 35% !important;
     }
-    .gif-menu{
+
+    .gif-menu {
         width: 100%;
     }
-      .to .massage,
-      .from .massage {
+
+    .to .massage,
+    .from .massage {
         max-width: 90%;
     }
 }
+
 @media screen and (max-width: 500px) {
     .show-sidenav {
         display: none;
@@ -405,6 +449,7 @@
     top: 0;
     background-color: var(--background);
 }
-.rotate-180::before{
+
+.rotate-180::before {
     transform: rotateY(180deg);
 }

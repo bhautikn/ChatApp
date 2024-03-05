@@ -44,7 +44,7 @@ export class ChatSpaceComponent implements OnInit {
   // date formatter
   formateTime = formateTime2;
   formatAMPM = formatAMPM;
-  
+
   //searching chats
   searchingChat: boolean = false;
   searchArray: any = [];
@@ -264,6 +264,7 @@ export class ChatSpaceComponent implements OnInit {
 
     const obj = {
       type: 'string',
+      miamitype: 'text/plain',
       data: text,
       sendableData: text,
       lastMassage: `you: ${text}`
@@ -318,7 +319,7 @@ export class ChatSpaceComponent implements OnInit {
       store: this.store,
       curruntIndex: this.curruntIndex,
     });
-    if(res){
+    if (res) {
       this._navigate.navigate(['/']);
     }
 
@@ -332,27 +333,23 @@ export class ChatSpaceComponent implements OnInit {
   uploadFile(e: any, file: any = null) {
     file = file || e.target.files[0];
 
-    let obj: any = {}
+    let obj: any = {
+      miamitype: file.type,
+      data: URL.createObjectURL(file),
+      sendableData: file
+    }
+
     if (file.type.split('/')[0] == 'image') {
-      let src: any = URL.createObjectURL(file);
       obj.type = 'image';
-      obj.data = src;
-      obj.sendableData = file;
-      obj.lastMassage = 'you: sended image'
     }
     else if (file.type.split('/')[0] == 'video') {
-      let src: any = URL.createObjectURL(file);
       obj.type = 'video';
-      obj.data = src;
-      obj.sendableData = file
-      obj.lastMassage = 'you: sended video'
     }
     else {
-      obj.type = file.miamitype;
-      obj.data = file;
-      obj.sendableData = file
-      obj.lastMassage = 'you: sended file'
+      obj.type = 'file';
     }
+
+    obj.lastMassage = `you: sended ${obj.type}`
     this.setData(obj);
   }
 
@@ -379,6 +376,7 @@ export class ChatSpaceComponent implements OnInit {
   sendGif(data: any) {
     const obj = {
       type: 'gif',
+      miamitype: 'text/plain',
       data: data,
       sendableData: data,
       lastMassage: 'you: sended gif'
@@ -665,18 +663,18 @@ export class ChatSpaceComponent implements OnInit {
     animate(div);
   }
 
-  openSetting(){
+  openSetting() {
     // todo: write code to open setting
   }
 
-  closeOrOpenSearch(val:boolean){
-    if(val){
+  closeOrOpenSearch(val: boolean) {
+    if (val) {
       this.searchingChat = true;
       console.log('searchingChat', this.searchingChat);
       setTimeout(() => {
         document.getElementById('search-input')?.focus();
       }, 10);
-    }else{
+    } else {
       this.searchingChat = false;
     }
   }

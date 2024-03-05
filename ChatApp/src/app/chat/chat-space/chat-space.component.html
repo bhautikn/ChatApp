@@ -210,6 +210,10 @@
                                         <img [src]=oneChatData.data alt="image" /> <br>
                                     </div>
 
+                                    <div class="progress" *ngIf="oneChatData.percentage != 100 && oneChatData.percentage" >
+                                        <div class="progress-bar" [style.width]="oneChatData.percentage + '%'">{{oneChatData.percentage}} %</div>
+                                    </div>
+
                                     <div class="time">
                                         {{formatAMPM(oneChatData.time)}}
                                         <span *ngIf="oneChatData.status == 'pending'">

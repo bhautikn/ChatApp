@@ -3,11 +3,9 @@ import { Router, RouterOutlet } from '@angular/router';
 import { ChattingSoketService } from './services/chatting-soket.service';
 import { Store } from '@ngrx/store';
 import { getAllChats } from './reducer/chat.selector';
-import { appendData, commit } from './reducer/chat.action';
+import { appendData, changeStatus, commit, setProgress, updateData } from './reducer/chat.action';
 
-// import * as ss from '../../node_modules/socket.io-stream';
-// import { fader } from './route-animations';
-
+declare var ss: any;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -15,6 +13,7 @@ import { appendData, commit } from './reducer/chat.action';
   // animations: [fader]
 })
 export class AppComponent {
+
   constructor(
     private _navigate: Router,
     private _chat: ChattingSoketService,
@@ -26,7 +25,6 @@ export class AppComponent {
   dropWater: any = new Audio('../assets/sounds/water_drop.mp3');
 
   async ngOnInit() {
-    // console.log('ss',ss);
     window.onunload = (e) => {
       this._chat.disconnect();
       this.store.dispatch(commit());
@@ -40,8 +38,21 @@ export class AppComponent {
     this._chat.onReceive((data: any, callback: any) => {
       callback({ id: data.id, status: 'seen' });
       this.dropWater.play();
-      this.addFrom(data.id, data.massage, data.dataType, data.to)
+      this.addFrom(data, data.data);
     })
+
+    // this._chat.onFileRecive((data: any) => {
+    //   this.dropWater.play();
+    //   this.preAdd(data);
+
+    // },(data:any)=>{
+    //   this.store.dispatch(setProgress({token:data.token, id:data.id, progress:10}))
+    // } ,async (data: any, blob: any) => {
+
+    //   // console.log('data', data)
+    //   this.addFrom(data, blob);
+    //   // console.log('blob', await blob.text())
+    // })
   }
 
   async joinAllChat(chats: any) {
@@ -65,49 +76,69 @@ export class AppComponent {
       chat.style.background = 'none';
     }
   }
-
-
-  addFrom(id: any, data: any, dataType: string, token: any) {
-
+  // preAdd({ id, dataType, token }: any) {
+  //   let obj: any = {
+  //     id: id,
+  //     data: '',
+  //     type: dataType,
+  //     time: new Date().toString(),
+  //     sended_or_recived: 'from',
+  //   }
+  //   this.setData(token, obj);
+  // }
+  async addFrom({ id, to, dataType }: any, blob: any) {
     let obj: any = {
       id: id,
       type: dataType,
       time: new Date().toString(),
       sended_or_recived: 'from',
     }
+
+    let lastMassage = `friend: sended ${blob}`;
+
+    // this.setData(token, obj, lastMassage);
+    // this.setData(token, obj);
+    // let obj: any = {
+    //   type: type
+    // };
+    // let lastMassage = `friend: sended ${type}`;
+
     switch (dataType) {
       case 'string':
-        obj.data = data;
-        obj.lastMassage = `friend: ${data}`
+        obj.data = blob;
+        lastMassage = `friend: ${obj.data}`
         break;
 
       case 'gif':
-        obj.data = data;
-        obj.lastMassage = `friend: sended gif`;
+        obj.data = blob;
         break;
 
       case 'image':
-        let blob = new Blob([data])
-        let myFile: File = new File([blob], "file.jpg")
+        let myFile: File = new File([blob], "file.png")
         let src: any = URL.createObjectURL(myFile);
         obj.data = src;
-        obj.lastMassage = `friend: sended image`;
         break;
 
       case 'video':
-        let blobVideo = new Blob([data])
-        let myFileVideo: File = new File([blobVideo], "file.mp4")
+        // let blobVideo = new Blob([data])
+        let myFileVideo: File = new File([blob], "file.mp4")
         let srcVideo: any = URL.createObjectURL(myFileVideo);
         obj.data = srcVideo;
-        obj.lastMassage = `friend: sended video`;
         break;
-    }
 
-    this.setData(token, obj);
+      default:
+        let file: File = new File([blob], "file")
+        let srcFile: any = URL.createObjectURL(file);
+        obj.data = srcFile;
+    }
+    this.store.dispatch(appendData({ token: to, data: obj, lastMassage: lastMassage }));
+
   }
-  setData(token: any, obj: any) {
-    this.store.dispatch(appendData({ token: token, data: obj }));
-  }
+
+  // setData(token: any, obj: any, lastMassage: any = 'freind: sended massage') {
+  //   this.store.dispatch(appendData({ token: token, data: obj, lastMassage: lastMassage }));
+  // }
+
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];
   }

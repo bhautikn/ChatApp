@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { appendData, changeStatus, deleteChat } from "./reducer/chat.action";
+import { appendData, changeStatus, deleteChat, setProgress } from "./reducer/chat.action";
 
 export function decodeHTMLEntities(str: any) {
   if (str && typeof str === 'string') {
@@ -62,14 +62,33 @@ export function sendDataToFreind(obj: any, _chat: any, authToken: any, urlToken:
       store.dispatch(changeStatus({ token: urlToken, id: obj.id, status: 'failed' }));
     }
   });
+  // let tempObj = { ...obj }
+  // delete tempObj.sendableData;
+  // delete tempObj.status;
+  // delete tempObj.lastMassage;
+  // delete tempObj.data;
+
+  // // console.log(tempObj)
+
+  // _chat.sendFile(authToken, obj.sendableData, tempObj, [
+  //   (data: any) => {
+  //     store.dispatch(setProgress({ token: urlToken, id: obj.id, progress: data }))
+  //   }, () => {
+  //     store.dispatch(changeStatus({ token: urlToken, id: obj.id, status: 'sent' }));
+  //     console.log('finished tranfer ...')
+  //   }, () => {
+  //     store.dispatch(changeStatus({ token: urlToken, id: obj.id, status: 'seen' }));
+  //     console.log('recive data to opponent')
+  //   }
+  // ]);
   // store.dispatch(changeLastMassage({token: urlToken, massage: obj.lastMassage}));
 
-  store.dispatch(appendData({ token: urlToken, data: obj }));
+  store.dispatch(appendData({ token: urlToken, data: obj, lastMassage: obj.lastMassage }));
 }
 
-export function formateDate(date:any){
+export function formateDate(date: any) {
   const date_t = new Date(date);
-  return date_t.getDay()+'/'+date_t.getMonth()+'/'+date_t.getFullYear();
+  return date_t.getDay() + '/' + date_t.getMonth() + '/' + date_t.getFullYear();
 }
 
 export function formatAMPM(date: any) {
@@ -92,7 +111,7 @@ export function getChats() {
   return JSON.parse(localStorage['chats']);
 }
 
-export function tost(props:any, animation:boolean = false) {
+export function tost(props: any, animation: boolean = false) {
 
   var toastMixin = Swal.mixin({
     toast: true,
@@ -106,50 +125,15 @@ export function tost(props:any, animation:boolean = false) {
       toast.addEventListener('mouseleave', Swal.resumeTimer)
     }
   });
-  setTimeout(()=>{
+  setTimeout(() => {
     toastMixin.fire(
       props
     );
   }, 50)
 }
 
-export const formateTime = (date:any) => {
-    const curruntDate:any = new Date();
-    date = new Date(date);
-    var seconds = Math.floor((curruntDate - date) / 1000);
-    var interval = seconds / 31536000;
-  
-    if (interval > 1) {
-      return formateDate(date);
-    }
-    interval = seconds / 2592000;
-
-    if (interval > 1) {
-      return formateDate(date);
-    }
-    interval = seconds / 86400;
-    if (interval > 1) {
-      interval = Math.floor(interval);
-      if(interval == 1){
-        return 'tommorow';
-      }
-      return formateDate(date)
-      // console.log(interval + " days ago")
-      // return Math.floor(interval) + " days ago";
-    }
-    interval = seconds / 3600;
-    if (interval > 1) {
-      return formatAMPM(date);
-    }
-    interval = seconds / 60;
-    if (interval > 1) {
-      return formatAMPM(date);
-    }
-    return "now";
-}
-
-export const formateTime2 = (date:any) => {
-  const curruntDate:any = new Date();
+export const formateTime = (date: any) => {
+  const curruntDate: any = new Date();
   date = new Date(date);
   var seconds = Math.floor((curruntDate - date) / 1000);
   var interval = seconds / 31536000;
@@ -165,17 +149,38 @@ export const formateTime2 = (date:any) => {
   interval = seconds / 86400;
   if (interval > 1) {
     interval = Math.floor(interval);
-    if(interval == 1){
+    if (interval == 1) {
       return 'tommorow';
     }
     return formateDate(date)
     // console.log(interval + " days ago")
     // return Math.floor(interval) + " days ago";
   }
-  return 'today';
+  interval = seconds / 3600;
+  if (interval > 1) {
+    return formatAMPM(date);
+  }
+  interval = seconds / 60;
+  if (interval > 1) {
+    return formatAMPM(date);
+  }
+  return "now";
 }
 
-export function dateDiffInDays(date1:any, date2:any) {
+export const formateTime2 = (date: any) => {
+  const curruntDate: any = new Date();
+  date = new Date(date);
+  let diff = dateDiffInDays(date, curruntDate)
+  if (diff == 0) {
+    return 'today';
+  }
+  if (diff == 1) {
+    return 'tommorow';
+  }
+  return formateDate(date);
+}
+
+export function dateDiffInDays(date1: any, date2: any) {
   const _MS_PER_DAY = 1000 * 60 * 60 * 24;
   // Discard the time and time-zone information.
   const utc1 = Date.UTC(date1.getFullYear(), date1.getMonth(), date1.getDate());

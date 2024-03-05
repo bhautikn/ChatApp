@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 
+declare var ss: any;
+
 @Injectable({
 	providedIn: 'root'
 })
@@ -9,8 +11,28 @@ export class ChattingSoketService {
 	constructor(private _socket: Socket) { }
 
 	//emit event
-	send(massage: any, dataType: any, auth: string, id: any, callback: any) {
-		this._socket.emit('massage', { massage: massage, dataType: dataType, token: auth, massageId: id }, callback);
+	send(data: any, dataType: any, auth: string, msgId: any, callback1: any) {
+		this._socket.emit('massage', { massage: data, dataType: dataType, token: auth, massageId: msgId }, callback1);
+	}
+	sendFile(auth: string, data: any, dataObj: any, [percentage, finished, final]: any) {
+		// data = new Blob([data], { type: dataType })
+		let stream = ss.createStream({
+			allowHalfOpen: true
+		});
+		ss(this._socket).emit('file', stream, { token: auth, ...dataObj }, final);
+		var blobStream = ss.createBlobReadStream(data);
+		var size = 0;
+
+		blobStream.on('data', function (chunk: any) {
+			size += chunk.length;
+			percentage(Math.floor(size / data.size * 100));
+			if (Math.floor(size / data.size * 100) == 100) {
+				// ss.closeStream()
+				finished(true)
+			}
+		});
+
+		blobStream.pipe(stream);
 	}
 	join(authToken: string) {
 		this._socket.emit('join', authToken);
@@ -23,7 +45,7 @@ export class ChattingSoketService {
 			callback(res);
 		})
 	}
-	reqAudioCall(authToken: any, callback: Function){
+	reqAudioCall(authToken: any, callback: Function) {
 		this._socket.emit('reqAudioCall', authToken, (res: any) => {
 			callback(res);
 		})
@@ -36,7 +58,7 @@ export class ChattingSoketService {
 	}
 	disconnectAudioCall(token: any) {
 		this._socket.emit('disconnectAudioCall', token);
-	
+
 	}
 	cancleVideoCall(token: any) {
 		this._socket.emit('cancleVideoCall', token);
@@ -48,13 +70,31 @@ export class ChattingSoketService {
 	onCancleVideoCall() {
 		return this._socket.fromEvent('cancleVideoCall');
 	}
+	// onFileRecive(callback: any, callback2: any, callback3: any) {
+	// 	ss(this._socket).on('massage', (stream: any, data: any, awk: any) => {
+	// 		var blobs: any = [];
+	// 		stream.on('data', (dataBit: any) => {
+	// 			blobs.push(dataBit);
+	// 			// callback2(dataBit)
+	// 			// callback2(data, dataBit);
+	// 		})
+	// 		stream.on('end', (res:any) => {
+	// 			console.log(blobs)
+	// 			const blob = new Blob([blobs], { type: data.miamitype });
+	// 			// console.log(data, res)
+	// 			callback3(data, blob)
+	// 			awk({ id: data.id, status: 'seen' });
+	// 		})
+	// 		callback(data);
+	// 	})
+	// }
 	onCancleAudioCall() {
 		return this._socket.fromEvent('cancleAudioCall');
 	}
 	onDisconnectVideoCall() {
 		return this._socket.fromEvent('disconnectVideoCall');
 	}
-	onDisconnectAudioCall(){
+	onDisconnectAudioCall() {
 		return this._socket.fromEvent('disconnectAudioCall');
 	}
 

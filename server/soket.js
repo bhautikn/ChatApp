@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const Users = require('./models/Users');
+const ss = require('socket.io-stream');
+const fs = require('fs');
 
 dotenv.config();
 const SIGN = process.env.JWT_SECRET_KEY;
@@ -17,6 +19,22 @@ mongoose.connect(MONGO_URL).then(() => {
 module.exports = (io) => {
 
     io.on('connection', (socket) => {
+
+        ss(socket).on('file', async (stream, obj, callback) => {
+            let stream2 = ss.createStream();
+            const { err, data } = verifyJWTToken(obj.token);
+            if (err) return socket.emit('error', 'Somthing Went Wrong');
+            try {
+                const freind = await getFreindByToken(data.token, socket.id);
+                obj.token = data.token;
+                // io.sockets.sockets.get(freind)
+                ss(io.sockets.sockets.get(freind)).emit('massage', stream2, obj, callback);
+                stream.pipe(stream2);
+            } catch (e) {
+                console.log(e);
+                return socket.emit('error', 'Somthing Went Wrong');
+            }
+        });
 
         socket.on('join', async (authToken) => {
             let token;
@@ -60,10 +78,7 @@ module.exports = (io) => {
             }
             try {
                 const freind = await getFreindByToken(data.token, socket.id);
-                //todo: send callback to user
-                // callback({ id: massageId, status: 'sent' });
-                // callback({ id: massageId, status: 'sent223232' });
-                io.timeout(20 * 60).to(freind).emit('recive', { massage: massage, dataType: dataType, to: data.token, id: massageId }, (err, obj) => {
+                io.timeout(20 * 60).to(freind).emit('recive', { data: massage, dataType: dataType, to: data.token, id: massageId }, (err, obj) => {
                     if (err) {
                         console.log(err)
                     } else {
@@ -78,6 +93,7 @@ module.exports = (io) => {
             }
         })
 
+        //video call
         socket.on('reqVideoCall', async (id, callback) => {
             const { err, data } = verifyJWTToken(id);
             if (err) {
@@ -150,6 +166,7 @@ module.exports = (io) => {
             }
         })
 
+        //send peer connection id
         socket.on('sendPeerConnectionId', async (id, peerToken) => {
             const { data, err } = verifyJWTToken(id);
             if (err) {
@@ -159,6 +176,7 @@ module.exports = (io) => {
             io.to(freind).emit('sendPeerConnectionId', peerToken);
         });
 
+        //todo: repair this all online problem
         socket.on('status', async (status, id) => {
             const { data, err } = verifyJWTToken(id);
             if (err) {
@@ -166,6 +184,7 @@ module.exports = (io) => {
             }
             const freind = await getFreindByToken(data.token, socket.id);
             io.to(freind).emit('status', status);
+            // io.to(freind).emit('status', { status: status, to: data.token });
         })
 
         socket.on('disconnect', async () => {
@@ -177,7 +196,7 @@ module.exports = (io) => {
             } catch (e) {
                 console.log('error occur at discconected area', e)
             }
-            deleteUser(socket.id);
+            await deleteUser(socket.id);
         });
 
     })
@@ -232,7 +251,7 @@ async function updateOnlineStatus(id) {
     await Users.updateOne({ id: id }, { $set: { online: false } });
 }
 async function deleteUser(id) {
-    await Users.deleteOne({ id: id });
+    await Users.deleteMany({ id: id });
 }
 async function getStatus(id) {
     const data = await Users.findOne({ id: id });
