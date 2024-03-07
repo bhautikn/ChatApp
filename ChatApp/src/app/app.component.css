@@ -4,13 +4,10 @@ nav{
     display: flex;
     justify-content: center;
 }
-.theme-changer{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    right: 10px !important;
+.theme-chnager{
     cursor: pointer;
+    padding: 10px;
+    color: var(--text);
 }
 .my-container{
     padding: 1px 10px;

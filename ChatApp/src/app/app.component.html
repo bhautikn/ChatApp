@@ -9,12 +9,12 @@
       </div>
     </div>
   </div>
-  <div class="theme-chnager">
-    hello
+  <div class="theme-chnager" (click)="toggleTheme()">
+    <i class="bi bi-sun" *ngIf="theme == 'dark'"></i>
+    <i class="bi bi-moon" *ngIf="theme == 'light'"></i>
   </div>
 </nav>
-
-<router-outlet></router-outlet>
+<router-outlet ></router-outlet>
 
 <!-- for animation between routes -->
 
