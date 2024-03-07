@@ -158,14 +158,15 @@
 .end-container .container-text-last {
     display: flex;
     justify-content: center;
+    padding: 10px;
     border-radius: 0 0 10px 10px;
 }
 
 .main-container {
     background-size: 30px 30px;
     background-image:
-        linear-gradient(to right, rgb(30, 30, 40) 1px, transparent 1px),
-        linear-gradient(to bottom, rgb(30, 30, 40) 1px, transparent 1px);
+        linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
     height: 86vh;
     border-radius: 10px;
     /* margin-top: 5px; */
@@ -186,7 +187,6 @@
 
 .text-feild {
     display: flex;
-    padding: 10px 0;
     justify-content: center;
     width: 100%;
     /* gap: 5px !important; */
@@ -321,7 +321,7 @@
 
 .from .text {
     /* background-color: var(--from-dark); */
-    border: 1px solid grey;
+    border: 1px solid var(--massage-border);
     background-color: transparent;
     border-top-left-radius: 0;
 }

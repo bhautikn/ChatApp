@@ -4,6 +4,14 @@ nav{
     display: flex;
     justify-content: center;
 }
+.theme-changer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    right: 10px !important;
+    cursor: pointer;
+}
 .my-container{
     padding: 1px 10px;
     border-radius: 10px;

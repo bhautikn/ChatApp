@@ -1,5 +1,5 @@
 import Swal from "sweetalert2";
-import { appendData, changeStatus, deleteChat, setProgress } from "./reducer/chat.action";
+import { appendData, changeStatus, deleteChat, setProgress, updateData } from "./reducer/chat.action";
 
 export function decodeHTMLEntities(str: any) {
   if (str && typeof str === 'string') {
@@ -84,6 +84,17 @@ export function sendDataToFreind(obj: any, _chat: any, authToken: any, urlToken:
   // store.dispatch(changeLastMassage({token: urlToken, massage: obj.lastMassage}));
 
   store.dispatch(appendData({ token: urlToken, data: obj, lastMassage: obj.lastMassage }));
+}
+
+export function editDataToFreind(obj: any, _chat: any, authToken: any, urlToken: any, store: any){
+  _chat.edit(obj.data, authToken, obj.id, (data: any) => {
+    if (data) {
+      store.dispatch(changeStatus({ token: urlToken, id: data.id, status: data.status }));
+    } else {
+      store.dispatch(changeStatus({ token: urlToken, id: obj.id, status: 'failed' }));
+    }
+  });
+  store.dispatch(updateData({ token: urlToken, data: obj, id: obj.id}));
 }
 
 export function formateDate(date: any) {

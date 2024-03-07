@@ -7,11 +7,12 @@
         <div class="row px-1 py-2" *ngIf="!searchingChat">
             <div class="col">
                 <a (click)="goBack()" class="aroow-left">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="25" fill="currentColor"
                         class="bi bi-arrow-left" viewBox="0 0 16 16">
                         <path fill-rule="evenodd"
                             d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8" />
                     </svg>
+                    <!-- <i class="bi bi-arrow-left" width="25" height="25"></i> -->
                 </a>
                 <div class="name text-truncate w-50" [title]="name">{{name}}</div>
                 <div>
@@ -179,14 +180,34 @@
                                                     <i class="bi bi-info-circle"></i>
                                                     Details
                                                 </li>
+                                                <span *ngIf="oneChatData.sended_or_recived == 'to'">
+                                                    <li>
+                                                        <hr class=" p-0 m-0">
+                                                    </li>
+                                                    <li class="dropdown-item p-2"
+                                                        (click)="setForEdit(oneChatData.id, oneChatData.data)">
+                                                        <i class="bi bi-pencil"></i>
+                                                        edit
+                                                    </li>
+                                                </span>
                                                 <li>
                                                     <hr class="p-0 m-0">
                                                 </li>
                                                 <li class="dropdown-item text-danger p-2"
-                                                    (click)="deletePerticulerChat(i)">
+                                                    (click)="deletePerticulerChat(oneChatData.id)">
                                                     <i class="bi bi-trash"></i>
-                                                    Delete
+                                                    Delete for me
                                                 </li>
+                                                <span *ngIf="oneChatData.sended_or_recived == 'to'">
+                                                    <li>
+                                                        <hr class="p-0 m-0">
+                                                    </li>
+                                                    <li class="dropdown-item text-danger p-2"
+                                                        (click)="deleteForEveryOneChat(oneChatData.id)">
+                                                        <i class="bi bi-trash"></i>
+                                                        Delete for everyone
+                                                    </li>
+                                                </span>
                                             </ul>
                                         </div>
 
@@ -206,15 +227,22 @@
                                         <img [src]=oneChatData.data /> <br>
                                     </div>
 
+                                    <div *ngIf="oneChatData.type == 'file'" (click)="showImage(oneChatData.data)">
+                                        <i class="bi bi-file-earmark fs-2 my-2"></i>
+                                    </div>
+
                                     <div *ngIf="oneChatData.type == 'gif'" (click)="showImage(oneChatData.data)">
                                         <img [src]=oneChatData.data alt="image" /> <br>
                                     </div>
 
-                                    <div class="progress" *ngIf="oneChatData.percentage != 100 && oneChatData.percentage" >
-                                        <div class="progress-bar" [style.width]="oneChatData.percentage + '%'">{{oneChatData.percentage}} %</div>
-                                    </div>
+                                    <!-- <div class="progress"
+                                        *ngIf="oneChatData.percentage != 100 && oneChatData.percentage">
+                                        <div class="progress-bar" [style.width]="oneChatData.percentage + '%'">
+                                            {{oneChatData.percentage}} %</div>
+                                    </div> -->
 
                                     <div class="time">
+                                        <i class="bi bi-pencil" *ngIf="oneChatData.edited" style="font-size: 1em !important;"></i>
                                         {{formatAMPM(oneChatData.time)}}
                                         <span *ngIf="oneChatData.status == 'pending'">
                                             <i class="bi bi-clock" style="font-size: 1em !important;"></i>
@@ -246,9 +274,16 @@
                         <app-gif (onsendGif)="sendGif($event)"></app-gif>
                     </div>
                 </div>
-                <div class="container-text-last container">
+                <div class="container-text-last container flex-wrap">
+                    
+                    <div class="d-flex border my-0 flex-row-reverse w-100" *ngIf="editModeObj.editing">
+                        <i class="bi option bi-x" (click)="editModeObj.editing = false"></i>
+                        <div class="w-100 d-flex p-1">
+                            edit mode
+                        </div>
+                    </div>
                     <div class="text-feild">
-                         <div class="massage-text" id="last-input-container">
+                        <div class="massage-text" id="last-input-container">
 
                             <div class="icon left-icon" *ngIf="chatLefticons">
                                 <label for="file-upload">
@@ -267,7 +302,8 @@
                             <textarea placeholder="Massage" (keydown)="input($event)" class="form-control" id="textarea"
                                 rows="1" autofocus></textarea>
                             <div class="icon send-btn-chat-space" (click)="addTo()">
-                                <i class="bi bi-send p-2 px-3"></i>
+                                <i class="bi bi-send p-2 px-3" *ngIf="!editModeObj.editing"></i>
+                                <i class="bi bi-pencil p-2 px-3" *ngIf="editModeObj.editing"></i>
                             </div>
                         </div>
                     </div>

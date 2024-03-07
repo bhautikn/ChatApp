@@ -24,7 +24,32 @@
   --from: rgb(27, 50, 118);
   --from-dark: rgb(14, 14, 135);
   --tansparent-black: rgba(0, 0, 0, 0.3);
+  --grid-color: rgb(30, 30, 40);
+  --massage-border: grey;
 }
+/* 
+:root {
+  --background-green: rgba(31, 58, 32, 0.3);
+  --background: #f6f6f6;
+  --background-light-3: #cfe8ff;
+  --background-light-4: #c0e1ff;
+  --background-light: #c9c9c9;
+  --background-light-2: #ffe1e1;
+  --text: rgb(0, 0, 0);
+  --text-light: rgb(62, 62, 62);
+  --shadow: black;
+  --shadow-light: rgb(23, 23, 23);
+  --green-dark: #0c342e;
+  --blue-dark: #738096;
+  --blue-light: #a7ceff;
+  --green: rgb(0, 255, 0);
+  --to: rgb(81, 195, 132);
+  --from: rgb(27, 50, 118);
+  --from-dark: rgb(14, 14, 135);
+  --tansparent-black: rgba(0, 0, 0, 0.3);
+  --grid-color: rgb(237, 228, 228);
+  --massage-border: black;
+} */
 
 body {
   background-color: var(--background);

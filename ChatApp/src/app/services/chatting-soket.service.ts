@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
+import { tost } from '../functions';
 
 declare var ss: any;
 
@@ -14,6 +15,17 @@ export class ChattingSoketService {
 	send(data: any, dataType: any, auth: string, msgId: any, callback1: any) {
 		this._socket.emit('massage', { massage: data, dataType: dataType, token: auth, massageId: msgId }, callback1);
 	}
+
+	edit(data: any, auth: string, msgId: any, callback1: any) {
+		this._socket.emit('edit', { data: data, token: auth, id: msgId }, callback1);
+	}
+
+	deleteForEveryOne(authToken: any, massageId:any) {
+		this._socket.emit('deleteForEveryOne', authToken, {id: massageId}, ()=>{
+			tost({ title: 'Text Copied', icon: 'success' }, false)
+		});
+	}
+
 	sendFile(auth: string, data: any, dataObj: any, [percentage, finished, final]: any) {
 		// data = new Blob([data], { type: dataType })
 		let stream = ss.createStream({
@@ -34,42 +46,61 @@ export class ChattingSoketService {
 
 		blobStream.pipe(stream);
 	}
+
 	join(authToken: string) {
 		this._socket.emit('join', authToken);
 	}
+
 	sendStatus(status: any, token: any) {
 		this._socket.emit('status', status, token);
 	}
+
 	reqVideoCall(authToken: any, callback: Function) {
 		this._socket.emit('reqVideoCall', authToken, (res: any) => {
 			callback(res);
 		})
 	}
+
 	reqAudioCall(authToken: any, callback: Function) {
 		this._socket.emit('reqAudioCall', authToken, (res: any) => {
 			callback(res);
 		})
 	}
+
 	sendPeerConnectionId(token: any, peerToken: any) {
 		this._socket.emit('sendPeerConnectionId', token, peerToken)
 	}
+
 	disconnectVideoCall(token: any) {
 		this._socket.emit('disconnectVideoCall', token);
 	}
+
 	disconnectAudioCall(token: any) {
 		this._socket.emit('disconnectAudioCall', token);
 
 	}
+
 	cancleVideoCall(token: any) {
 		this._socket.emit('cancleVideoCall', token);
 	}
+
 	cancleAudioCall(token: any) {
 		this._socket.emit('cancleAudioCall', token);
 	}
+
 	// listen event
 	onCancleVideoCall() {
 		return this._socket.fromEvent('cancleVideoCall');
 	}
+	
+	onDeleteForEveryOne(callback:any){
+		return this._socket.on('deleteForEveryOne', callback);
+	}
+
+	onEdit(callback: any){
+		return this._socket.on('edit', callback);
+	}
+
 	// onFileRecive(callback: any, callback2: any, callback3: any) {
 	// 	ss(this._socket).on('massage', (stream: any, data: any, awk: any) => {
 	// 		var blobs: any = [];
@@ -88,12 +119,15 @@ export class ChattingSoketService {
 	// 		callback(data);
 	// 	})
 	// }
+
 	onCancleAudioCall() {
 		return this._socket.fromEvent('cancleAudioCall');
 	}
+
 	onDisconnectVideoCall() {
 		return this._socket.fromEvent('disconnectVideoCall');
 	}
+
 	onDisconnectAudioCall() {
 		return this._socket.fromEvent('disconnectAudioCall');
 	}
@@ -101,15 +135,19 @@ export class ChattingSoketService {
 	onPeerConnectionId() {
 		return this._socket.fromEvent('sendPeerConnectionId');
 	}
+
 	status() {
 		return this._socket.fromEvent('status')
 	}
+
 	onReceive(callback: any) {
 		return this._socket.on('recive', callback);
 	}
+
 	onReqVideoCall() {
 		return this._socket.fromEvent('reqVideoCall')
 	}
+
 	onReqAudioCall() {
 		return this._socket.fromEvent('reqAudioCall')
 	}
@@ -118,6 +156,7 @@ export class ChattingSoketService {
 	disconnect() {
 		this._socket.disconnect();
 	}
+
 	connect() {
 		this._socket.connect();
 	}

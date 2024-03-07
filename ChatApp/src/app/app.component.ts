@@ -3,7 +3,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { ChattingSoketService } from './services/chatting-soket.service';
 import { Store } from '@ngrx/store';
 import { getAllChats } from './reducer/chat.selector';
-import { appendData, changeStatus, commit, setProgress, updateData } from './reducer/chat.action';
+import { appendData, changeStatus, commit, deletePerticulerChat, setProgress, updateData } from './reducer/chat.action';
 
 declare var ss: any;
 @Component({
@@ -33,6 +33,7 @@ export class AppComponent {
     this.store.select(getAllChats).subscribe((data) => {
       this.chats = data.chat;
     })
+
     this.joinAllChat(this.chats);
 
     this._chat.onReceive((data: any, callback: any) => {
@@ -40,6 +41,16 @@ export class AppComponent {
       this.dropWater.play();
       this.addFrom(data, data.data);
     })
+
+    this._chat.onDeleteForEveryOne((data:any, callback:any)=>{
+      this.store.dispatch(deletePerticulerChat({token: data.to, id: data.id}))
+      callback({id: data.id, status: 'deleted'})
+    })
+
+    this._chat.onEdit((data: any, to:any, callback: any) => {
+      callback({ id: data.id, status: 'seen' });
+      this.store.dispatch(updateData({ token: to, id: data.id, data: data }));
+    });
 
     // this._chat.onFileRecive((data: any) => {
     //   this.dropWater.play();

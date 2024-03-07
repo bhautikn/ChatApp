@@ -25,12 +25,12 @@ export const chatReducer = createReducer(
     on(resetChatData, (state, props) => (resetDataR(state, props.token))),
     on(resetresetUnreadToZero, (state, props) => (resetUnreadToZeroR(state, props.token))),
     on(addChat, (state, props) => (addChatR(state, props.chatObj))),
-    on(deletePerticulerChat, (state, props) => (deletePerticulerChatR(state, props.token, props.index))),
+    on(deletePerticulerChat, (state, props) => (deletePerticulerChatR(state, props.token, props.id))),
     on(changeStatus, (state, props) => (changeStatusR(state, props.token, props.id, props.status))),
     on(setProgress, (state, props) => (setProgressR(state, props.token, props.id, props.progress))),
     on(updateData, (state, props) => (updateDataR(state, props.token, props.id, props.data))),
     on(commit, (state) => (commitR(state)))
-    );
+);
 
 function commitR(state: any) {
     localStorage.setItem('chats', JSON.stringify(state))
@@ -54,26 +54,24 @@ function changeStatusR(state: any, token: any, id: any, status: any) {
     }
 }
 
-function deletePerticulerChatR(state: any, token: any, index: any) {
+function deletePerticulerChatR(state: any, token: any, id: any) {
     const chatIndex: number = getIndexByToken(state, token);
-    if (chatIndex >= 0) {
-        let tempData = {
-            ...state[chatIndex],
-            data: [
-                ...state[chatIndex].data.slice(0, index),
-                ...state[chatIndex].data.slice(index + 1)
-            ]
-        };
-        return changeObjectBetweenArray(state, tempData, chatIndex);
-    } else {
-        return state;
-    }
+    const index: number = getIndexById(state[chatIndex].data, id);
+    if (chatIndex < 0 || index < 0) return state;
+
+    let tempData = {
+        ...state[chatIndex],
+        data: [
+            ...state[chatIndex].data.slice(0, index),
+            ...state[chatIndex].data.slice(index + 1)
+        ]
+    };
+    return changeObjectBetweenArray(state, tempData, chatIndex);
 
 }
 
 function appendDataR(state: any, token: number, data: any, lastMassage: any) {
     const index = getIndexByToken(state, token);
-    console.log('appended data', token)
     if (index >= 0) {
         const lastModified: any = new Date(state[index].modified);
         let datediff = dateDiffInDays(lastModified, new Date());
@@ -159,27 +157,23 @@ function setChatNameR(state: any, token: any, name: string) {
     return state;
 }
 
-function updateDataR(state: any, token: any, id: any, data:any) {
+function updateDataR(state: any, token: any, id: any, data: any) {
     const chatIndex: number = getIndexByToken(state, token);
-    if (chatIndex >= 0) {
-        let tempData = {
-            ...state[chatIndex],
-            data: state[chatIndex].data.map((item: any) => {
-                if (item.id == id) {
-                    let TempData = { ...item, ...data };
-                    return TempData
-                }
-                return item;
-            })
-        };
-        return [
-            tempData,
-            ...state.slice(0, chatIndex),
-            ...state.slice(chatIndex + 1),
-        ];
-    } else {
-        return state;
-    }
+    const index: number = getIndexById(state[chatIndex].data, id);
+    if (chatIndex < 0 || index < 0) return state;
+    let tempData = {
+        ...state[chatIndex],
+        data: [
+            ...state[chatIndex].data.slice(0, index),
+            { ...state[chatIndex].data[index], ...data},
+            ...state[chatIndex].data.slice(index + 1)
+        ]
+    };
+    return [
+        tempData,
+        ...state.slice(0, chatIndex),
+        ...state.slice(chatIndex + 1),
+    ];
 }
 
 function setProgressR(state: any, token: any, id: any, percentage: any) {
@@ -212,6 +206,18 @@ function getIndexByToken(state: any, token: any): number {
     let index = -1;
     state.forEach((item: any, i: any) => {
         if (item.token == token) {
+            index = i;
+            return;
+        }
+    })
+    return index;
+}
+
+function getIndexById(state: any, id: any) {
+    let index = -1;
+    // console.log(state, id);
+    state.forEach((item: any, i: any) => {
+        if (item.id == id) {
             index = i;
             return;
         }

@@ -5,8 +5,8 @@ import { ApiChatService } from '../../services/api-chat.service';
 import Swal from 'sweetalert2';
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../reducer/chat.selector';
-import { addChat, deletePerticulerChat, resetChatData } from '../../reducer/chat.action';
-import { decodeHTMLEntities, deleteChatByToken, formatAMPM, formateTime2, sendDataToFreind, tost } from '../../functions';
+import { addChat, deletePerticulerChat, resetChatData, updateData } from '../../reducer/chat.action';
+import { decodeHTMLEntities, deleteChatByToken, editDataToFreind, formatAMPM, formateTime2, sendDataToFreind, tost } from '../../functions';
 
 
 @Component({
@@ -24,6 +24,7 @@ export class ChatSpaceComponent implements OnInit {
     private store: Store
   ) { }
 
+  textArea: any;
   urlToken: any = this._route.snapshot.params['token'];
   chatTitle: string = ''
   authToken: any = '';
@@ -53,6 +54,11 @@ export class ChatSpaceComponent implements OnInit {
     lenght: 0,
   };
 
+  //edit text
+  editModeObj = {
+    editing: false,
+    id: null
+  }
   //assets
   dropWater: any = new Audio('../assets/sounds/water_drop.mp3');
 
@@ -192,10 +198,16 @@ export class ChatSpaceComponent implements OnInit {
   }
 
   ngAfterViewInit() {
+    this.textArea = document.querySelector('#textarea');
     var holder: any = document.querySelector('.main-container');
     const handleDragElement = (e: any) => {
       e.preventDefault();
-      this.uploadFile(null, e.dataTransfer.files[0]);
+      console.log(e.dataTransfer);
+      try {
+        this.uploadFile(null, e.dataTransfer.files[0]);
+      } catch (e) {
+        console.log(e);
+      }
     }
     holder.ondragover = function () { this.style.border = '2px dashed green'; return false; };
     holder.ondragend = function () { this.style.border = '1px solid rgb(51, 51, 51)'; return false; };
@@ -249,8 +261,8 @@ export class ChatSpaceComponent implements OnInit {
   }
 
   addTo() {
-    const textArea: any = document.querySelector('#textarea');
-    let text: string = textArea.value;
+
+    let text: string = this.textArea.value;
 
     if (text == "\n" || text == '' || !text || text.trim() == '') {
       this.typing(false);
@@ -258,16 +270,28 @@ export class ChatSpaceComponent implements OnInit {
     }
 
     setTimeout(() => {
-      textArea.value = "";
-      textArea.style.height = '0px';
+      this.textArea.value = "";
+      this.textArea.style.height = '0px';
     }, 1)
 
-    const obj = {
-      type: 'string',
-      miamitype: 'text/plain',
-      data: text,
-      sendableData: text,
-      lastMassage: `you: ${text}`
+    var obj: any;
+
+    if (this.editModeObj.editing) {
+      obj = {
+        data: text,
+        lastMassage: `you: ${text}`,
+        id: this.editModeObj.id,
+        edited: true,
+      }
+    }
+    else {
+      obj = {
+        type: 'string',
+        miamitype: 'text/plain',
+        data: text,
+        sendableData: text,
+        lastMassage: `you: ${text}`
+      }
     }
     this.setData(obj);
   }
@@ -357,18 +381,27 @@ export class ChatSpaceComponent implements OnInit {
     this.curruntIndex = 0;
     obj.time = new Date().toString()
     obj.sended_or_recived = 'to';
-    obj.id = Date.now();
     obj.status = 'pending';
 
     if (this.status == 'offline') {
       tost({ title: 'Your Freind is offline', icon: 'warning' }, true);
     }
     this.dropWater.play();
-    sendDataToFreind(obj, this._chat, this.authToken, this.urlToken, this.store);
+    if (this.editModeObj.editing) {
+      editDataToFreind(obj, this._chat, this.authToken, this.urlToken, this.store);
 
-    setTimeout(() => {
-      this.scrollTop();
-    }, 50);
+      this.editModeObj = {
+        editing: false,
+        id: null
+      }
+    } else {
+      obj.id = Date.now();
+      sendDataToFreind(obj, this._chat, this.authToken, this.urlToken, this.store);
+      
+      setTimeout(() => {
+        this.scrollTop();
+      }, 50);
+    }
 
     this.typing(false);
   }
@@ -541,8 +574,24 @@ export class ChatSpaceComponent implements OnInit {
     return Outname;
   }
 
-  deletePerticulerChat(index: any) {
-    this.store.dispatch(deletePerticulerChat({ index: index, token: this.urlToken }));
+  deletePerticulerChat(id: any) {
+    this.store.dispatch(deletePerticulerChat({ id: id, token: this.urlToken }));
+  }
+
+  deleteForEveryOneChat(id: any) {
+    this._chat.deleteForEveryOne(this.authToken, id);
+    this.store.dispatch(deletePerticulerChat({ id: id, token: this.urlToken }));
+
+  }
+
+  setForEdit(id: any, data: any) {
+    this.textArea.value = data;
+    this.textArea.focus();
+
+    this.editModeObj = {
+      editing: true,
+      id: id
+    }
   }
 
   copyToClipBord(text: string) {
