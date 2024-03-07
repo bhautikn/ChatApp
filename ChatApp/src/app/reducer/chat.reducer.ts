@@ -127,7 +127,7 @@ function deleteChatR(state: any, index: number) {
 }
 
 function addChatR(state: any, obj: any) {
-    state = [{ ...state, modified: state.created }, obj];
+    state = [...state, {...obj, modified: state.created}];
     return state;
 }
 

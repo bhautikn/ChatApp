@@ -327,11 +327,12 @@ export class ChatSpaceComponent implements OnInit {
           }
         });
         if (!isFound) {
-          let name: string = await this.nameEnterPopUp();
+          this.name = await this.nameEnterPopUp();
+           
           let obj = {
             token: this.urlToken,
             cretaed: new Date().toString(),
-            name: name,
+            name: this.name,
             data: [],
             unread: 0,
           }
@@ -708,6 +709,7 @@ export class ChatSpaceComponent implements OnInit {
       }
     }
   }
+
   animateScroll(div: any) {
     div.scrollIntoView({ behavior: "smooth", inline: "center" });
     div.style.transitionDuration = '200ms';
@@ -716,6 +718,7 @@ export class ChatSpaceComponent implements OnInit {
       div.style.background = 'transparent'
     }, 1000)
   }
+
   incrementSearch(inc: number) {
 
     this.searchInfo.curruntIndex += inc;
