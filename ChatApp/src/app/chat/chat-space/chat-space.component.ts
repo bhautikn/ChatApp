@@ -59,6 +59,14 @@ export class ChatSpaceComponent implements OnInit {
     editing: false,
     id: null
   }
+
+  //reply mode
+  replyMode: any = {
+    replying: false,
+    data: null
+  }
+
+  curruntMode: any;
   //assets
   dropWater: any = new Audio('../assets/sounds/water_drop.mp3');
 
@@ -387,17 +395,27 @@ export class ChatSpaceComponent implements OnInit {
       tost({ title: 'Your Freind is offline', icon: 'warning' }, true);
     }
     this.dropWater.play();
-    if (this.editModeObj.editing) {
+    if (this.curruntMode == 'editing') {
       editDataToFreind(obj, this._chat, this.authToken, this.urlToken, this.store);
 
       this.editModeObj = {
         editing: false,
         id: null
       }
+      this.curruntMode = null;
+
+    } else if (this.curruntMode == 'replying') {
+      obj.reply = this.replyMode.data;
+      sendDataToFreind(obj, this._chat, this.authToken, this.urlToken, this.store);
+      this.replyMode = {
+        replying: false,
+        data: null
+      }
+      this.curruntMode = null;
     } else {
       obj.id = Date.now();
       sendDataToFreind(obj, this._chat, this.authToken, this.urlToken, this.store);
-      
+
       setTimeout(() => {
         this.scrollTop();
       }, 50);
@@ -587,6 +605,7 @@ export class ChatSpaceComponent implements OnInit {
   setForEdit(id: any, data: any) {
     this.textArea.value = data;
     this.textArea.focus();
+    this.curruntMode = 'editing';
 
     this.editModeObj = {
       editing: true,
@@ -689,16 +708,15 @@ export class ChatSpaceComponent implements OnInit {
       }
     }
   }
-
+  animateScroll(div: any) {
+    div.scrollIntoView({ behavior: "smooth", inline: "center" });
+    div.style.transitionDuration = '200ms';
+    div.style.background = 'rgba(0, 138, 188, 0.2)';
+    setTimeout(() => {
+      div.style.background = 'transparent'
+    }, 1000)
+  }
   incrementSearch(inc: number) {
-    function animate(div: any) {
-      div.scrollIntoView({ behavior: "smooth", inline: "center" });
-      div.style.transitionDuration = '200ms';
-      div.style.background = 'rgba(0, 138, 188, 0.2)';
-      setTimeout(() => {
-        div.style.background = 'transparent'
-      }, 1000)
-    }
 
     this.searchInfo.curruntIndex += inc;
     if (this.searchInfo.curruntIndex <= -1) {
@@ -709,7 +727,7 @@ export class ChatSpaceComponent implements OnInit {
     }
 
     const div: any = document.getElementById(this.searchArray[this.searchInfo.curruntIndex].id);
-    animate(div);
+    this.animateScroll(div);
   }
 
   openSetting() {
@@ -726,5 +744,19 @@ export class ChatSpaceComponent implements OnInit {
     } else {
       this.searchingChat = false;
     }
+  }
+
+  reply(data: any) {
+    this.replyMode = {
+      replying: true,
+      data: data
+    }
+    this.curruntMode = 'replying';
+  }
+
+  handleReplyClick(e:any){
+    const div: any = document.getElementById(e.id);
+    this.animateScroll(div);
+
   }
 }

@@ -12,12 +12,12 @@ export class ChattingSoketService {
 	constructor(private _socket: Socket) { }
 
 	//emit event
-	send(data: any, dataType: any, auth: string, msgId: any, callback1: any) {
-		this._socket.emit('massage', { massage: data, dataType: dataType, token: auth, massageId: msgId }, callback1);
+	send(data: any, auth: string, callback1: any) {
+		this._socket.emit('massage', auth, data, callback1);
 	}
 
 	edit(data: any, auth: string, msgId: any, callback1: any) {
-		this._socket.emit('edit', { data: data, token: auth, id: msgId }, callback1);
+		this._socket.emit('edit', auth, { data: data, id: msgId }, callback1);
 	}
 
 	deleteForEveryOne(authToken: any, massageId:any) {

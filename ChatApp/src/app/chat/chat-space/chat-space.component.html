@@ -139,9 +139,13 @@
                             <div [class]=oneChatData.sended_or_recived>
 
                                 <div class="massage">
+                                    <div *ngIf="oneChatData.reply" class="w-100 flex-shrink-0 border rounded reply-massage">
+                                        <app-reply-top [replyMode]="oneChatData.reply" (onclick)="handleReplyClick($event)"></app-reply-top>
+                                    </div>
+
                                     <div class="text d-flex align-items-start p-0">
 
-                                        <div class="btn-group py-0 m-0"
+                                        <div class="btn-group py-0 m-0" style="width: 10px;"
                                             [ngClass]="{'float-end': oneChatData.sended_or_recived == 'to'}">
 
                                             <div class="m-0 p-0" data-bs-toggle="dropdown" aria-expanded="false">
@@ -169,6 +173,13 @@
                                                 <li>
                                                     <hr class="p-0 m-0">
                                                 </li>
+                                                <li class="dropdown-item p-2" (click)="reply(oneChatData)">
+                                                    <i class="bi bi-reply"></i>
+                                                    reply
+                                                </li>
+                                                <li>
+                                                    <hr class="p-0 m-0">
+                                                </li>
                                                 <li class="dropdown-item p-2" (click)="resendMassage(i)">
                                                     <i class="bi bi-arrow-clockwise"></i>
                                                     Resend
@@ -180,7 +191,8 @@
                                                     <i class="bi bi-info-circle"></i>
                                                     Details
                                                 </li>
-                                                <span *ngIf="oneChatData.sended_or_recived == 'to' && oneChatData.type == 'string'">
+                                                <span
+                                                    *ngIf="oneChatData.sended_or_recived == 'to' && oneChatData.type == 'string'">
                                                     <li>
                                                         <hr class=" p-0 m-0">
                                                     </li>
@@ -242,7 +254,8 @@
                                     </div> -->
 
                                     <div class="time">
-                                        <i class="bi bi-pencil" *ngIf="oneChatData.edited" style="font-size: 1em !important;"></i>
+                                        <i class="bi bi-pencil" *ngIf="oneChatData.edited"
+                                            style="font-size: 1em !important;"></i>
                                         {{formatAMPM(oneChatData.time)}}
                                         <span *ngIf="oneChatData.status == 'pending'">
                                             <i class="bi bi-clock" style="font-size: 1em !important;"></i>
@@ -275,12 +288,18 @@
                     </div>
                 </div>
                 <div class="container-text-last container flex-wrap">
-                    
-                    <div class="d-flex border my-0 flex-row-reverse w-100" *ngIf="editModeObj.editing">
-                        <i class="bi option bi-x" (click)="editModeObj.editing = false"></i>
+
+                    <div class="d-flex border border-secondary rounded my-0 flex-row-reverse w-100"
+                        *ngIf="curruntMode == 'editing'">
+                        <i class="bi option bi-x" (click)="curruntMode = null"></i>
                         <div class="w-100 d-flex p-1">
-                            edit mode
+                            editing...
                         </div>
+                    </div>
+                    <div class="d-flex border border-secondary rounded my-0 flex-row-reverse w-100"
+                        *ngIf="curruntMode == 'replying'">
+                        <i class="bi option bi-x" (click)="curruntMode = null"></i>
+                        <app-reply-top [replyMode]="replyMode.data"></app-reply-top>
                     </div>
                     <div class="text-feild">
                         <div class="massage-text" id="last-input-container">

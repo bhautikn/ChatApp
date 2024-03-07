@@ -54,8 +54,11 @@ export function sendDataToFreind(obj: any, _chat: any, authToken: any, urlToken:
   //     }
   //   }, 20 * 1000);
   // })
-
-  _chat.send(obj.sendableData, obj.type, authToken, obj.id, (data: any) => {
+  obj.data = obj.sendableData;
+  delete obj.sendableData;
+  delete obj.lastMassage;
+  delete obj.status;
+  _chat.send(obj, authToken, (data: any) => {
     if (data) {
       store.dispatch(changeStatus({ token: urlToken, id: data.id, status: data.status }));
     } else {

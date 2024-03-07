@@ -67,19 +67,19 @@ module.exports = (io) => {
             }
         })
 
-        socket.on('massage', async ({ massage, dataType, token, massageId }, callback) => {
-            const { err, data } = verifyJWTToken(token);
+        socket.on('massage', async (authToken, obj, callback) => {
+            const { err, data } = verifyJWTToken(authToken);
             if (err) {
-                return socket.emit('error', 'Somthing Went Wrong');
                 callback({ id: massageId, sucsess: false });
+                return socket.emit('error', 'Somthing Went Wrong');
             }
 
-            if (dataType == 'string') {
+            if (obj.dataType == 'string') {
                 massage = HTMLSPACIALCHAR(massage);
             }
             try {
                 const freind = await getFreindByToken(data.token, socket.id);
-                io.timeout(20 * 60).to(freind).emit('recive', { data: massage, dataType: dataType, to: data.token, id: massageId }, (err, obj) => {
+                io.timeout(20 * 60).to(freind).emit('recive', obj, data.token, (err, obj) => {
                     if (err) {
                         console.log(err)
                     } else {
@@ -107,15 +107,14 @@ module.exports = (io) => {
             }
         })
 
-        socket.on('edit', async(obj, callback) => {
-            const { err, data } = verifyJWTToken(obj.token);
+        socket.on('edit', async (token, obj, callback) => {
+            const { err, data } = verifyJWTToken(token);
             if (err) {
                 callback({ id: obj.massageId, sucsess: false });
                 return socket.emit('error', 'Somthing Went Wrong');
             }
             try {
                 const freind = await getFreindByToken(data.token, socket.id);
-                delete obj.token;
                 obj.edited = true;
                 io.timeout(20 * 60).to(freind).emit('edit', obj, data.token, (err, obj) => {
                     if (err) {
@@ -132,113 +131,113 @@ module.exports = (io) => {
             }
         })
 
-    //video call
-    socket.on('reqVideoCall', async (id, callback) => {
-        const { err, data } = verifyJWTToken(id);
-        if (err) {
-            return socket.emit('error', 'Somthing Went Wrong');
-        }
-        const freind = await getFreindByToken(data.token, socket.id);
+        //video call
+        socket.on('reqVideoCall', async (id, callback) => {
+            const { err, data } = verifyJWTToken(id);
+            if (err) {
+                return socket.emit('error', 'Somthing Went Wrong');
+            }
+            const freind = await getFreindByToken(data.token, socket.id);
 
-        io.timeout(10000).to(freind).emit('reqVideoCall', (err, res) => {
-            if (err) callback('err');
-            if (res[0] == true) callback(true);
-            else if (res[0] == false) callback(false);
+            io.timeout(10000).to(freind).emit('reqVideoCall', (err, res) => {
+                if (err) callback('err');
+                if (res[0] == true) callback(true);
+                else if (res[0] == false) callback(false);
+            })
         })
-    })
 
-    socket.on('cancleVideoCall', async (id) => {
-        const { data, err } = verifyJWTToken(id);
-        if (err) {
-            return socket.emit('error', 'Somthing Went Wrong');
-        } else {
-            const freind = await getFreindByToken(data.token, socket.id);
-            io.to(freind).emit('cancleVideoCall');
-        }
-    })
-
-    socket.on('disconnectVideoCall', async (id) => {
-
-        const { data, err } = verifyJWTToken(id);
-        if (err) {
-            return socket.emit('error', 'Somthing Went Wrong');
-        } else {
-            const freind = await getFreindByToken(data.token, socket.id);
-            io.to(freind).emit('disconnectVideoCall');
-        }
-    })
-
-    //audio call
-    socket.on('reqAudioCall', async (id, callback) => {
-        const { err, data } = verifyJWTToken(id);
-        if (err) {
-            return socket.emit('error', 'Somthing Went Wrong');
-        }
-        const freind = await getFreindByToken(data.token, socket.id);
-
-        // console.log('use responded', freind);
-        io.timeout(10000).to(freind).emit('reqAudioCall', (err, res) => {
-            if (err) callback('err');
-            if (res[0] == true) callback(true);
-            else if (res[0] == false) callback(false);
+        socket.on('cancleVideoCall', async (id) => {
+            const { data, err } = verifyJWTToken(id);
+            if (err) {
+                return socket.emit('error', 'Somthing Went Wrong');
+            } else {
+                const freind = await getFreindByToken(data.token, socket.id);
+                io.to(freind).emit('cancleVideoCall');
+            }
         })
-    })
 
-    socket.on('cancleAudioCall', async (id) => {
-        const { data, err } = verifyJWTToken(id);
-        if (err) {
-            return socket.emit('error', 'Somthing Went Wrong');
-        } else {
+        socket.on('disconnectVideoCall', async (id) => {
+
+            const { data, err } = verifyJWTToken(id);
+            if (err) {
+                return socket.emit('error', 'Somthing Went Wrong');
+            } else {
+                const freind = await getFreindByToken(data.token, socket.id);
+                io.to(freind).emit('disconnectVideoCall');
+            }
+        })
+
+        //audio call
+        socket.on('reqAudioCall', async (id, callback) => {
+            const { err, data } = verifyJWTToken(id);
+            if (err) {
+                return socket.emit('error', 'Somthing Went Wrong');
+            }
             const freind = await getFreindByToken(data.token, socket.id);
-            io.to(freind).emit('cancleAudioCall');
-        }
-    })
 
-    socket.on('disconnectAudioCall', async (id) => {
+            // console.log('use responded', freind);
+            io.timeout(10000).to(freind).emit('reqAudioCall', (err, res) => {
+                if (err) callback('err');
+                if (res[0] == true) callback(true);
+                else if (res[0] == false) callback(false);
+            })
+        })
 
-        const { data, err } = verifyJWTToken(id);
-        if (err) {
-            return socket.emit('error', 'Somthing Went Wrong');
-        } else {
+        socket.on('cancleAudioCall', async (id) => {
+            const { data, err } = verifyJWTToken(id);
+            if (err) {
+                return socket.emit('error', 'Somthing Went Wrong');
+            } else {
+                const freind = await getFreindByToken(data.token, socket.id);
+                io.to(freind).emit('cancleAudioCall');
+            }
+        })
+
+        socket.on('disconnectAudioCall', async (id) => {
+
+            const { data, err } = verifyJWTToken(id);
+            if (err) {
+                return socket.emit('error', 'Somthing Went Wrong');
+            } else {
+                const freind = await getFreindByToken(data.token, socket.id);
+                io.to(freind).emit('disconnectAudioCall');
+            }
+        })
+
+        //send peer connection id
+        socket.on('sendPeerConnectionId', async (id, peerToken) => {
+            const { data, err } = verifyJWTToken(id);
+            if (err) {
+                return socket.emit('error', 'Somthing Went Wrong');
+            }
             const freind = await getFreindByToken(data.token, socket.id);
-            io.to(freind).emit('disconnectAudioCall');
-        }
+            io.to(freind).emit('sendPeerConnectionId', peerToken);
+        });
+
+        //todo: repair this all online problem
+        socket.on('status', async (status, id) => {
+            const { data, err } = verifyJWTToken(id);
+            if (err) {
+                return socket.emit('error', 'Somthing Went Wrong');
+            }
+            const freind = await getFreindByToken(data.token, socket.id);
+            io.to(freind).emit('status', status);
+            // io.to(freind).emit('status', { status: status, to: data.token });
+        })
+
+        socket.on('disconnect', async () => {
+            try {
+                const freindId = await getFreindId(socket.id);
+                updateOnlineStatus(freindId);
+                io.to(freindId).emit('status', 'offline');
+
+            } catch (e) {
+                console.log('error occur at discconected area', e)
+            }
+            await deleteUser(socket.id);
+        });
+
     })
-
-    //send peer connection id
-    socket.on('sendPeerConnectionId', async (id, peerToken) => {
-        const { data, err } = verifyJWTToken(id);
-        if (err) {
-            return socket.emit('error', 'Somthing Went Wrong');
-        }
-        const freind = await getFreindByToken(data.token, socket.id);
-        io.to(freind).emit('sendPeerConnectionId', peerToken);
-    });
-
-    //todo: repair this all online problem
-    socket.on('status', async (status, id) => {
-        const { data, err } = verifyJWTToken(id);
-        if (err) {
-            return socket.emit('error', 'Somthing Went Wrong');
-        }
-        const freind = await getFreindByToken(data.token, socket.id);
-        io.to(freind).emit('status', status);
-        // io.to(freind).emit('status', { status: status, to: data.token });
-    })
-
-    socket.on('disconnect', async () => {
-        try {
-            const freindId = await getFreindId(socket.id);
-            updateOnlineStatus(freindId);
-            io.to(freindId).emit('status', 'offline');
-
-        } catch (e) {
-            console.log('error occur at discconected area', e)
-        }
-        await deleteUser(socket.id);
-    });
-
-})
 }
 function verifyJWTToken(token) {
     try {

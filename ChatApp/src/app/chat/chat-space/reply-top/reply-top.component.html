@@ -1,0 +1,26 @@
+<div class="w-100 px-1" (click)="handleClick()">
+    <div class="col">
+        <div class="fw-bold">{{ replyMode.sended_or_recived == 'to' ? 'You' : 'freind' }}
+        </div>
+        <div *ngIf="replyMode.type == 'string'; else otherDataType">{{replyMode.data}}
+        </div>
+        <ng-template #otherDataType>
+            <span class="d-flex gap-2">
+                <i class="bi bi-file-earmark"></i>
+                {{replyMode.type}}
+            </span>
+        </ng-template>
+    </div>
+    <div class="col text-end">
+        <div *ngIf="replyMode.type == 'image'">
+            <img [src]="replyMode.data" alt="..." width="30px">
+        </div>
+        <div *ngIf="replyMode.type == 'gif'">
+            <img [src]="replyMode.data" alt="..." width="30px">
+        </div>
+        <div *ngIf="replyMode.type == 'video'">
+            <video  [src]="replyMode.data" height="30px"></video>
+        </div>
+        <div *ngIf="replyMode.type == 'file'">file</div>
+    </div>
+</div> 

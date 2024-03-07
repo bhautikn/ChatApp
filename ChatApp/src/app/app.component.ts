@@ -43,10 +43,11 @@ export class AppComponent {
 
     this.joinAllChat(this.chats);
 
-    this._chat.onReceive((data: any, callback: any) => {
+    this._chat.onReceive((data: any, to:any,  callback: any) => {
+      console.log(data);
       callback({ id: data.id, status: 'seen' });
       this.dropWater.play();
-      this.addFrom(data, data.data);
+      this.addFrom(data, data.data, to);
     })
 
     this._chat.onDeleteForEveryOne((data: any, callback: any) => {
@@ -104,10 +105,13 @@ export class AppComponent {
   //   }
   //   this.setData(token, obj);
   // }
-  async addFrom({ id, to, dataType }: any, blob: any) {
-    let obj: any = {
-      id: id,
-      type: dataType,
+  async addFrom(obj: any, blob: any, to:any) {
+    // let obj: any = {
+    //   id: id,
+    //   type: dataType,
+    // }
+    obj = {
+      ...obj,
       time: new Date().toString(),
       sended_or_recived: 'from',
     }
@@ -121,7 +125,7 @@ export class AppComponent {
     // };
     // let lastMassage = `friend: sended ${type}`;
 
-    switch (dataType) {
+    switch (obj.type) {
       case 'string':
         obj.data = blob;
         lastMassage = `friend: ${obj.data}`
@@ -152,6 +156,7 @@ export class AppComponent {
     this.store.dispatch(appendData({ token: to, data: obj, lastMassage: lastMassage }));
 
   }
+
   toggleThemeLight() {
     localStorage.setItem('theme', 'light')
     this.theme = 'light';

@@ -30,6 +30,7 @@ import { ForwardComponent } from './chat/forward/forward.component';
 import { OneChatComponent } from './chat/chat-space/side-bar/one-chat/one-chat.component';
 import { AudioVisulizerComponent } from './chat/audio-visulizer/audio-visulizer.component';
 import { AudioCallComponent } from './chat/chat-space/audio-call/audio-call.component';
+import { ReplyTopComponent } from './chat/chat-space/reply-top/reply-top.component';
 
 const config: SocketIoConfig = {
     url: environment.soketUrl,
@@ -56,7 +57,8 @@ const config: SocketIoConfig = {
     ForwardComponent,
     OneChatComponent,
     AudioVisulizerComponent,
-    AudioCallComponent
+    AudioCallComponent,
+    ReplyTopComponent
   ],
   imports: [
     BrowserModule,

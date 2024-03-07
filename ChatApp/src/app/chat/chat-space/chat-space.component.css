@@ -282,6 +282,9 @@
         transform: translateX(20px);
     }
 } */
+.reply-massage{
+    cursor: pointer;
+}
 .to .massage,
 .from .massage {
     /* background-color: green; */
@@ -291,6 +294,7 @@
     line-break: anywhere;
     min-width: 50px;
     max-width: 50%;
+
 }
 
 .to .text,
