@@ -48,13 +48,11 @@ export class SideBarComponent {
     this.onreload.emit(to);
   }
   handleChange(index: number, event: any) {
-    console.log(event);
     if (event.keyCode == 13) {
       this.changeParticipentName(index, event);
     }
   }
   changeParticipentName(index: number, event: any) {
-    console.log(index)
     this.isChangingName = false
   }
   handleClick(token: any, i: any) {
@@ -70,7 +68,6 @@ export class SideBarComponent {
     }
   }
   isKeyInObject(key:any){
-    // console.log(key in  this.selectedObj)
     return key in this.selectedObj;
   }
   searchChats(e:any){
@@ -82,6 +79,5 @@ export class SideBarComponent {
     this.searchArray = this.chats.filter((chat:any)=>{
       return chat.name.toLowerCase().includes(e.target.value.toLowerCase());
     });
-    console.log(this.searchArray, 'sdsd');
   }
 }

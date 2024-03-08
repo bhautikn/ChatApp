@@ -4,20 +4,22 @@ import { ChattingSoketService } from './services/chatting-soket.service';
 import { Store } from '@ngrx/store';
 import { getAllChats } from './reducer/chat.selector';
 import { appendData, commit, deletePerticulerChat, updateData } from './reducer/chat.action';
+import { ApiChatService } from './services/api-chat.service';
+import { fader } from './route-animations';
 
-declare var ss: any;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-  // animations: [fader]
+  animations: [fader]
 })
 export class AppComponent {
 
   constructor(
     private _navigate: Router,
     private _chat: ChattingSoketService,
-    private store: Store<any>
+    private store: Store<any>,
+    private _apichat: ApiChatService
   ) { }
 
   title = 'ChatApp';
@@ -25,36 +27,44 @@ export class AppComponent {
   dropWater: any = new Audio('../assets/sounds/water_drop.mp3');
   theme: any = localStorage.getItem('theme');
   async ngOnInit() {
-    console.log(this.theme)
+    this._apichat.dummyReq();
+
+    //theme
     if (!this.theme) {
       localStorage.setItem('theme', 'dark');
     }
-    if(this.theme == 'light'){
+    if (this.theme == 'light') {
       this.toggleThemeLight();
     }
+
+    //save data on close
     window.onunload = (e) => {
       this._chat.disconnect();
       this.store.dispatch(commit());
     }
 
+    //select all data from store
     this.store.select(getAllChats).subscribe((data) => {
       this.chats = data.chat;
     })
 
+    //join all previusly saved chat
     this.joinAllChat(this.chats);
 
-    this._chat.onReceive((data: any, to:any,  callback: any) => {
-      console.log(data);
+    //handle all chat reviving data request
+    this._chat.onReceive((data: any, to: any, callback: any) => {
       callback({ id: data.id, status: 'seen' });
       this.dropWater.play();
       this.addFrom(data, data.data, to);
     })
 
+    //handle all chat delete data request
     this._chat.onDeleteForEveryOne((data: any, callback: any) => {
       this.store.dispatch(deletePerticulerChat({ token: data.to, id: data.id }))
       callback({ id: data.id, status: 'deleted' })
     })
 
+    //habdle all chat edit data request
     this._chat.onEdit((data: any, to: any, callback: any) => {
       callback({ id: data.id, status: 'seen' });
       this.store.dispatch(updateData({ token: to, id: data.id, data: data }));
@@ -95,21 +105,8 @@ export class AppComponent {
       chat.style.background = 'none';
     }
   }
-  // preAdd({ id, dataType, token }: any) {
-  //   let obj: any = {
-  //     id: id,
-  //     data: '',
-  //     type: dataType,
-  //     time: new Date().toString(),
-  //     sended_or_recived: 'from',
-  //   }
-  //   this.setData(token, obj);
-  // }
-  async addFrom(obj: any, blob: any, to:any) {
-    // let obj: any = {
-    //   id: id,
-    //   type: dataType,
-    // }
+
+  async addFrom(obj: any, blob: any, to: any) {
     obj = {
       ...obj,
       time: new Date().toString(),
@@ -117,13 +114,6 @@ export class AppComponent {
     }
 
     let lastMassage = `friend: sended ${blob}`;
-
-    // this.setData(token, obj, lastMassage);
-    // this.setData(token, obj);
-    // let obj: any = {
-    //   type: type
-    // };
-    // let lastMassage = `friend: sended ${type}`;
 
     switch (obj.type) {
       case 'string':
@@ -157,6 +147,7 @@ export class AppComponent {
 
   }
 
+  //theme change handler
   toggleThemeLight() {
     localStorage.setItem('theme', 'light')
     this.theme = 'light';
@@ -226,10 +217,6 @@ export class AppComponent {
       this.toggleThemeDark();
     }
   }
-
-  // setData(token: any, obj: any, lastMassage: any = 'freind: sended massage') {
-  //   this.store.dispatch(appendData({ token: token, data: obj, lastMassage: lastMassage }));
-  // }
 
   prepareRoute(outlet: RouterOutlet) {
     return outlet && outlet.activatedRouteData && outlet.activatedRouteData['animation'];

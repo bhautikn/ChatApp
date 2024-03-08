@@ -7,7 +7,8 @@
         <ng-template #otherDataType>
             <span class="d-flex gap-2">
                 <i class="bi bi-file-earmark"></i>
-                {{replyMode.type}}
+                <div *ngIf="replyMode.type == 'file'" class="w-50 text-truncate">{{replyMode.filename}}</div>
+                <span *ngIf="replyMode.type != 'file'">{{replyMode.type}}</span>
             </span>
         </ng-template>
     </div>
@@ -21,6 +22,5 @@
         <div *ngIf="replyMode.type == 'video'">
             <video  [src]="replyMode.data" height="30px"></video>
         </div>
-        <div *ngIf="replyMode.type == 'file'">file</div>
     </div>
 </div> 

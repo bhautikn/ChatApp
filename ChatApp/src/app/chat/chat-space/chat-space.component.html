@@ -139,7 +139,7 @@
                             <div [class]=oneChatData.sended_or_recived>
 
                                 <div class="massage">
-                                    <div *ngIf="oneChatData.reply" class="w-100 flex-shrink-0 border rounded reply-massage">
+                                    <div *ngIf="oneChatData.reply" class="w-100 flex-shrink-0 border border-secondary rounded reply-massage">
                                         <app-reply-top [replyMode]="oneChatData.reply" (onclick)="handleReplyClick($event)"></app-reply-top>
                                     </div>
 
@@ -159,7 +159,7 @@
                                                     Copy
                                                 </li>
                                                 <li class="dropdown-item p-2" *ngIf="oneChatData.type != 'string' "
-                                                    (click)="downloadFile(oneChatData.data,oneChatData.type)">
+                                                    (click)="downloadFile(oneChatData.data,oneChatData.type, oneChatData.filename)">
                                                     <i class="bi bi-download"></i>
                                                     Download
                                                 </li>
@@ -240,7 +240,9 @@
                                     </div>
 
                                     <div *ngIf="oneChatData.type == 'file'" (click)="showImage(oneChatData.data)">
-                                        <i class="bi bi-file-earmark fs-2 my-2"></i>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-file-earmark fs-2 my-2"></i>&nbsp;<div class="w-75 text-truncate">{{oneChatData.filename}}</div>
+                                        </div>
                                     </div>
 
                                     <div *ngIf="oneChatData.type == 'gif'" (click)="showImage(oneChatData.data)">

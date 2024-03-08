@@ -19,6 +19,7 @@ export class GIFComponent {
     // load gifs
     this._gif_api.getAll().subscribe((res: any) => {
       this.gifs = res.results;
+      console.log(this.gifs)
     })
   }
 

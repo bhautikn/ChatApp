@@ -8,15 +8,16 @@ spam detaction captcha
 
 
 ///////////////// chat ///////////////////////////
-add audio call feture
-group chat
-fix mute and stop audio in chat
+<> group chat
 
+# fix mute and stop audio in chat
+# add audio call feture
 # add send video and audio and image in chat
 
 ///////////////// genaral ////////////////////////
-create light mode of application
 update nevigation bar of web
 fix nevbar toggel problem
 
 create mobile app
+
+# create light mode of application

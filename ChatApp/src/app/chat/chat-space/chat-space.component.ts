@@ -210,7 +210,6 @@ export class ChatSpaceComponent implements OnInit {
     var holder: any = document.querySelector('.main-container');
     const handleDragElement = (e: any) => {
       e.preventDefault();
-      console.log(e.dataTransfer);
       try {
         this.uploadFile(null, e.dataTransfer.files[0]);
       } catch (e) {
@@ -310,7 +309,6 @@ export class ChatSpaceComponent implements OnInit {
         const { password, isConfirmed } = await this.passwordEnterPopUp('wrong password try again!!');
         if (!isConfirmed) {
           // this._navigate.navigate(['/post']);
-          console.log('navigate to /post ', window.history)
           return;
         }
         else {
@@ -365,11 +363,11 @@ export class ChatSpaceComponent implements OnInit {
 
   uploadFile(e: any, file: any = null) {
     file = file || e.target.files[0];
-
     let obj: any = {
       miamitype: file.type,
       data: URL.createObjectURL(file),
-      sendableData: file
+      sendableData: file,
+      filename: file.name,
     }
 
     if (file.type.split('/')[0] == 'image') {
@@ -619,23 +617,15 @@ export class ChatSpaceComponent implements OnInit {
     tost({ title: 'Text Copied', icon: 'success' });
   }
 
-  downloadFile(src: any, type: string) {
+  downloadFile(src: any, type: string, filename:any) {
     var a: any = document.createElement("a");
     document.body.appendChild(a);
     a.style = "display: none";
-    if (type == 'image') {
-      var fileName = Math.random().toString(36).substring(7) + '.png';
-    }
-    else if (type == 'video') {
-      var fileName = Math.random().toString(36).substring(7) + '.mp4';
-    }
-    else if (type == 'gif') {
-      var fileName = Math.random().toString(36).substring(7) + '.gif';
-    } else {
-      var fileName = Math.random().toString(36).substring(7) + '.file';
-    }
     a.href = src;
-    a.download = fileName;
+    if(type == 'gif'){
+      filename = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '.gif';
+    }
+    a.download = filename;
     a.click();
   }
 
@@ -666,7 +656,6 @@ export class ChatSpaceComponent implements OnInit {
       </div>
       `
     });
-    console.log(data);
   }
 
   forward(data: any) {
@@ -711,7 +700,7 @@ export class ChatSpaceComponent implements OnInit {
   }
 
   animateScroll(div: any) {
-    div.scrollIntoView({ behavior: "smooth", inline: "center" });
+    div.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
     div.style.transitionDuration = '200ms';
     div.style.background = 'rgba(0, 138, 188, 0.2)';
     setTimeout(() => {
@@ -740,7 +729,6 @@ export class ChatSpaceComponent implements OnInit {
   closeOrOpenSearch(val: boolean) {
     if (val) {
       this.searchingChat = true;
-      console.log('searchingChat', this.searchingChat);
       setTimeout(() => {
         document.getElementById('search-input')?.focus();
       }, 10);
@@ -750,6 +738,7 @@ export class ChatSpaceComponent implements OnInit {
   }
 
   reply(data: any) {
+    this.textArea.focus();
     this.replyMode = {
       replying: true,
       data: data

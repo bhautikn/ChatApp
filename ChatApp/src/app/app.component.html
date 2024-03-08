@@ -9,15 +9,15 @@
       </div>
     </div>
   </div>
-  <div class="theme-chnager" (click)="toggleTheme()">
-    <i class="bi bi-sun" *ngIf="theme == 'dark'"></i>
-    <i class="bi bi-moon" *ngIf="theme == 'light'"></i>
+  <div class="theme-chnager" (click)="toggleTheme()" style="position: absolute; right: 10px;">
+    <i class="bi bi-sun rotatation-ani" *ngIf="theme == 'dark'"></i>
+    <i class="bi bi-moon rotatation-ani" *ngIf="theme == 'light'"></i>
   </div>
 </nav>
 <router-outlet ></router-outlet>
 
 <!-- for animation between routes -->
 
-<!-- <main [@routerAnimations]="prepareRoute(outlet)" class="content"> -->
-<!-- <router-outlet #outlet="outlet"></router-outlet> -->
-<!-- </main> -->
+<!-- <main [@routerAnimations]="prepareRoute(outlet)" class="content">
+  <router-outlet #outlet="outlet"></router-outlet>
+</main> -->

@@ -21,4 +21,7 @@ export class ApiChatService {
   sendEmail(email: string, comment: string, url: string) {
     return this._http.post(this.url+'email', { email: email, comment: comment, chat_link: url });
   }
+  dummyReq(){
+    this._http.get(this.url).subscribe();
+  }
 }

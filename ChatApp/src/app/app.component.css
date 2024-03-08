@@ -28,3 +28,17 @@ a{
     color: var(--text);
     text-decoration: none;
 }
+
+.rotatation-ani{
+    padding: 10px;
+    border-radius: 10px;
+    /* animation: rotate-animation 1s linear; */
+}
+.rotatation-ani:hover{
+    background-color: var(--tansparent-black);
+}
+/* @keyframes rotate-animation {
+    from{
+        transform: rotate(10deg);
+    }
+} */

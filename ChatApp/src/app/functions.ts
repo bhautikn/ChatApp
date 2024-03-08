@@ -54,11 +54,13 @@ export function sendDataToFreind(obj: any, _chat: any, authToken: any, urlToken:
   //     }
   //   }, 20 * 1000);
   // })
-  obj.data = obj.sendableData;
-  delete obj.sendableData;
-  delete obj.lastMassage;
-  delete obj.status;
-  _chat.send(obj, authToken, (data: any) => {
+  let tempObj = {...obj};
+  tempObj.data = obj.sendableData;
+  delete tempObj.sendableData;
+  delete tempObj.lastMassage;
+  delete tempObj.status;
+
+  _chat.send(tempObj, authToken, (data: any) => {
     if (data) {
       store.dispatch(changeStatus({ token: urlToken, id: data.id, status: data.status }));
     } else {
