@@ -1,0 +1,50 @@
+<div class="container mt-1">
+    <div class="p-2 cross-icon" (click)="closeSettings()">
+        <i class="bi bi-x-lg"></i>
+    </div>
+    <div class="my-2"></div>
+    <table class="table">
+        <tr>
+            <td>
+                <li class="dropdown-item">
+                    <div class="form-check form-switch">
+                        <input
+                        (change)="chnageHistorySetting()" 
+                        class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" [checked]="history">
+                        <label class="form-check-label" for="flexSwitchCheckChecked">
+                            History is {{history?'on':'off'}}
+                        </label>
+                    </div>
+                </li>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <li class="dropdown-item">
+                    <div class="d-flex gap-2" (click)="toggleSound()">
+                        <i class="bi bi-volume-up" *ngIf="isSound"></i>
+                        <i class="bi bi-volume-mute-fill" *ngIf="!isSound"></i>
+                        <label class="form-check-label" for="Soundoption">
+                            Sound
+                        </label>
+                    </div>
+                </li>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <li class="dropdown-item">
+                    <div class="d-flex gap-2" (click)="toggleTheme()">
+                        <div class="form-check-label">
+                            <i class="bi bi-sun rotatation-ani" *ngIf="theme == 'light'"></i>
+                            <i class="bi bi-moon rotatation-ani" *ngIf="theme == 'dark'"></i>
+                        </div>
+                        <label class="form-check-label" for="themeChanger">
+                            {{theme}}
+                        </label>
+                    </div>
+                </li>
+            </td>
+        </tr>
+    </table>
+</div>

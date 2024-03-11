@@ -1,0 +1,24 @@
+<div class="list">
+    <div *ngIf="chats.length == 0; else searchBar" class="fs-2 text-secondary text-center p-3">
+        no chats found
+    </div>
+    <ng-template #searchBar>
+        <div>
+            <input type="search" placeholder="search" (keyup)="searchChats($event)"
+                class="form-control my-3 w-50 ms-auto search-bar">
+        </div>
+    </ng-template>
+    <span *ngIf="!searching; else searchedChats">
+
+        <div (click)="handleClick(item.token, i)" class="links" *ngFor="let item of chats; index as i"
+            [ngClass]="{'selected': isKeyInObject(item.token) }">
+            <app-one-chat [item]="item" [i]="i" [selection]="selection" [urlToken]="urlToken"></app-one-chat>
+        </div>
+    </span>
+    <ng-template #searchedChats>
+        <div (click)="handleClick(item.token, i)" class="links" *ngFor="let item of searchArray; index as i"
+            [ngClass]="{'selected': isKeyInObject(item.token) }">
+            <app-one-chat [i]="i" [item]="item"></app-one-chat>
+        </div>
+    </ng-template>
+</div>

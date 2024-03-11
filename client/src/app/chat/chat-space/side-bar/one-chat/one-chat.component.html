@@ -1,0 +1,48 @@
+<div class="list-item" [ngClass]="{'list-active': item.token == urlToken && !selection}">
+    <div class="position-relative">
+        <span *ngIf="item.token != urlToken">
+            <span *ngIf="item.unread > 0"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{item.unread}}
+            </span>
+        </span>
+    </div>
+    <div>
+        <div class="text-truncate w-50 float-start" [title]="item.name">
+            {{item.name}}
+        </div>
+        <div class="trash w-25 float-end text-center" title="Delete" *ngIf="!selection">
+
+            <div class="btn-group" (click)="stoppropogation($event)">
+                <div class="" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-three-dots-vertical option"></i>
+                </div>
+                <ul class="dropdown-menu p-0">
+                    <li class="dropdown-item p-2" (click)="showInfo()">
+                        <i class="bi bi-info-circle"></i>
+                        Details
+                    </li>
+                    <li>
+                        <hr class="p-0 m-0">
+                    </li>
+                    <li class="dropdown-item p-2" (click)="clearChat()">
+                        <i class="bi bi-x-circle" ></i>
+                        Clear Chat
+                    </li>
+                    <li>
+                        <hr class="p-0 m-0">
+                    </li>
+                    <li class="dropdown-item text-danger p-2" (click)="DeleteChat()">
+                        <i class="bi bi-trash"></i>
+                        Delete Chat
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="d-flex">
+        <div class="text-truncate w-75" style="color: var(--text-light);">{{item.lastMassage}}</div>
+        <div class="created-at text-center w-25">{{formateTime(item.modified)}}</div>
+    </div>
+</div>

@@ -17,4 +17,9 @@ router.post('/authanticate', authanticate)
 
 router.post('/email', sendEmail)
 
+// dummy req to start server
+router.get('/', (req, res) =>{
+    res.json({status: 200});
+})
+
 module.exports = router;

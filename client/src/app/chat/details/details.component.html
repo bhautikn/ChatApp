@@ -1,0 +1,43 @@
+<div>
+    <div class="p-2 cross-icon" (click)="close()">
+        <i class="bi bi-x-lg"></i>
+    </div>
+    <div class="my-2"></div>
+    <table class="table hover">
+        <tr>
+            <td>
+                <li class="dropdown-item">
+                    type: {{data.type}}
+                </li>
+            </td>
+        </tr>
+        <tr *ngIf="data.miamitype">
+            <td>
+                <li class="dropdown-item">
+                    miamitype: {{data.miamitype}}
+                </li>
+            </td>
+        </tr>
+        <tr *ngIf="data.filename">
+            <td>
+                <li class="dropdown-item">
+                    file name: {{data.filename}}
+                </li>
+            </td>
+        </tr>
+        <tr *ngIf="data.status">
+            <td>
+                <li class="dropdown-item">
+                    status: {{data.status}}
+                </li>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <li class="dropdown-item">
+                    time: {{formateDate(data.time) +' '+ formatAMPM(data.time)}}
+                </li>
+            </td>
+        </tr>
+    </table>
+</div>

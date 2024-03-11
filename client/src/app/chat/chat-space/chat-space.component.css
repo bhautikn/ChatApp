@@ -1,0 +1,490 @@
+.super-main-container {
+    overflow: hidden;
+
+    background-color: var(--background-light-3);
+    height: 100vh;
+}
+.title-bar{
+    height: 6vh;
+}
+.cross-icon {
+    width: max-content;
+    margin-left: 10px;
+    font-size: 1.7em;
+    cursor: pointer;
+    padding: 5px 5px;
+    transition-duration: 200ms;
+    border-radius: 5px;
+}
+
+.text-small {
+    font-size: 0.7em !important;
+}
+
+.dropdown-item {
+    cursor: pointer;
+}
+
+.cross-icon:hover {
+    background-color: rgb(10, 10, 10, 0.2);
+}
+
+.show-sidenav {
+    /* background-color: red; */
+    height: 100%;
+    overflow: auto;
+    width: 20% !important;
+    display: block;
+    visibility: visible !important;
+}
+
+.side-nav {
+    width: max-content;
+    width: 0px;
+    visibility: hidden;
+    /* height: 90vh; */
+    transition-duration: 300ms;
+    /* padding: 10px; */
+}
+
+@keyframes side-nav {
+    from {
+        opacity: 0.3;
+        transform: translateX(-10px);
+    }
+}
+
+.name {
+    font-size: 1.1em;
+    font-weight: bold;
+    line-height: 1em;
+}
+
+.status {
+    font-size: 0.7em;
+    line-height: 1.3em;
+}
+
+.green-dot {
+    height: 10px;
+    width: 10px;
+    background-color: var(--green);
+    border-radius: 50%;
+    float: left;
+    margin-right: 4px;
+    margin-top: 3px;
+}
+
+.grey-dot {
+    height: 10px;
+    width: 10px;
+    background-color: grey;
+    border-radius: 50%;
+    float: left;
+    margin-right: 4px;
+    margin-top: 3px;
+}
+
+.aroow-left {
+    float: left;
+    margin-right: 5px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.line {
+    background: var(--text);
+    height: 2px;
+    margin: 5px;
+    border-radius: 5px;
+}
+
+.option {
+    width: 40px;
+    margin-left: auto;
+    padding: 5px;
+    font-size: 1.2em;
+    border-radius: 5px;
+    transition-duration: 200ms;
+    cursor: pointer;
+}
+
+/* conetex-menu css start */
+@keyframes animation-contex {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+#context-menu {
+    display: block;
+    background-color: var(--light-bg-color);
+    border: 1px solid var(--back-color);
+    color: var(--txt-color);
+    z-index: 100;
+    background-color: smokewhite;
+    width: fit-content;
+    box-shadow: 2px 2px 15px var(--back-bg-color);
+    padding: 10px;
+    border-radius: 5px;
+    position: absolute;
+    user-select: none;
+    animation: animation-contex 800ms;
+    border: 1px solid lightgray;
+}
+
+#context-menu .item {
+    padding: 5px;
+    cursor: pointer;
+    transition-duration: 100ms;
+    border-radius: 5px;
+    font-weight: 600;
+}
+
+#context-menu .item:hover {
+    background-color: var(--hover-color);
+}
+
+/* conetex-menu css end */
+.option:hover {
+    background-color: rgb(10, 10, 10, 0.2);
+}
+
+.chats-container {
+    overflow-y: auto;
+    display: block;
+}
+
+.end-container .container-text-last {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    border-radius: 0 0 10px 10px;
+}
+
+.main-container {
+    background-size: 30px 30px;
+    background-image:
+        linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+    /* height: 86vh; */
+    height: 93vh;
+    border-radius: 10px;
+    /* margin-top: 5px; */
+    display: flex;
+    align-items: flex-end;
+    background-color: var(--background);
+    border: 1px solid rgb(51, 51, 51);
+}
+
+.end-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    /* justify-content: center; */
+    width: 100%;
+    max-height: 100%;
+}
+
+.text-feild {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    /* gap: 5px !important; */
+}
+
+.massage-text {
+    display: flex;
+    width: 100%;
+    line-break: anywhere;
+    overflow: hidden;
+    padding: 2px;
+    align-items: center;
+    border: 1px solid grey;
+    border-radius: 10px;
+}
+
+.massage-text #textarea {
+    background-color: transparent;
+    border: 0;
+    box-shadow: none;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.send-btn-chat-space {
+    border: 0;
+    border-radius: 5px;
+}
+
+.send-btn-chat-space:hover {
+    background-color: var(--blue-light);
+}
+
+.send-btn-chat-space .bi-send:hover {
+    background-color: none;
+}
+
+.center-logo-while-no-chat {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    height: 50vh;
+    font-size: 4em !important;
+    color: var(--text-light);
+    width: 100%;
+}
+
+.massage-text .icon {
+    /* transition-duration: 200ms; */
+    background-color: var(--blue-dark);
+    display: flex;
+    font-size: 1.2em;
+    justify-content: center;
+    color: var(--text);
+    text-align: center;
+    margin: 1px;
+}
+
+.left-icon {
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.massage-text .icon i {
+    border-radius: 5px;
+    padding: 5px;
+    text-align: center;
+}
+
+.massage-text .icon:hover {
+    background-color: var(--blue-light);
+}
+
+/* massage to css set */
+.to {
+    margin: 5px 0;
+    /* animation: chat-animation-to 200ms linear; */
+}
+
+.from {
+    margin: 5px 0;
+    /* animation: chat-animation-from 200ms linear; */
+}
+
+/* @keyframes chat-animation-to {
+    from {
+        transform: translateX(-20px);
+    }
+}
+@keyframes chat-animation-from {
+    from {
+        transform: translateX(20px);
+    }
+} */
+.reply-massage{
+    cursor: pointer;
+}
+.to .massage,
+.from .massage {
+    /* background-color: green; */
+    padding: 2px;
+    float: right;
+    width: max-content;
+    line-break: anywhere;
+    min-width: 50px;
+    max-width: 50%;
+
+}
+
+.to .text,
+.from .text {
+    background-color: var(--to);
+    padding: 10px;
+    font-size: 1.2em;
+    padding: 10px;
+    border-radius: 10px;
+
+}
+
+.to .massage-status {
+    float: right;
+    font-size: 0.7em;
+}
+
+/* massage to set css end here */
+/* massage from set css start here */
+
+.from .massage {
+    float: left;
+}
+
+.to .text {
+    border-end-end-radius: 0;
+}
+
+.from .text {
+    /* background-color: var(--from-dark); */
+    border: 1px solid var(--massage-border);
+    background-color: transparent;
+    border-top-left-radius: 0;
+}
+
+.from img,
+.to img {
+    max-width: 200px;
+    border-bottom-left-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+.from img {
+    border-radius: 0px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.from .time,
+.to .time {
+    font-size: 0.6em;
+    float: right;
+    line-height: 12px;
+    margin: 0 1px;
+}
+
+.from .time {
+    float: left;
+}
+
+.progress {
+    width: 100%;
+    height: 10px;
+    background-color: grey;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background-color: green;
+    border-radius: 5px;
+    padding: 0 !important;
+    margin: 0 !important;
+    font-size: 0.5em;
+}
+
+@keyframes massage {
+    from {
+        transform: translateY(200px);
+    }
+
+    to {
+        transform: translateY(0px);
+    }
+}
+
+.typing-dot>div {
+    height: 7px;
+    width: 7px;
+    background-color: var(--green);
+    border-radius: 50%;
+    float: left;
+    margin-right: 2px;
+    margin-top: 5px;
+    animation: first-dot 1s infinite ease-out;
+}
+
+.typing-dot>div:nth-child(3) {
+    animation-delay: 400ms;
+    margin-right: 5px;
+}
+
+.typing-dot>div:nth-child(2) {
+    animation-delay: 200ms;
+}
+
+@keyframes first-dot {
+    from {
+        transform: translateY(-2px);
+    }
+}
+
+@media screen and (max-width: 1080px) {
+    .side-nav, .from-side-component {
+        width: 30% !important;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .show-sidenav, .from-side-component {
+        width: 35% !important;
+    }
+
+    .gif-menu {
+        width: 100%;
+    }
+
+    .to .massage,
+    .from .massage {
+        max-width: 90%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .from-side-component{
+        width: 100% !important;
+    }
+    .show-sidenav {
+        display: none;
+    }
+}
+
+/* Gif section */
+.gif-menu {
+    border: 0.5px solid gray;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgba(10, 10, 10, 0.2);
+    backdrop-filter: blur(2px);
+    z-index: 200;
+    animation: from-down 300ms;
+    /* position: absolute; */
+}
+
+@keyframes from-down {
+    from {
+        transform: translateY(200px);
+    }
+}
+
+/* video call section */
+.videocall-component {
+    position: absolute;
+    height: 100vh;
+    width: 100%;
+    top: 0;
+    background-color: var(--background);
+}
+.from-side-component{
+    box-shadow: 2px 2px 10px black;
+    position: absolute;
+    height: 100vh;
+    width: 20%;
+    top: 0;
+    right: 0;
+    background-color: var(--background);
+    animation: from-right-ani 300ms forwards;
+}
+
+@keyframes from-right-ani {
+    from{
+        transform: translateX(200px);
+    }
+}
+
+.rotate-180::before {
+    transform: rotateY(180deg);
+}

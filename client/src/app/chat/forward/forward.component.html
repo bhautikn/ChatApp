@@ -1,0 +1,16 @@
+<div>
+    <div class="p-2 cross-icon" (click)="handleClose()">
+        <i class="bi bi-x-lg"></i>
+    </div>
+    <div>
+        <app-side-bar [selection]="true" (onSelect)="addInList($event)"></app-side-bar>
+    </div>
+    <div class="my-3"></div>
+    <div class="bg-info-subtle p-2 last-buttons">
+        <div class="container gap-3 d-flex flex-row-reverse">
+            <div class="btn border btn-success" (click)="sendAll()">
+                <i class="bi bi-check"></i>
+            </div>
+        </div>
+    </div>
+</div>
