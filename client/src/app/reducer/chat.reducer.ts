@@ -11,12 +11,15 @@ import {
     resetresetUnreadToZero,
     setChatName,
     setProgress,
-    updateData
+    updateData,
+    updateStatus
 
 } from './chat.action';
 import { dateDiffInDays, getChats } from "../functions";
 import { Title } from "@angular/platform-browser";
 import { JsonPipe } from "@angular/common";
+import { takeLast } from "rxjs";
+import { state } from "@angular/animations";
 
 const initialState: any = getChats();
 
@@ -33,15 +36,21 @@ export const chatReducer = createReducer(
     on(setProgress, (state, props) => (setProgressR(state, props.token, props.id, props.progress))),
     on(updateData, (state, props) => (updateDataR(state, props.token, props.id, props.data))),
     on(changeHistorySatting, (state, props) => (changeHistorySattingR(state, props.token, props.setting))),
-    on(commit, (state) => (commitR(state)))
+    on(updateStatus, (state, props) => (updateStatusR(state, props.token, props.status))),
+    on(commit, (state) => (commitR(state))),
 );
 
 function commitR(state: any) {
     let data: any = state.map((item: any) => {
-        if(item.history){
-            return item;
+        if (item.history) {
+            return {...item, status: 'offline'};
         }
-        return {...item, data: []};
+        return { 
+            ...item, 
+            data: [] , 
+            status: 'offline',
+            lastMassage: ''
+        };
     })
     localStorage.setItem('chats', JSON.stringify(data))
 }
@@ -51,6 +60,13 @@ function changeHistorySattingR(state: any, token: any, setting: any) {
     if (index < 0) return state;
     return changeObjectBetweenArray(state, { ...state[index], history: setting }, index);
 }
+
+function updateStatusR(state: any, token: any, status: any) {
+    const index = getIndexByToken(state, token);
+    if (index < 0) return state;
+    return changeObjectBetweenArray(state, { ...state[index], status: status }, index);
+}
+
 function changeStatusR(state: any, token: any, id: any, status: any) {
     const chatIndex: number = getIndexByToken(state, token);
     if (chatIndex >= 0) {
@@ -142,7 +158,15 @@ function deleteChatR(state: any, index: number) {
 }
 
 function addChatR(state: any, obj: any) {
-    state = [...state, { ...obj, modified: state.created, history: true }];
+    state = [
+        ...state, 
+        { 
+            ...obj, 
+            modified: state.created, 
+            history: true,
+            status: 'offline',
+        }
+    ];
     return state;
 }
 

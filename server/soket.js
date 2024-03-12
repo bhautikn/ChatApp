@@ -37,6 +37,7 @@ module.exports = (io) => {
         });
 
         socket.on('join', async (authToken) => {
+            console.log('user join', socket.id);
             let token;
             let login = false;
             const { err, data } = verifyJWTToken(authToken);
@@ -58,11 +59,12 @@ module.exports = (io) => {
                     await updateFreind(socket.id, friendId);
 
                     // send them status online
-                    io.to(socket.id).emit('status', 'online');
-                    io.to(friendId).emit('status', 'online');
+                    io.to(socket.id).emit('status', { status: 'online', to: data.token });
+                    io.to(friendId).emit('status', { status: 'online', to: data.token });
 
                 } else if (total_paticipate == 0) {
                     await add(socket.id, token, login);
+                    io.to(socket.id).emit('status', { status: 'offline', to: data.token });
                 }
             }
         })
@@ -79,13 +81,8 @@ module.exports = (io) => {
             }
             try {
                 const freind = await getFreindByToken(data.token, socket.id);
-                io.timeout(20 * 60).to(freind).emit('recive', obj, data.token, (err, obj) => {
-                    if (err) {
-                        console.log(err)
-                    } else {
-                        callback(obj[0])
-                    }
-                });
+                callback({id: obj.id, status: 'sent' })
+                io.timeout(20 * 60).to(freind).emit('recive', obj, data.token, );
 
             } catch (e) {
                 console.log('erro occure', e);
@@ -116,19 +113,25 @@ module.exports = (io) => {
             try {
                 const freind = await getFreindByToken(data.token, socket.id);
                 obj.edited = true;
-                io.timeout(20 * 60).to(freind).emit('edit', obj, data.token, (err, obj) => {
-                    if (err) {
-                        console.log(err)
-                    } else {
-                        callback(obj[0])
-                    }
-                });
+                callback({ id: obj.id, status: 'sent'});
+                io.timeout(20 * 60).to(freind).emit('edit', obj, data.token);
 
             } catch (e) {
                 console.log('erro occure', e);
                 callback({ id: massageId, sucsess: false });
                 return socket.emit('error', 'Somthing Went Wrong');
             }
+        })
+
+        socket.on('seen', async (authToken, obj) => {
+            console.log('seen req here');
+            const { err, data } = verifyJWTToken(authToken);
+            if (err) {
+                return socket.emit('error', 'Somthing Went Wrong');
+            }
+            const freind = await getFreindByToken(data.token, socket.id);
+            console.log('seen req here');
+            io.to(freind).emit('seen', { id: obj.id, to: data.token });
         })
 
         //video call
@@ -214,31 +217,33 @@ module.exports = (io) => {
             io.to(freind).emit('sendPeerConnectionId', peerToken);
         });
 
-        //todo: repair this all online problem
         socket.on('status', async (status, id) => {
             const { data, err } = verifyJWTToken(id);
             if (err) {
                 return socket.emit('error', 'Somthing Went Wrong');
             }
             const freind = await getFreindByToken(data.token, socket.id);
-            io.to(freind).emit('status', status);
+            io.to(freind).emit('status', { status: status, to: data.token });
             // io.to(freind).emit('status', { status: status, to: data.token });
         })
 
         socket.on('disconnect', async () => {
             try {
                 const freindId = await getFreindId(socket.id);
+                const token = await getTokenById(socket.id);
                 updateOnlineStatus(freindId);
-                io.to(freindId).emit('status', 'offline');
+                io.to(freindId).emit('status', { status: 'offline', to: token });
 
             } catch (e) {
                 console.log('error occur at discconected area', e)
             }
             await deleteUser(socket.id);
+
         });
 
     })
 }
+
 function verifyJWTToken(token) {
     try {
         var decoded = jwt.verify(token, SIGN);
@@ -256,6 +261,14 @@ async function add(id, token, auth) {
         friend: '',
         online: false,
     }).save();
+}
+async function getTokenById(id) {
+    try {
+        const data = await Users.findOne({ id: id })
+        return data.token;
+    } catch (e) {
+        console.log(e);
+    }
 }
 async function countToken(token) {
     return await Users.find({ token: token }).count();

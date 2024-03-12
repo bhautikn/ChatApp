@@ -12,5 +12,6 @@ export const deletePerticulerChat = createAction('[Chat Component] delete one ch
 export const changeStatus = createAction('[Chat Component] massage sended server', props<{token: any, id: any, status:any}>());
 export const setProgress = createAction('[Chat Component] set sended chat progress', props<{token: any, id: any, progress: any}>());
 export const changeHistorySatting = createAction('[Chat Component] change history setting', props<{token: any, setting: any}>());
+export const updateStatus = createAction('[Chat Component] update chat status', props<{token: any, status: any}>());
 export const commit = createAction('[Chat Component] commit');
 

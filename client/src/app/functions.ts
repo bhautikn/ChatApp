@@ -87,8 +87,9 @@ export function sendDataToFreind(obj: any, _chat: any, authToken: any, urlToken:
   //   }
   // ]);
   // store.dispatch(changeLastMassage({token: urlToken, massage: obj.lastMassage}));
-
-  store.dispatch(appendData({ token: urlToken, data: obj, lastMassage: obj.lastMassage }));
+  const lastMassage = obj.lastMassage
+  delete obj.lastMassage;
+  store.dispatch(appendData({ token: urlToken, data: obj, lastMassage: lastMassage }));
 }
 
 export function editDataToFreind(obj: any, _chat: any, authToken: any, urlToken: any, store: any){

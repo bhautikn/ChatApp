@@ -74,69 +74,11 @@ export class AudioCallComponent {
     mediaDevices.getUserMedia({
       audio: true,
     }).then((stream) => {
-      console.log('get user media successfully', stream);
       this.localstream = stream
       this.audio.srcObject = this.localstream;
     });
 
   }
-
-  // dragElement(elmnt: any) {
-  //   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0
-  //   elmnt.onmousedown = dragMouseDown;
-
-  //   function dragMouseDown(e: any) {
-  //     // e = e || window.event;
-  //     e.preventDefault();
-  //     // get the mouse cursor position at startup:
-  //     pos3 = e.clientX;
-  //     pos4 = e.clientY;
-  //     document.onmouseup = closeDragElement;
-  //     // call a function whenever the cursor moves:
-  //     document.onmousemove = elementDrag;
-  //   }
-
-  //   function elementDrag(e: any) {
-  //     // e = e || window.event;
-  //     e.preventDefault();
-  //     // calculate the new cursor position:
-  //     pos1 = pos3 - e.clientX;
-  //     pos2 = pos4 - e.clientY;
-  //     pos3 = e.clientX;
-  //     pos4 = e.clientY;
-  //     // set the element's new position:
-  //     elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-  //     elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-  //   }
-
-  //   function closeDragElement() {
-  //     /* stop moving when mouse button is released:*/
-  //     document.onmouseup = null;
-  //     document.onmousemove = null;
-  //   }
-  // }
-  // setAudio(isVideo: boolean) {
-  //   if (isVideo) {
-  //     this.isAudio = false;
-  //     try{
-  //       this.localstream.getVideoTracks().forEach((track: any) => {
-  //         track.enabled = false;
-  //       });
-  //     }catch(e){
-  //       console.log('error in stoping track', e)
-  //     }
-  //   }
-  //   else {
-  //     try{
-  //       this.localstream.getVideoTracks().forEach((track: any) => {
-  //         track.enabled = true;
-  //       });
-  //     }catch(e){
-  //       console.log('error in stoping track', e)
-  //     }
-  //     this.isVideo = true
-  //   }
-  // }
   setAudio(isAudio: boolean) {
     if (isAudio) {
       this.isAudio = false;
@@ -174,7 +116,6 @@ export class AudioCallComponent {
     if(this.localstream){
       try{
         this.localstream.getAudioTracks().forEach((track: any) => {
-          console.log(track);
           track.stop();
         });
       }catch(e){

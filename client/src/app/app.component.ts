@@ -3,10 +3,11 @@ import { Router, RouterOutlet } from '@angular/router';
 import { ChattingSoketService } from './services/chatting-soket.service';
 import { Store } from '@ngrx/store';
 import { getAllChats } from './reducer/chat.selector';
-import { appendData, commit, deletePerticulerChat, updateData } from './reducer/chat.action';
+import { appendData, changeStatus, commit, deletePerticulerChat, updateData, updateStatus } from './reducer/chat.action';
 import { ApiChatService } from './services/api-chat.service';
 import { fader } from './route-animations';
 import { toggleThemeLight } from './themeProvider';
+import { Token } from '@angular/compiler';
 
 @Component({
   selector: 'app-root',
@@ -38,7 +39,7 @@ export class AppComponent {
     if (theme == 'light') {
       toggleThemeLight();
     }
-    if(!localStorage.getItem('sound')){
+    if (!localStorage.getItem('sound')) {
       localStorage.setItem('sound', 'true');
     }
 
@@ -57,8 +58,9 @@ export class AppComponent {
     this.joinAllChat(this.chats);
 
     //handle all chat reviving data request
-    this._chat.onReceive((data: any, to: any, callback: any) => {
-      callback({ id: data.id, status: 'seen' });
+    this._chat.onReceive((data: any, to: any) => {
+      const authToken = localStorage.getItem(to);
+      this._chat.sendSeenStatus(authToken, data.id);
       this.dropWater.play();
       this.addFrom(data, data.data, to);
     })
@@ -70,11 +72,19 @@ export class AppComponent {
     })
 
     //habdle all chat edit data request
-    this._chat.onEdit((data: any, to: any, callback: any) => {
-      callback({ id: data.id, status: 'seen' });
+    this._chat.onEdit((data: any, to: any) => {
+      const authToken = localStorage.getItem(to);
+      this._chat.sendSeenStatus(authToken, data.id);
       this.store.dispatch(updateData({ token: to, id: data.id, data: data }));
     });
 
+    this._chat.status().subscribe(({ status, to }: any) => {
+      this.store.dispatch(updateStatus({ token: to, status: status }));
+    })
+
+    this._chat.onSeenStatus().subscribe(({ to, id }: any) => {
+      this.store.dispatch(changeStatus({ token: to, status: 'seen', id: id }))
+    })
     // this._chat.onFileRecive((data: any) => {
     //   this.dropWater.play();
     //   this.preAdd(data);

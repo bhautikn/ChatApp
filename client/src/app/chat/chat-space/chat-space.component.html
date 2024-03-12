@@ -214,6 +214,10 @@
                                             </ul>
                                         </div>
 
+                                        <!-- <span *ngIf="oneChatData.filename" class=" ms-1 w-25 text-truncate">
+                                            {{oneChatData.filename}}
+                                        </span> -->
+
                                         <div class="p-2" *ngIf="oneChatData.type == 'string'">
                                             {{oneChatData.data}}
                                         </div>
@@ -337,13 +341,9 @@
 <app-forward *ngIf="isForwarding" [data]="forwardData" (onForward)="closeForward($event)" class="from-side-component">
 </app-forward>
 
-<app-settings 
-    *ngIf="isSettings" 
-    class="from-side-component"
-    [urlToken]="urlToken"
-    [history]="chats[curruntIndex].history"
-    (onclose)="closeSetting($event)"
-></app-settings>
+<app-settings *ngIf="isSettings" class="from-side-component" [urlToken]="urlToken"
+    [history]="chats[curruntIndex].history" (onclose)="closeSetting($event)"></app-settings>
 
 
-<app-details class="from-side-component" (onclose)="closeDetail()" *ngIf="details.show" [data]="details.data"></app-details>
+<app-details class="from-side-component" (onclose)="closeDetail()" *ngIf="details.show"
+    [data]="details.data"></app-details>

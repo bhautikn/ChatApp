@@ -102,6 +102,7 @@ export class ChatSpaceComponent implements OnInit {
       setTimeout(() => {
         this.scrollTop();
       }, 10)
+      this.status = this.chats[this.curruntIndex].status;
     })
 
     this.authToken = localStorage[this.urlToken];
@@ -119,15 +120,8 @@ export class ChatSpaceComponent implements OnInit {
       }
     }
     this.name = this.chats[this.curruntIndex].name;
-    //set status
-    this._chat.status().subscribe((data: any) => {
-      this.status = data;
-    })
-
-    this._chat.onCancleVideoCall().subscribe(() => {
-      Swal.close();
-    })
-
+    
+    //video call
     this._chat.onReqVideoCall().subscribe((func: any) => {
       const incomingRing: any = new Audio('../assets/sounds/phone-incoming.mp3');
       if(this.isSound){
@@ -169,9 +163,11 @@ export class ChatSpaceComponent implements OnInit {
         }
       });
     });
+    this._chat.onCancleVideoCall().subscribe(() => {
+      Swal.close();
+    });
 
     //audio call
-
     this._chat.onReqAudioCall().subscribe((func: any) => {
       const incomingRing: any = new Audio('../assets/sounds/phone-incoming.mp3');
       if(this.isSound){
@@ -213,6 +209,10 @@ export class ChatSpaceComponent implements OnInit {
         }
       });
     });
+    this._chat.onCancleAudioCall().subscribe(() => {
+      Swal.close();
+    })
+    
 
   }
 

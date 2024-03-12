@@ -20,32 +20,40 @@ export class ChattingSoketService {
 		this._socket.emit('edit', auth, { data: data, id: msgId }, callback1);
 	}
 
-	deleteForEveryOne(authToken: any, massageId:any) {
-		this._socket.emit('deleteForEveryOne', authToken, {id: massageId}, ()=>{
+	deleteForEveryOne(authToken: any, massageId: any) {
+		this._socket.emit('deleteForEveryOne', authToken, { id: massageId }, () => {
 			tost({ title: 'Massage Deleted!', icon: 'success' }, false)
 		});
 	}
 
-	sendFile(auth: string, data: any, dataObj: any, [percentage, finished, final]: any) {
-		// data = new Blob([data], { type: dataType })
-		let stream = ss.createStream({
-			allowHalfOpen: true
-		});
-		ss(this._socket).emit('file', stream, { token: auth, ...dataObj }, final);
-		var blobStream = ss.createBlobReadStream(data);
-		var size = 0;
-
-		blobStream.on('data', function (chunk: any) {
-			size += chunk.length;
-			percentage(Math.floor(size / data.size * 100));
-			if (Math.floor(size / data.size * 100) == 100) {
-				// ss.closeStream()
-				finished(true)
-			}
-		});
-
-		blobStream.pipe(stream);
+	sendSeenStatus(authToken: any, massageId: any) {
+		this._socket.emit('seen', authToken, { id: massageId });
 	}
+
+	onSeenStatus() {
+		return this._socket.fromEvent('seen');
+	}
+
+	// sendFile(auth: string, data: any, dataObj: any, [percentage, finished, final]: any) {
+	// 	// data = new Blob([data], { type: dataType })
+	// 	let stream = ss.createStream({
+	// 		allowHalfOpen: true
+	// 	});
+	// 	ss(this._socket).emit('file', stream, { token: auth, ...dataObj }, final);
+	// 	var blobStream = ss.createBlobReadStream(data);
+	// 	var size = 0;
+
+	// 	blobStream.on('data', function (chunk: any) {
+	// 		size += chunk.length;
+	// 		percentage(Math.floor(size / data.size * 100));
+	// 		if (Math.floor(size / data.size * 100) == 100) {
+	// 			// ss.closeStream()
+	// 			finished(true)
+	// 		}
+	// 	});
+
+	// 	blobStream.pipe(stream);
+	// }
 
 	join(authToken: string) {
 		this._socket.emit('join', authToken);
@@ -92,12 +100,12 @@ export class ChattingSoketService {
 	onCancleVideoCall() {
 		return this._socket.fromEvent('cancleVideoCall');
 	}
-	
-	onDeleteForEveryOne(callback:any){
+
+	onDeleteForEveryOne(callback: any) {
 		return this._socket.on('deleteForEveryOne', callback);
 	}
 
-	onEdit(callback: any){
+	onEdit(callback: any) {
 		return this._socket.on('edit', callback);
 	}
 

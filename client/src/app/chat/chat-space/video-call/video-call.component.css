@@ -57,3 +57,10 @@
     align-items: center;
     flex-wrap: nowrap;
 }
+
+@media screen and (max-width: 500px) {
+    .myVideoContainer{
+        width: 150px;
+    }
+    
+}
