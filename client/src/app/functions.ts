@@ -42,18 +42,6 @@ export async function deleteChatByToken({ urlToken, authToken, api, store, curru
 
 export function sendDataToFreind(obj: any, _chat: any, authToken: any, urlToken: any, store: any) {
 
-  //todo: change status after 20 seconds if not received fix this
-
-  // store.select(getAllChats).subscribe((data: any) => {
-  //   setTimeout(() => {
-  //     const filterddata = data.chat.find((e: any) => e.token == urlToken);
-  //     const tempData = filterddata.data.find((e: any) => e.id == obj.id);
-  //     console.log(tempData, 'tempData.status', tempData.status == 'pending');
-  //     if (tempData.status == 'pending') {
-  //       store.dispatch(changeStatus({ token: urlToken, id: obj.id, status: 'failed' }));
-  //     }
-  //   }, 20 * 1000);
-  // })
   let tempObj = {...obj};
   tempObj.data = obj.sendableData;
   delete tempObj.sendableData;
@@ -67,26 +55,7 @@ export function sendDataToFreind(obj: any, _chat: any, authToken: any, urlToken:
       store.dispatch(changeStatus({ token: urlToken, id: obj.id, status: 'failed' }));
     }
   });
-  // let tempObj = { ...obj }
-  // delete tempObj.sendableData;
-  // delete tempObj.status;
-  // delete tempObj.lastMassage;
-  // delete tempObj.data;
 
-  // // console.log(tempObj)
-
-  // _chat.sendFile(authToken, obj.sendableData, tempObj, [
-  //   (data: any) => {
-  //     store.dispatch(setProgress({ token: urlToken, id: obj.id, progress: data }))
-  //   }, () => {
-  //     store.dispatch(changeStatus({ token: urlToken, id: obj.id, status: 'sent' }));
-  //     console.log('finished tranfer ...')
-  //   }, () => {
-  //     store.dispatch(changeStatus({ token: urlToken, id: obj.id, status: 'seen' }));
-  //     console.log('recive data to opponent')
-  //   }
-  // ]);
-  // store.dispatch(changeLastMassage({token: urlToken, massage: obj.lastMassage}));
   const lastMassage = obj.lastMassage
   delete obj.lastMassage;
   store.dispatch(appendData({ token: urlToken, data: obj, lastMassage: lastMassage }));
@@ -189,10 +158,10 @@ export const formateTime2 = (date: any) => {
   date = new Date(date);
   let diff = dateDiffInDays(date, curruntDate)
   if (diff == 0) {
-    return 'today';
+    return 'Today';
   }
   if (diff == 1) {
-    return 'tommorow';
+    return 'Tommorow';
   }
   return formateDate(date);
 }

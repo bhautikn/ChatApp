@@ -13,20 +13,22 @@ export class GIFComponent {
   @Output() onsendGif: EventEmitter<any> = new EventEmitter();
 
   gifs:any = [];
-
+  potition:any = false;
   ngOnInit(){
-
-    // load gifs
-    this._gif_api.getAll().subscribe((res: any) => {
-      this.gifs = res.results;
-      console.log(this.gifs)
+    this.loadGif();
+  }
+  loadGif(){
+    this._gif_api.getAll(this.potition).subscribe((res: any) => {
+      this.potition = res.next;
+      this.gifs = this.gifs.concat(res.results);
     })
   }
-
   sendGif(url: any): void {
     this.onsendGif.emit(url);
   }
-
+  onScroll(){
+    console.log('scroll');
+  }
   changeGifText(e: any) {
     this._gif_api.getBySearch(e.target.value).subscribe((res: any) => {
       this.gifs = res.results;

@@ -41,6 +41,7 @@ export class ChatSpaceComponent implements OnInit {
   isAudioCall: boolean = false;
   chatLefticons: boolean = true;
   isForwarding: boolean = false;
+  inviteMenu: boolean = false;
   forwardData: any;
 
   // date formatter

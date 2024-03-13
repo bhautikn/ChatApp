@@ -3,7 +3,7 @@
     <div class="side-nav show-sidenav flex-shrink-0 w-50">
         <app-side-bar (onreload)="reloadPage($event)"></app-side-bar>
     </div>
-    <div class="px-1 w-100">
+    <div class="px-1 main-side-bar">
         <div class="title-bar">
             <div class="row px-1 py-2" *ngIf="!searchingChat">
                 <div class="col">
@@ -39,7 +39,7 @@
                             <i class="bi bi-three-dots-vertical option"></i>
                         </div>
                         <ul class="dropdown-menu p-0">
-                            <li class="dropdown-item p-2">
+                            <li class="dropdown-item p-2" (click)="inviteMenu = true">
                                 <i class="bi bi-share"></i>
                                 Invite
                             </li>
@@ -78,7 +78,7 @@
             </div>
 
             <!-- search bar -->
-            <div class="row px-1 py-2" *ngIf="searchingChat">
+            <div class="row px-1 py-1" *ngIf="searchingChat">
                 <div class="d-flex gap-2 align-self-center">
                     <input type="search" class="form-control" placeholder="search" (keyup)="handleSearch($event)"
                         id="search-input" autofocus>
@@ -125,7 +125,7 @@
                         </div>
 
                         <div class="row" [id]="oneChatData.id" *ngIf="oneChatData.type != 'sepretor'">
-                            <div [class]=oneChatData.sended_or_recived>
+                            <div [class]=oneChatData.sended_or_recived [ngClass]="{'to-animation': oneChatData.sended_or_recived == 'to' && oneChatData.status == 'pending'}">
 
                                 <div class="massage">
                                     <div *ngIf="oneChatData.reply"
@@ -175,13 +175,6 @@
                                                     <i class="bi bi-arrow-clockwise"></i>
                                                     Resend
                                                 </li>
-                                                <li>
-                                                    <hr class="p-0 m-0">
-                                                </li>
-                                                <li class="dropdown-item p-2" (click)="openDetail(oneChatData)">
-                                                    <i class="bi bi-info-circle"></i>
-                                                    Details
-                                                </li>
                                                 <span
                                                     *ngIf="oneChatData.sended_or_recived == 'to' && oneChatData.type == 'string'">
                                                     <li>
@@ -190,9 +183,16 @@
                                                     <li class="dropdown-item p-2"
                                                         (click)="setForEdit(oneChatData.id, oneChatData.data)">
                                                         <i class="bi bi-pencil"></i>
-                                                        edit
+                                                        Edit
                                                     </li>
                                                 </span>
+                                                <li>
+                                                    <hr class="p-0 m-0">
+                                                </li>
+                                                <li class="dropdown-item p-2" (click)="openDetail(oneChatData)">
+                                                    <i class="bi bi-info-circle"></i>
+                                                    Details
+                                                </li>
                                                 <li>
                                                     <hr class="p-0 m-0">
                                                 </li>
@@ -225,7 +225,7 @@
                                     </div>
 
                                     <div *ngIf="oneChatData.type == 'video'">
-                                        <video width="320" height="240" controls>
+                                        <video controls>
                                             <source [src]=oneChatData.data type="video/mp4">
                                         </video><br>
                                     </div>
@@ -255,20 +255,7 @@
                                         <i class="bi bi-pencil" *ngIf="oneChatData.edited"
                                             style="font-size: 1em !important;"></i>
                                         {{formatAMPM(oneChatData.time)}}
-                                        <span *ngIf="oneChatData.status == 'pending'">
-                                            <i class="bi bi-clock" style="font-size: 1em !important;"></i>
-                                        </span>
-                                        <span *ngIf="oneChatData.status == 'sent'">
-                                            <i class="bi bi-check-all" style="font-size: 1.5em !important;"></i>
-                                        </span>
-                                        <span *ngIf="oneChatData.status === 'failed'">
-                                            <i class="bi bi-x-octagon text-danger"
-                                                style="font-size: 1em !important;"></i>
-                                        </span>
-                                        <span *ngIf="oneChatData.status === 'seen'">
-                                            <i class="bi bi-check-all text-info"
-                                                style="font-size: 1.5em !important;"></i>
-                                        </span>
+                                        <app-marks [status]="oneChatData.status"></app-marks>
                                     </div>
                                 </div>
                                 <div class="float-end text-center d-flex h-100 align-items-center mx-2"
@@ -347,3 +334,5 @@
 
 <app-details class="from-side-component" (onclose)="closeDetail()" *ngIf="details.show"
     [data]="details.data"></app-details>
+
+<app-invite *ngIf="inviteMenu" class="from-side-component" (onclose)="inviteMenu = false" ></app-invite>

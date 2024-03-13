@@ -76,6 +76,7 @@ svg{
     bottom: 30px;
     align-items: center;
     text-align: center;
+    background-color: var(--background-light-4);
 }
 @media screen and (max-width: 768px){
     .add-chat-btn{

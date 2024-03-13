@@ -1,0 +1,14 @@
+<span *ngIf="status == 'pending'">
+    <i class="bi bi-clock" style="font-size: 1em !important;"></i>
+</span>
+<span *ngIf="status == 'sent'">
+    <i class="bi bi-check-all" style="font-size: 1.5em !important;"></i>
+</span>
+<span *ngIf="status === 'failed'">
+    <i class="bi bi-x-octagon text-danger"
+        style="font-size: 1em !important;"></i>
+</span>
+<span *ngIf="status === 'seen'">
+    <i class="bi bi-check-all text-info"
+        style="font-size: 1.5em !important;"></i>
+</span>

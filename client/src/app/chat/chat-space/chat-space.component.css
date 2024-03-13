@@ -1,12 +1,13 @@
 .super-main-container {
     overflow: hidden;
-
     background-color: var(--background-light-3);
     height: 100vh;
 }
-.title-bar{
+
+.title-bar {
     height: 6vh;
 }
+
 .cross-icon {
     width: max-content;
     margin-left: 10px;
@@ -36,6 +37,9 @@
     width: 20% !important;
     display: block;
     visibility: visible !important;
+}
+.main-side-bar{
+    width: 80%;
 }
 
 .side-nav {
@@ -234,7 +238,8 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-    height: 50vh;
+    user-select: none;
+    height: 90vh;
     font-size: 4em !important;
     color: var(--text-light);
     width: 100%;
@@ -269,15 +274,18 @@
 /* massage to css set */
 .to {
     margin: 5px 0;
-    /* animation: chat-animation-to 200ms linear; */
 }
 
 .from {
     margin: 5px 0;
-    /* animation: chat-animation-from 200ms linear; */
+    animation: chat-animation-from 200ms linear;
 }
 
-/* @keyframes chat-animation-to {
+.to-animation{
+    animation: chat-animation-to 200ms linear;
+}
+
+@keyframes chat-animation-to {
     from {
         transform: translateX(-20px);
     }
@@ -286,10 +294,11 @@
     from {
         transform: translateX(20px);
     }
-} */
-.reply-massage{
+}
+.reply-massage {
     cursor: pointer;
 }
+
 .to .massage,
 .from .massage {
     /* background-color: green; */
@@ -297,6 +306,7 @@
     float: right;
     width: max-content;
     line-break: anywhere;
+    word-break: break-all;
     min-width: 50px;
     max-width: 50%;
 
@@ -336,13 +346,21 @@
 }
 
 .from img,
-.to img {
-    max-width: 200px;
+.to img,
+.from video,
+.to video {
+    max-width: 300px;
     border-bottom-left-radius: 10px;
     border-top-left-radius: 10px;
 }
 
-.from img {
+.from video,
+.to video {
+    max-width: 300px;
+}
+
+.from img,
+.from video {
     border-radius: 0px;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -413,16 +431,33 @@
 }
 
 @media screen and (max-width: 1080px) {
-    .side-nav, .from-side-component {
+
+    .side-nav,
+    .from-side-component {
         width: 30% !important;
+    }
+
+    .main-side-bar{
+        width: 70%;
+    }
+
+    .from img,
+    .to img,
+    .from video,
+    .to video {
+        max-width: 250px;
     }
 }
 
 @media screen and (max-width: 700px) {
-    .show-sidenav, .from-side-component {
+
+    .show-sidenav,
+    .from-side-component {
         width: 35% !important;
     }
-
+    .main-side-bar{
+        width: 65%;
+    }
     .gif-menu {
         width: 100%;
     }
@@ -431,14 +466,31 @@
     .from .massage {
         max-width: 90%;
     }
+
+    .from img,
+    .to img,
+    .from video,
+    .to video {
+        max-width: 200px;
+    }
 }
 
 @media screen and (max-width: 500px) {
-    .from-side-component{
+    .from-side-component {
         width: 100% !important;
+    }
+    .main-side-bar{
+        width: 100%;
     }
     .show-sidenav {
         display: none;
+    }
+
+    .from img,
+    .to img,
+    .from video,
+    .to video {
+        max-width: 200px;
     }
 }
 
@@ -468,7 +520,8 @@
     top: 0;
     background-color: var(--background);
 }
-.from-side-component{
+
+.from-side-component {
     box-shadow: 2px 2px 10px black;
     position: fixed;
     height: 100vh;
@@ -480,7 +533,7 @@
 }
 
 @keyframes from-right-ani {
-    from{
+    from {
         transform: translateX(200px);
     }
 }

@@ -97,25 +97,4 @@ export class ChatComponent {
   redirect(to: string) {
     this._navigate.navigate([to]);
   }
-
-  inviteFreind() {
-    if (this.email == '' || this.comment == '') {
-      return alert('Please fill the email and comment');
-    }
-    this.sendEmailLoading = true;
-    this._api.sendEmail(this.email, this.comment, this.fullUrl).subscribe((data: any) => {
-      if (data.status == 200) {
-        this.sendEmailLoading = false;
-        Swal.fire({
-          title: 'Email sent',
-          text: 'The email has been sent successfully',
-          icon: 'success',
-          customClass: 'swal-background',
-          confirmButtonText: 'OK'
-        })
-      } else {
-        alert('Email not sent');
-      }
-    });
-  }
 }

@@ -7,7 +7,7 @@
         <tr>
             <td>
                 <li class="dropdown-item">
-                    type: {{data.type}}
+                    Type: {{data.type | titlecase}}
                 </li>
             </td>
         </tr>
@@ -21,21 +21,22 @@
         <tr *ngIf="data.filename">
             <td>
                 <li class="dropdown-item">
-                    file name: {{data.filename}}
+                    File Name: {{data.filename}}
                 </li>
             </td>
         </tr>
         <tr *ngIf="data.status">
             <td>
                 <li class="dropdown-item">
-                    status: {{data.status}}
+                    Status: {{data.status | titlecase}}
                 </li>
             </td>
         </tr>
         <tr>
             <td>
                 <li class="dropdown-item">
-                    time: {{formateDate(data.time) +' '+ formatAMPM(data.time)}}
+                    Time: {{formateDate(data.time) +' '+ formatAMPM(data.time)}}
+                    <span *ngIf="data.edited" class="fw-bold">Edited</span>
                 </li>
             </td>
         </tr>

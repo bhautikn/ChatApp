@@ -10,7 +10,10 @@ export class GifApiService {
 
   constructor(private _http:HttpClient) { }
 
-  getAll(){
+  getAll(pos:any=false){
+    if(pos){
+      return this._http.get(this.url+'trending?key='+environment.gif_api_key+'&limit=20&pos='+pos);
+    }
     return this._http.get(this.url+'trending?key='+environment.gif_api_key+'&limit=20');
   }
   getBySearch(searchText:string){

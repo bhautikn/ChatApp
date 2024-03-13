@@ -25,6 +25,8 @@ import { AudioCallComponent } from './chat/chat-space/audio-call/audio-call.comp
 import { ReplyTopComponent } from './chat/chat-space/reply-top/reply-top.component';
 import { SettingsComponent } from './chat/settings/settings.component';
 import { DetailsComponent } from './chat/details/details.component';
+import { InviteComponent } from './chat/invite/invite.component';
+import { MarksComponent } from './chat/marks/marks.component';
 
 const config: SocketIoConfig = {
     url: environment.soketUrl,
@@ -46,7 +48,9 @@ const config: SocketIoConfig = {
     AudioCallComponent,
     ReplyTopComponent,
     SettingsComponent,
-    DetailsComponent
+    DetailsComponent,
+    InviteComponent,
+    MarksComponent
   ],
   imports: [
     BrowserModule,
