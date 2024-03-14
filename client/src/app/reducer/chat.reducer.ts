@@ -16,10 +16,6 @@ import {
 
 } from './chat.action';
 import { dateDiffInDays, getChats } from "../functions";
-import { Title } from "@angular/platform-browser";
-import { JsonPipe } from "@angular/common";
-import { takeLast } from "rxjs";
-import { state } from "@angular/animations";
 
 const initialState: any = getChats();
 
@@ -143,7 +139,7 @@ function resetDataR(state: any, token: any) {
 
     const index = getIndexByToken(state, token);
     if (index >= 0) {
-        let tempData = { ...state[index], data: [], unread: 0 }
+        let tempData = { ...state[index], data: [], unread: 0, lastMassage: ''}
         return changeObjectBetweenArray(state, tempData, index);
     }
     return state;
