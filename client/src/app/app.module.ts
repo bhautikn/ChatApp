@@ -14,7 +14,6 @@ import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { VideoCallComponent } from './chat/chat-space/video-call/video-call.component';
 import { BackNevigationComponent } from './back-nevigation/back-nevigation.component';
-import { InfiniteScrollModule } from "ngx-infinite-scroll";
 import { GIFComponent } from './gif/gif.component';
 import { StoreModule } from '@ngrx/store';
 import { chatReducer } from './reducer/chat.reducer';
@@ -61,7 +60,6 @@ const config: SocketIoConfig = {
     CommonModule,
     SocketIoModule.forRoot(config),
     BrowserAnimationsModule,
-    InfiniteScrollModule,
     StoreModule.forRoot({chat: chatReducer}),
   ],
   providers: [],

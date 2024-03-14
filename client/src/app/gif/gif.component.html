@@ -7,12 +7,8 @@
             <img [src]="i.media[0].gif.url">
         </div>
     </div>
-    <div 
-    infiniteScroll 
-    [infiniteScrollDistance]="0" [scrollWindow]="false" [infiniteScrollThrottle]="300"
-        (scrolled)="onScroll()">
-    </div>
     <div class="loading-div-container">
-        <div class="loading-div"></div>
+        <div class="btn border" *ngIf="!loading" (click)="loadGif()">Load More</div>
+        <div class="loading-div" *ngIf="loading"></div>
     </div>
 </div>

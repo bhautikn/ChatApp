@@ -14,13 +14,17 @@ export class GIFComponent {
 
   gifs:any = [];
   potition:any = false;
+  loading: boolean = true;
+
   ngOnInit(){
     this.loadGif();
   }
   loadGif(){
+    this.loading = true;
     this._gif_api.getAll(this.potition).subscribe((res: any) => {
       this.potition = res.next;
       this.gifs = this.gifs.concat(res.results);
+      this.loading = false;
     })
   }
   sendGif(url: any): void {
