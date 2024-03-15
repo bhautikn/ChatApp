@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { deleteChat, resetChatData } from '../../../../reducer/chat.action';
-import { formateDate, formateTime } from '../../../../functions';
+import { deleteWarning, formateDate, formateTime } from '../../../../functions';
 
 @Component({
   selector: 'app-one-chat',
@@ -40,7 +40,11 @@ formateDate = formateDate;
     e.stopPropagation();
   }
   DeleteChat(){
-    this.store.dispatch(deleteChat({ index: this.i }))
+    deleteWarning((result: any) => {
+      if (result.isConfirmed) {
+        this.store.dispatch(deleteChat({ index: this.i }))
+      }
+    })
   }
 
   clearChat(){

@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../reducer/chat.selector';
 import { addChat, deletePerticulerChat, resetChatData } from '../../reducer/chat.action';
-import { debounce, decodeHTMLEntities, deleteChatByToken, editDataToFreind, formatAMPM, formateTime2, sendDataToFreind, tost } from '../../functions';
+import { debounce, decodeHTMLEntities, deleteChatByToken, deleteWarning, editDataToFreind, formatAMPM, formateTime2, sendDataToFreind, tost } from '../../functions';
 
 
 @Component({
@@ -71,7 +71,7 @@ export class ChatSpaceComponent implements OnInit {
   }
 
   isSettings: boolean = false;
-  details:any = {
+  details: any = {
     show: false,
     data: null,
   }
@@ -123,11 +123,11 @@ export class ChatSpaceComponent implements OnInit {
       }
     }
     this.name = this.chats[this.curruntIndex].name;
-    
+
     //video call
     this._chat.onReqVideoCall().subscribe((func: any) => {
       const incomingRing: any = new Audio('../assets/sounds/phone-incoming.mp3');
-      if(this.isSound){
+      if (this.isSound) {
         incomingRing.play()
       }
       // this.incomingRing.loop=true;
@@ -173,7 +173,7 @@ export class ChatSpaceComponent implements OnInit {
     //audio call
     this._chat.onReqAudioCall().subscribe((func: any) => {
       const incomingRing: any = new Audio('../assets/sounds/phone-incoming.mp3');
-      if(this.isSound){
+      if (this.isSound) {
         incomingRing.play()
       }
       // this.incomingRing.loop=true;
@@ -215,7 +215,7 @@ export class ChatSpaceComponent implements OnInit {
     this._chat.onCancleAudioCall().subscribe(() => {
       Swal.close();
     })
-    
+
 
   }
 
@@ -340,7 +340,7 @@ export class ChatSpaceComponent implements OnInit {
         });
         if (!isFound) {
           this.name = await this.nameEnterPopUp();
-           
+
           let obj = {
             token: this.urlToken,
             cretaed: new Date().toString(),
@@ -407,7 +407,7 @@ export class ChatSpaceComponent implements OnInit {
     if (this.status == 'offline') {
       tost({ title: 'Your Freind is offline', icon: 'warning' }, true);
     }
-    if(this.isSound){
+    if (this.isSound) {
       this.dropWater.play();
     }
     if (this.curruntMode == 'editing') {
@@ -461,7 +461,7 @@ export class ChatSpaceComponent implements OnInit {
     const phoneCallMusic = new Audio('../assets/sounds/phone-outgoing.mp3')
 
     const MusicPlayId = setInterval(() => {
-      if(this.isSound){
+      if (this.isSound) {
         phoneCallMusic.play();
       }
     }, 500);
@@ -511,7 +511,7 @@ export class ChatSpaceComponent implements OnInit {
 
     const phoneCallMusic = new Audio('../assets/sounds/phone-outgoing.mp3')
     const MusicPlayId = setInterval(() => {
-      if(this.isSound){
+      if (this.isSound) {
         phoneCallMusic.play();
       }
     }, 500);
@@ -613,13 +613,20 @@ export class ChatSpaceComponent implements OnInit {
   }
 
   deletePerticulerChat(id: any) {
-    this.store.dispatch(deletePerticulerChat({ id: id, token: this.urlToken }));
+    deleteWarning((res: any) => {
+      if (res.isConfirmed) {
+        this.store.dispatch(deletePerticulerChat({ id: id, token: this.urlToken }));
+      }
+    })
   }
 
   deleteForEveryOneChat(id: any) {
-    this._chat.deleteForEveryOne(this.authToken, id);
-    this.store.dispatch(deletePerticulerChat({ id: id, token: this.urlToken }));
-
+    deleteWarning((res: any) => {
+      if (res.isConfirmed) {
+        this._chat.deleteForEveryOne(this.authToken, id);
+        this.store.dispatch(deletePerticulerChat({ id: id, token: this.urlToken }));
+      }
+    })
   }
 
   setForEdit(id: any, data: any) {
@@ -638,12 +645,12 @@ export class ChatSpaceComponent implements OnInit {
     tost({ title: 'Text Copied', icon: 'success' });
   }
 
-  downloadFile(src: any, type: string, filename:any) {
+  downloadFile(src: any, type: string, filename: any) {
     var a: any = document.createElement("a");
     document.body.appendChild(a);
     a.style = "display: none";
     a.href = src;
-    if(type == 'gif'){
+    if (type == 'gif') {
       filename = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + '.gif';
     }
     a.download = filename;
@@ -684,7 +691,7 @@ export class ChatSpaceComponent implements OnInit {
     this.setData(obj);
   }
 
-  handleSearch(self:any, e: any) {
+  handleSearch(self: any, e: any) {
     const text = e.target.value;
     if (text != '') {
       self.searchArray = [];
@@ -701,7 +708,7 @@ export class ChatSpaceComponent implements OnInit {
       }
     }
   }
-  handleKeyDownSearch( e: any) {
+  handleKeyDownSearch(e: any) {
     if (e.keyCode == 13) {
       this.incrementSearch(1);
     }
@@ -733,7 +740,7 @@ export class ChatSpaceComponent implements OnInit {
   openSetting() {
     this.isSettings = true;
   }
-  closeSetting(data:any){
+  closeSetting(data: any) {
     this.isSound = data;
 
     this.isSettings = false;
@@ -742,7 +749,7 @@ export class ChatSpaceComponent implements OnInit {
     this.details.show = true;
     this.details.data = data;
   }
-  closeDetail(){
+  closeDetail() {
     this.details.show = false;
     this.details.data = null;
   }
@@ -767,7 +774,7 @@ export class ChatSpaceComponent implements OnInit {
     this.curruntMode = 'replying';
   }
 
-  handleReplyClick(e:any){
+  handleReplyClick(e: any) {
     const div: any = document.getElementById(e.id);
     this.animateScroll(div);
 

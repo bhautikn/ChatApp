@@ -12,7 +12,21 @@ export function decodeHTMLEntities(str: any) {
 
 export async function deleteChatByToken({ urlToken, authToken, api, store, curruntIndex }: any) {
   let res = false;
-  await Swal.fire({
+  deleteWarning((result: any) => {
+    if (result.isConfirmed) {
+      res = true;
+      api.deleteChat(urlToken, authToken).subscribe((data: any) => {
+        if (data.ok == 200) {
+          store.dispatch(deleteChat({ index: curruntIndex }));
+        }
+      });
+    }
+  });
+  return res;
+}
+
+export function deleteWarning(func: any) {
+  Swal.fire({
     title: "Are you sure?",
     text: "You won't be able to revert this!",
     icon: "warning",
@@ -21,28 +35,12 @@ export async function deleteChatByToken({ urlToken, authToken, api, store, curru
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
     confirmButtonText: "Yes, delete it!"
-  }).then((result) => {
-    if (result.isConfirmed) {
-      res = true;
-      api.deleteChat(urlToken, authToken).subscribe((data: any) => {
-        if (data.ok == 200) {
-          store.dispatch(deleteChat({ index: curruntIndex }));
-        }
-      });
-      Swal.fire({
-        title: "Deleted!",
-        text: "Your file has been deleted.",
-        icon: "success",
-        customClass: 'swal-background',
-      });
-    }
-  });
-  return res;
-}
+  }).then(func);
 
+}
 export function sendDataToFreind(obj: any, _chat: any, authToken: any, urlToken: any, store: any) {
 
-  let tempObj = {...obj};
+  let tempObj = { ...obj };
   tempObj.data = obj.sendableData;
   delete tempObj.sendableData;
   delete tempObj.lastMassage;
@@ -61,7 +59,7 @@ export function sendDataToFreind(obj: any, _chat: any, authToken: any, urlToken:
   store.dispatch(appendData({ token: urlToken, data: obj, lastMassage: lastMassage }));
 }
 
-export function editDataToFreind(obj: any, _chat: any, authToken: any, urlToken: any, store: any){
+export function editDataToFreind(obj: any, _chat: any, authToken: any, urlToken: any, store: any) {
   _chat.edit(obj.data, authToken, obj.id, (data: any) => {
     if (data) {
       store.dispatch(changeStatus({ token: urlToken, id: data.id, status: data.status }));
@@ -69,7 +67,7 @@ export function editDataToFreind(obj: any, _chat: any, authToken: any, urlToken:
       store.dispatch(changeStatus({ token: urlToken, id: obj.id, status: 'failed' }));
     }
   });
-  store.dispatch(updateData({ token: urlToken, data: obj, id: obj.id}));
+  store.dispatch(updateData({ token: urlToken, data: obj, id: obj.id }));
 }
 
 export function formateDate(date: any) {
@@ -175,12 +173,12 @@ export function dateDiffInDays(date1: any, date2: any) {
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
-export function debounce(func:any, delay:any) {
-  let timeout:any=null
-  return function (...args:any){
-      if(timeout) clearTimeout(timeout)
-      timeout=setTimeout(() => {
-          func(...args)
-      }, delay)
+export function debounce(func: any, delay: any) {
+  let timeout: any = null
+  return function (...args: any) {
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(() => {
+      func(...args)
+    }, delay)
   }
 }
