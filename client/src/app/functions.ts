@@ -174,3 +174,13 @@ export function dateDiffInDays(date1: any, date2: any) {
 
   return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
+
+export function debounce(func:any, delay:any) {
+  let timeout:any=null
+  return function (...args:any){
+      if(timeout) clearTimeout(timeout)
+      timeout=setTimeout(() => {
+          func(...args)
+      }, delay)
+  }
+}

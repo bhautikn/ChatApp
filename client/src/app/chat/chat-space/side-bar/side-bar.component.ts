@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../../reducer/chat.selector';
 import { resetresetUnreadToZero } from '../../../reducer/chat.action';
+import { debounce } from '../../../functions';
 
 @Component({
   selector: 'app-side-bar',
@@ -28,6 +29,7 @@ export class SideBarComponent {
   selectedObj: any = {};
   searching: boolean = false;
   searchArray: any = [];
+  searchChatsD = debounce(this.searchChats, 300);
 
   ngOnInit(): void {
     this.store.select(getAllChats).subscribe((data: any) => {
@@ -69,13 +71,13 @@ export class SideBarComponent {
   isKeyInObject(key: any) {
     return key in this.selectedObj;
   }
-  searchChats(e: any) {
+  searchChats(self:any, e: any) {
     if (e.target.value == '') {
-      this.searching = false;
+      self.searching = false;
     } else {
-      this.searching = true;
+      self.searching = true;
     }
-    this.searchArray = this.chats.filter((chat: any) => {
+    self.searchArray = self.chats.filter((chat: any) => {
       return chat.name.toLowerCase().includes(e.target.value.toLowerCase());
     });
   }

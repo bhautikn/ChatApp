@@ -6,7 +6,7 @@ import Swal from 'sweetalert2';
 import { Store } from '@ngrx/store';
 import { getAllChats } from '../../reducer/chat.selector';
 import { addChat, deletePerticulerChat, resetChatData } from '../../reducer/chat.action';
-import { decodeHTMLEntities, deleteChatByToken, editDataToFreind, formatAMPM, formateTime2, sendDataToFreind, tost } from '../../functions';
+import { debounce, decodeHTMLEntities, deleteChatByToken, editDataToFreind, formatAMPM, formateTime2, sendDataToFreind, tost } from '../../functions';
 
 
 @Component({
@@ -43,6 +43,8 @@ export class ChatSpaceComponent implements OnInit {
   isForwarding: boolean = false;
   inviteMenu: boolean = false;
   forwardData: any;
+
+  handleSearchD = debounce(this.handleSearch, 200);
 
   // date formatter
   formateTime = formateTime2;
@@ -682,24 +684,26 @@ export class ChatSpaceComponent implements OnInit {
     this.setData(obj);
   }
 
-  handleSearch(e: any) {
+  handleSearch(self:any, e: any) {
     const text = e.target.value;
-    if (e.keyCode == 13) {
-      this.incrementSearch(1);
-    }
-    else if (text != '') {
-      this.searchArray = [];
-      for (const element of this.data) {
+    if (text != '') {
+      self.searchArray = [];
+      for (const element of self.data) {
         if (element.type == 'string') {
           if (element.data.indexOf(text) != -1) {
-            this.searchArray.push(element);
+            self.searchArray.push(element);
           }
         }
       }
-      this.searchInfo = {
-        length: this.searchArray.length,
+      self.searchInfo = {
+        length: self.searchArray.length,
         curruntIndex: -1
       }
+    }
+  }
+  handleKeyDownSearch( e: any) {
+    if (e.keyCode == 13) {
+      this.incrementSearch(1);
     }
   }
 

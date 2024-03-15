@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { GifApiService } from '../services/gif-api.service';
+import { debounce } from '../functions';
 
 @Component({
   selector: 'app-gif',
@@ -7,19 +8,19 @@ import { GifApiService } from '../services/gif-api.service';
   styleUrl: './gif.component.css'
 })
 export class GIFComponent {
-  
-  constructor(private _gif_api: GifApiService){}
+
+  constructor(private _gif_api: GifApiService) { }
 
   @Output() onsendGif: EventEmitter<any> = new EventEmitter();
-
-  gifs:any = [];
-  potition:any = false;
+  gifs: any = [];
+  potition: any = false;
   loading: boolean = true;
+  searchGif = debounce(this.changeGifText, 500);
 
-  ngOnInit(){
+  ngOnInit() {
     this.loadGif();
   }
-  loadGif(){
+  loadGif() {
     this.loading = true;
     this._gif_api.getAll(this.potition).subscribe((res: any) => {
       this.potition = res.next;
@@ -30,12 +31,9 @@ export class GIFComponent {
   sendGif(url: any): void {
     this.onsendGif.emit(url);
   }
-  onScroll(){
-    console.log('scroll');
-  }
-  changeGifText(e: any) {
-    this._gif_api.getBySearch(e.target.value).subscribe((res: any) => {
-      this.gifs = res.results;
+  changeGifText(self:any, e: any) {
+    self._gif_api.getBySearch(e.target.value).subscribe((res: any) => {
+      self.gifs = res.results;
     })
   }
 }
