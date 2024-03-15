@@ -80,7 +80,7 @@
             <!-- search bar -->
             <div class="row px-1 py-1" *ngIf="searchingChat">
                 <div class="d-flex gap-2 align-self-center">
-                    <input type="search" class="form-control" placeholder="search" (keyup)="handleSearchD(this, $event)" (keydown)="handleKeyDownSearch($event)"
+                    <input type="search" class="form-control search-input-cls" placeholder="Search Chat" (keyup)="handleSearchD(this, $event)" (keydown)="handleKeyDownSearch($event)"
                         id="search-input" autofocus>
                     <div class="d-flex align-self-center gap-1" style="width: fit-content;">
                         <span style="width: 50px;" class="d-flex align-self-center">
