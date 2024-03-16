@@ -72,7 +72,7 @@ module.exports = (io) => {
         socket.on('massage', async (authToken, obj, callback) => {
             const { err, data } = verifyJWTToken(authToken);
             if (err) {
-                callback({ id: massageId, sucsess: false });
+                callback({ id: obj.id, status: 'failed' });
                 return socket.emit('error', 'Somthing Went Wrong');
             }
 
@@ -86,7 +86,7 @@ module.exports = (io) => {
 
             } catch (e) {
                 console.log('erro occure', e);
-                callback({ id: massageId, sucsess: false });
+                callback({ id: obj.id, status: 'failed' });
                 return socket.emit('error', 'Somthing Went Wrong');
             }
         })
@@ -107,7 +107,7 @@ module.exports = (io) => {
         socket.on('edit', async (token, obj, callback) => {
             const { err, data } = verifyJWTToken(token);
             if (err) {
-                callback({ id: obj.massageId, sucsess: false });
+                callback({ id: obj.id, status: 'failed' });
                 return socket.emit('error', 'Somthing Went Wrong');
             }
             try {
@@ -118,7 +118,7 @@ module.exports = (io) => {
 
             } catch (e) {
                 console.log('erro occure', e);
-                callback({ id: massageId, sucsess: false });
+                callback({ id: obj.id, status: 'failed' });
                 return socket.emit('error', 'Somthing Went Wrong');
             }
         })
